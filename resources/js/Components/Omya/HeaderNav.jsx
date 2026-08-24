@@ -1,151 +1,115 @@
-import React, { useState } from 'react';
-import {
-  Menu, X, ChevronDown, User, Globe, ArrowUpRight, ArrowDownRight,
-  Shield, Phone, Mail,
-} from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Menu, X, ChevronDown, User, ArrowRight, ChevronRight, Landmark, Briefcase, TrendingUp, Award, Shield, Layers } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLanguage } from '@/Context/LanguageContext';
 import OmyaLogo from '@/Components/Omya/OmyaLogo';
+import StockTickerBar from '@/Components/Omya/StockTickerBar';
 
-const socialLinks = [
-  { label: 'Facebook', path: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z' },
-  { label: 'LinkedIn', path: 'M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z' },
-  { label: 'Twitter', path: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' },
-  { label: 'YouTube', path: 'M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z' },
-];
-
-// Live stock ticker data
-const stockItems = [
-  { name: 'BVMAC ALL SHARE', value: '197.45', change: '+0.85%', positive: true },
-  { name: 'BVMAC 10', value: '156.78', change: '+0.56%', positive: true },
-  { name: 'CAC 40', value: '7 984.21', change: '+0.25%', positive: true },
-  { name: 'DOW JONES', value: '39 065.26', change: '+0.35%', positive: true },
-  { name: 'PÉTROLE BRENT', value: '83.45', change: '-0.12%', positive: false },
-  { name: 'OR (GOLD)', value: '2 342.10', change: '+0.45%', positive: true },
-  { name: 'SAFACAM (BVMAC)', value: '23 500 FCFA', change: '+1.20%', positive: true },
-  { name: 'SOCAPALM (BVMAC)', value: '48 000 FCFA', change: '+0.95%', positive: true },
-];
-
-const languages = [
-  { code: 'FR', label: 'Français', flag: '🇫🇷' },
-  { code: 'PT', label: 'Português', flag: '🇵🇹' },
-  { code: 'EN', label: 'English', flag: '🇬🇧' },
-];
-
-export default function HeaderNav({ onOpenAuth }) {
-  const { currentLang, changeLanguage, t } = useLanguage();
+export default function HeaderNav({ onOpenAuth, onSelectView }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [activeAccordion, setActiveAccordion] = useState(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 30);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleNavClick = (viewId, e, href) => {
+    if (e) e.preventDefault();
+    const anchorId = href && href.startsWith('#') && href.length > 1 ? href.slice(1) : null;
+    if (onSelectView) {
+      onSelectView(viewId, anchorId);
+    }
+  };
+
+  const solutionsCol1 = [
+    { num: '01', title: 'Structuration financière', desc: 'Montage d\'opérations obligataires et d\'ouverture du capital', viewId: 'nos-solutions', href: '#solutions-structuration', icon: Landmark },
+    { num: '02', title: 'Développement d\'affaires', desc: 'Accompagnement des États, entreprises et institutionnels', viewId: 'nos-solutions', href: '#solutions-developpement', icon: Briefcase },
+    { num: '03', title: 'Placements financiers', desc: 'Placer les actifs sur le marché des capitaux CEMAC', viewId: 'investir', href: '#solutions-placements', icon: TrendingUp },
+    { num: '04', title: 'Conseil en financement', desc: 'Conseil aux émetteurs et aux investisseurs', viewId: 'financer', href: '#solutions-conseil', icon: Award },
+  ];
+
+  const solutionsCol2 = [
+    { num: '05', title: 'Exécution d\'ordre', desc: 'Ordres d\'achat et de vente des titres', viewId: 'investir', href: '#solutions-execution', icon: ArrowRight },
+    { num: '06', title: 'Conservation & compte-titre', desc: 'Agréé par le dépositaire central BEAC (DCU)', viewId: 'nos-solutions', href: '#solutions-conservation', icon: Shield },
+    { num: '07', title: 'Gestion de portefeuille', desc: 'Mandat discrétionnaire et conseil en investissement', viewId: 'investir', href: '#solutions-gestion', icon: Layers },
+  ];
 
   const navMenuItems = [
+    { id: 'accueil', label: 'Accueil', href: '#accueil', viewId: 'accueil' },
     {
-      id: 'accueil',
-      label: t.navHome,
-      href: '#',
-      dropdown: [
-        { label: t.dropMarketOverview, desc: 'Aperçu global de la BVMAC & indices', href: '#marches' },
-        { label: t.dropNews, desc: 'Dernières actualités de la sous-région', href: '#actualites' },
-        { label: t.dropMainIndices, desc: 'Suivi des indices phares de la CEMAC', href: '#marches' },
-        { label: t.dropPopStocks, desc: 'Actions les plus échangées', href: '#produits' },
+      id: 'a-propos', label: 'À propos', href: '#presentation', viewId: 'a-propos', dropdownType: 'list',
+      dropdownItems: [
+        { label: 'Présentation', desc: 'Agrément COSUMAF & Groupe YAO CORP', viewId: 'a-propos', href: '#presentation' },
+        { label: 'Notre mission', desc: 'Accompagnement personnes morales & physiques', viewId: 'a-propos', href: '#mission' },
+        { label: 'Notre vision', desc: '3 axes pour le marché CEMAC', viewId: 'a-propos', href: '#vision' },
+        { label: 'Nos valeurs', desc: 'Intégrité, Rigueur & Proximité', viewId: 'a-propos', href: '#valeurs' },
+        { label: 'Nos cibles', desc: 'États, Entreprises, PME & Particuliers', viewId: 'a-propos', href: '#cibles' },
+      ],
+    },
+    { id: 'nos-solutions', label: 'Nos solutions', href: '#nos-solutions', viewId: 'nos-solutions', dropdownType: 'megamenu' },
+    {
+      id: 'investir', label: 'Investir', href: '#investir', viewId: 'investir', dropdownType: 'list',
+      dropdownItems: [
+        { label: 'Pourquoi investir ?', desc: 'Optimiser et sécuriser votre capital', viewId: 'investir', href: '#pourquoi-investir' },
+        { label: 'Placements financiers', desc: 'Titres et opportunités sur la CEMAC', viewId: 'investir', href: '#solutions-placements' },
+        { label: 'Gestion de portefeuille', desc: 'Mandat discrétionnaire sur-mesure', viewId: 'investir', href: '#solutions-gestion' },
+        { label: 'Exécution d\'ordre', desc: 'Transactions rapides et sécurisées', viewId: 'investir', href: '#solutions-execution' },
+        { label: 'Comprendre la bourse', desc: 'Guide pédagogique pour investisseurs', viewId: 'marche-financier', href: '#marche-financier' },
       ],
     },
     {
-      id: 'a-propos',
-      label: t.navAbout || 'À Propos',
-      href: '#a-propos',
-      dropdown: [
-        { label: 'Notre Histoire', desc: 'OMYA INVEST depuis 2014', href: '#a-propos' },
-        { label: 'Notre Équipe', desc: 'Experts certifiés COSUMAF', href: '#a-propos' },
-        { label: 'Nos Agréments', desc: 'Réglementation & conformité', href: '#a-propos' },
+      id: 'financer', label: 'Financer', href: '#financer', viewId: 'financer', dropdownType: 'list',
+      dropdownItems: [
+        { label: 'Besoin de financement ?', desc: 'Mobilisation de capitaux structurés', viewId: 'financer', href: '#besoin-financement' },
+        { label: 'Structuration financière', desc: 'Montage sur-mesure pour émetteurs', viewId: 'financer', href: '#solutions-structuration' },
+        { label: 'Emprunt obligataire', desc: 'Levée de fonds sur le marché obligataire', viewId: 'financer', href: '#emprunt-obligataire' },
+        { label: 'Ouverture du capital', desc: 'Introduction en bourse & equity', viewId: 'financer', href: '#ouverture-capital' },
+        { label: 'Conseil en financement', desc: 'Accompagnement stratégique des émetteurs', viewId: 'financer', href: '#solutions-conseil' },
+      ],
+    },
+    { id: 'partenaires', label: 'Partenaires', href: '#partenaires', viewId: 'partenaires' },
+    {
+      id: 'marche-financier', label: 'Marché financier', href: '#marche-financier', viewId: 'marche-financier', dropdownType: 'list',
+      dropdownItems: [
+        { label: 'Comprendre le marché CEMAC', desc: 'Organisation et cadre COSUMAF', viewId: 'marche-financier', href: '#marche-cemac' },
+        { label: 'Actions', desc: 'Titres de propriété cotés sur la BVMAC', viewId: 'marche-financier', href: '#instruments-actions' },
+        { label: 'Obligations', desc: 'Titres de créances d\'États et entreprises', viewId: 'marche-financier', href: '#instruments-obligations' },
+        { label: 'Éducation financière', desc: 'Pédagogie et guides de marché', viewId: 'marche-financier', href: '#education-financiere' },
       ],
     },
     {
-      id: 'services',
-      label: 'Services',
-      href: '#services',
-      dropdown: [
-        { label: t.dropStocks, desc: 'Actions cotées BVMAC', href: '#produits' },
-        { label: t.dropBonds, desc: 'Obligations d\'État & Privées', href: '#produits' },
-        { label: 'Gestion de Patrimoine', desc: 'Conseils personnalisés', href: '#services' },
-        { label: 'Conseil Financier', desc: 'Stratégies d\'investissement', href: '#services' },
+      id: 'actualites-documents', label: 'Presse & Doc', href: '#actualites', viewId: 'actualites-documents', dropdownType: 'list',
+      dropdownItems: [
+        { label: 'Actualités', desc: 'Dernières nouvelles du marché CEMAC', viewId: 'actualites-documents', href: '#actualites-recents' },
+        { label: 'Publications', desc: 'Analyses et rapports d\'experts', viewId: 'actualites-documents', href: '#publications' },
+        { label: 'Communiqués', desc: 'Annonces officielles OMYA INVEST', viewId: 'actualites-documents', href: '#communiques' },
+        { label: 'Documents', desc: 'Règlements, prospectus & formulaires', viewId: 'actualites-documents', href: '#documents' },
       ],
     },
-    {
-      id: 'marches',
-      label: t.navMarkets,
-      href: '#marches',
-      dropdown: [
-        { label: 'BVMAC', desc: 'Indices et actions BVMAC', href: '#marches' },
-        { label: t.dropForex, desc: 'Devises (EUR, USD, XAF)', href: '#marches' },
-        { label: t.dropCommodities, desc: 'Matières premières', href: '#marches' },
-      ],
-    },
-    {
-      id: 'actualites',
-      label: t.navNews,
-      href: '#actualites',
-      dropdown: [
-        { label: t.dropEconomy, desc: 'Actualités économiques CEMAC', href: '#actualites' },
-        { label: t.dropCompanies, desc: 'Vie des entreprises', href: '#actualites' },
-        { label: t.dropFinancialAnalyses, desc: 'Analyses des experts OMYA', href: '#actualites' },
-      ],
-    },
-    {
-      id: 'contact',
-      label: 'Contact',
-      href: '#contact',
-    },
+    { id: 'contact', label: 'Contact', href: '#contact', viewId: 'contact' },
   ];
 
   return (
-    <header className="sticky top-0 z-50 shadow-md">
+    <header className="sticky top-0 left-0 right-0 z-50 shadow-md">
 
-      {/* ── TOP BAR: contact info + social icons ── */}
-      <div className="bg-[#0C4A6E] text-white text-xs py-2 px-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          {/* Left: email + phone */}
-          <div className="flex items-center gap-6">
-            <a href="mailto:contact@omyainvest.com" className="flex items-center gap-1.5 text-sky-300 hover:text-white transition">
-              <Mail className="w-3 h-3 text-sky-400" />
-              <span>contact@omyainvest.com</span>
-            </a>
-            <a href="tel:+242061234567" className="flex items-center gap-1.5 text-sky-300 hover:text-white transition">
-              <Phone className="w-3 h-3 text-sky-400" />
-              <span>+242 06 123 45 67</span>
-            </a>
-          </div>
-          {/* Right: social icons */}
-          <div className="hidden sm:flex items-center gap-3">
-            {socialLinks.map(({ label, path }) => (
-              <motion.a
-                key={label}
-                href="#"
-                aria-label={label}
-                className="text-sky-400 hover:text-sky-400 transition"
-                whileHover={{ scale: 1.2 }}
-              >
-                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                  <path d={path} />
-                </svg>
-              </motion.a>
-            ))}
-          </div>
-        </div>
-      </div>
+      {/* TICKER BARRE DE COTATION */}
+      <StockTickerBar />
 
-      {/* ── MAIN NAV BAR: white background ── */}
-      <div className="bg-white border-b border-sky-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+      {/* NAVBAR FOND BLANC PURE & BLEU NUIT */}
+      <div className={`transition-all duration-300 ${scrolled ? 'bg-white/98 backdrop-blur-xl shadow-lg' : 'bg-white'} border-b border-slate-200`}>
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between gap-6 h-[76px]">
 
             {/* Logo */}
-            <a href="#" className="flex items-center shrink-0">
-              <OmyaLogo light={false} className="h-10" />
+            <a href="#" onClick={(e) => handleNavClick('accueil', e)} className="flex items-center shrink-0 mr-2">
+              <OmyaLogo light={false} className="h-10 sm:h-11 w-auto" />
             </a>
 
-            {/* Desktop Nav Links */}
-            <nav className="hidden lg:flex items-center gap-1">
+            {/* Desktop Navigation */}
+            <nav className="hidden 2xl:flex items-center gap-1 flex-1 justify-center min-w-0">
               {navMenuItems.map((item) => (
                 <div
                   key={item.id}
@@ -155,47 +119,102 @@ export default function HeaderNav({ onOpenAuth }) {
                 >
                   <a
                     href={item.href}
-                    className={`inline-flex items-center gap-1 px-4 py-2.5 text-sm font-600 nav-link-hover transition-colors ${
+                    onClick={(e) => handleNavClick(item.viewId, e, item.href)}
+                    className={`font-nav inline-flex items-center gap-1 px-3 py-2.5 text-[12.5px] font-bold tracking-wide transition-all uppercase rounded-sm border-b-2 whitespace-nowrap ${
                       activeDropdown === item.id
-                        ? 'text-sky-500'
-                        : 'text-gray-700 hover:text-sky-500'
+                        ? 'text-[#002E5B] border-b-[#002E5B] bg-slate-100'
+                        : 'text-[#001D3D] hover:text-[#002E5B] hover:border-b-[#002E5B] hover:bg-slate-50'
                     }`}
-                    style={{ fontWeight: 600 }}
                   >
                     <span>{item.label}</span>
-                    {item.dropdown && (
-                      <ChevronDown
-                        className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${
-                          activeDropdown === item.id ? 'rotate-180 text-sky-400' : ''
-                        }`}
-                      />
+                    {item.dropdownType && (
+                      <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${activeDropdown === item.id ? 'rotate-180 text-[#002E5B]' : 'text-slate-500'}`} />
                     )}
                   </a>
 
                   {/* Dropdown */}
                   <AnimatePresence>
-                    {item.dropdown && activeDropdown === item.id && (
+                    {item.dropdownType === 'list' && activeDropdown === item.id && (
                       <motion.div
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 8 }}
-                        transition={{ duration: 0.2 }}
-                        className="absolute top-full left-0 mt-1 w-64 bg-white border border-sky-100 rounded-xl shadow-xl p-2 z-50"
+                        transition={{ duration: 0.15 }}
+                        className="absolute top-full left-0 mt-0 w-72 bg-white border border-slate-200 border-t-2 border-t-[#002E5B] shadow-2xl z-50 rounded-b-md"
                       >
-                        {item.dropdown.map((sub, idx) => (
+                        {item.dropdownItems.map((sub, idx) => (
                           <a
                             key={idx}
                             href={sub.href}
-                            className="block p-2.5 rounded-lg hover:bg-sky-50 transition group"
+                            onClick={(e) => handleNavClick(sub.viewId, e, sub.href)}
+                            className="block px-4 py-3 hover:bg-[#F4F6FA] border-b border-slate-100 last:border-none transition group"
                           >
-                            <div className="text-sm font-700 text-gray-800 group-hover:text-sky-500 transition" style={{ fontWeight: 700 }}>
-                              {sub.label}
+                            <div className="text-[12.5px] font-bold font-nav text-[#001D3D] group-hover:text-[#002E5B] transition flex items-center justify-between">
+                              <span>{sub.label}</span>
+                              <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 text-[#002E5B] transition-all" />
                             </div>
-                            <div className="text-xs text-gray-500 leading-snug mt-0.5">
-                              {sub.desc}
-                            </div>
+                            <div className="text-[11px] text-slate-500 leading-snug mt-0.5">{sub.desc}</div>
                           </a>
                         ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Mega Menu Nos Solutions */}
+                  <AnimatePresence>
+                    {item.dropdownType === 'megamenu' && activeDropdown === item.id && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 8 }}
+                        transition={{ duration: 0.18 }}
+                        className="absolute top-full -left-24 mt-0 w-[720px] bg-white border border-slate-200 border-t-2 border-t-[#002E5B] shadow-2xl z-50 p-6 rounded-b-md"
+                      >
+                        <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-200">
+                          <div>
+                            <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#002E5B] font-nav">Agrément COSUMAF-SDB-01/2025</span>
+                            <h4 className="text-sm font-bold text-[#001D3D] mt-0.5 font-nav">Nos 7 Solutions & Services Financiers</h4>
+                          </div>
+                          <a href="#nos-solutions" onClick={(e) => handleNavClick('nos-solutions', e, '#nos-solutions')} className="text-xs font-bold text-[#002E5B] hover:underline inline-flex items-center gap-1 font-nav uppercase">
+                            <span>Voir tout</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </a>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="space-y-1">
+                            {solutionsCol1.map((svc) => {
+                              const Icon = svc.icon;
+                              return (
+                                <a key={svc.num} href={svc.href} onClick={(e) => handleNavClick(svc.viewId, e, svc.href)} className="flex items-start gap-3 p-3 hover:bg-[#F4F6FA] transition group rounded-md">
+                                  <div className="shrink-0 w-8 h-8 rounded-sm bg-[#002E5B] text-white flex items-center justify-center">
+                                    <Icon className="w-4 h-4" />
+                                  </div>
+                                  <div>
+                                    <h5 className="text-[12px] font-bold text-[#001D3D] group-hover:text-[#002E5B] transition font-nav">{svc.title}</h5>
+                                    <p className="text-[10.5px] text-slate-500 mt-0.5 leading-snug">{svc.desc}</p>
+                                  </div>
+                                </a>
+                              );
+                            })}
+                          </div>
+                          <div className="space-y-1">
+                            {solutionsCol2.map((svc) => {
+                              const Icon = svc.icon;
+                              return (
+                                <a key={svc.num} href={svc.href} onClick={(e) => handleNavClick(svc.viewId, e, svc.href)} className="flex items-start gap-3 p-3 hover:bg-[#F4F6FA] transition group rounded-md">
+                                  <div className="shrink-0 w-8 h-8 rounded-sm bg-[#002E5B] text-white flex items-center justify-center">
+                                    <Icon className="w-4 h-4" />
+                                  </div>
+                                  <div>
+                                    <h5 className="text-[12px] font-bold text-[#001D3D] group-hover:text-[#002E5B] transition font-nav">{svc.title}</h5>
+                                    <p className="text-[10.5px] text-slate-500 mt-0.5 leading-snug">{svc.desc}</p>
+                                  </div>
+                                </a>
+                              );
+                            })}
+                          </div>
+                        </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -203,104 +222,29 @@ export default function HeaderNav({ onOpenAuth }) {
               ))}
             </nav>
 
-            {/* Right: Language + CTA */}
-            <div className="hidden sm:flex items-center gap-3">
-              {/* Language Selector */}
-              <div className="relative z-50">
-                <button
-                  onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                  className="flex items-center gap-1.5 text-gray-600 hover:text-gray-900 px-3 py-2 rounded-lg border border-sky-200 hover:border-sky-300 transition text-xs font-bold"
-                >
-                  <Globe className="w-3.5 h-3.5 text-sky-500" />
-                  <span>{currentLang}</span>
-                  <ChevronDown className="w-3 h-3" />
-                </button>
-
-                <AnimatePresence>
-                  {langDropdownOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 6 }}
-                      className="absolute right-0 mt-2 w-36 bg-white border border-sky-100 rounded-xl shadow-xl py-2 z-50"
-                    >
-                      {languages.map((lang) => (
-                        <button
-                          key={lang.code}
-                          onClick={() => { changeLanguage(lang.code); setLangDropdownOpen(false); }}
-                          className={`w-full text-left px-3.5 py-2 flex items-center gap-2.5 hover:bg-sky-50 transition text-xs ${
-                            currentLang === lang.code ? 'text-sky-500 font-black' : 'text-gray-600 font-bold'
-                          }`}
-                        >
-                          <span className="text-base">{lang.flag}</span>
-                          <span>{lang.label}</span>
-                        </button>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Espace Client */}
-              <motion.button
-                onClick={() => onOpenAuth('login', 'client')}
-                className="btn-orange btn-sm flex items-center gap-1.5"
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
+            {/* CTA ESPACE CLIENT — BLEU NUIT AGRANDI */}
+            <div className="hidden 2xl:flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => onOpenAuth && onOpenAuth('login', 'client')}
+                className="px-7 py-3 bg-[#002E5B] text-white hover:bg-[#001D3D] transition-all duration-300 font-nav text-xs font-black uppercase rounded-sm border-2 border-[#002E5B] shadow-xl flex items-center gap-2 shrink-0 tracking-wider"
               >
-                <User className="w-3.5 h-3.5" />
-                <span>{t.clientSpace}</span>
-              </motion.button>
-
-              {/* Espace Membre */}
-              <motion.button
-                onClick={() => onOpenAuth('login', 'member')}
-                className="btn-outline-navy btn-sm flex items-center gap-1.5"
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                <Shield className="w-3.5 h-3.5" />
-                <span>{t.memberSpace}</span>
-              </motion.button>
+                <User className="w-4 h-4 text-white" />
+                <span>Espace client</span>
+              </button>
             </div>
 
-            {/* Mobile hamburger */}
-            <div className="flex lg:hidden">
-              <motion.button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                whileTap={{ scale: 0.95 }}
-              >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </motion.button>
+            {/* Mobile Hamburger */}
+            <div className="flex 2xl:hidden">
+              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 text-[#001D3D] hover:text-[#002E5B] transition">
+                {mobileMenuOpen ? <X className="w-6 h-6 text-[#001D3D]" /> : <Menu className="w-6 h-6" />}
+              </button>
             </div>
 
           </div>
         </div>
       </div>
 
-      {/* ── LIVE TICKER BAR (navy) — hidden ── */}
-      {false && (
-      <div className="ticker-bar py-1.5 px-4 overflow-hidden">
-        <div className="animate-ticker space-x-8">
-          {stockItems.concat(stockItems).map((stock, idx) => (
-            <span key={idx} className="inline-flex items-center gap-1.5 font-mono text-[11px]">
-              <span className="font-semibold text-sky-300">{stock.name}:</span>
-              <span className="text-white font-black">{stock.value}</span>
-              <span className={`inline-flex items-center text-[10px] font-bold px-1 rounded ${
-                stock.positive ? 'text-emerald-400' : 'text-rose-400'
-              }`}>
-                {stock.positive ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
-                {stock.change}
-              </span>
-              <span className="text-sky-600 ml-2">|</span>
-            </span>
-          ))}
-        </div>
-      </div>
-      )}
-
-      {/* ── MOBILE DRAWER ── */}
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -308,38 +252,49 @@ export default function HeaderNav({ onOpenAuth }) {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="lg:hidden bg-white border-b border-sky-100 px-4 overflow-hidden"
+            className="2xl:hidden bg-white border-b-2 border-[#002E5B] px-4 pt-2 pb-6 shadow-2xl"
           >
-            <div className="py-4 space-y-1">
+            <div className="space-y-0.5">
               {navMenuItems.map((item) => (
-                <a
-                  key={item.id}
-                  href={item.href}
-                  className="block py-2.5 px-3 text-sm font-bold text-gray-700 hover:text-sky-500 hover:bg-sky-50 rounded-lg transition"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.label}
-                </a>
+                <div key={item.id} className="border-b border-slate-100 last:border-none">
+                  {!item.dropdownType ? (
+                    <a href={item.href} onClick={(e) => { handleNavClick(item.viewId, e, item.href); setMobileMenuOpen(false); }} className="block py-3 text-sm font-bold text-[#001D3D] hover:text-[#002E5B] font-nav uppercase">
+                      {item.label}
+                    </a>
+                  ) : (
+                    <div>
+                      <button onClick={() => setActiveAccordion(activeAccordion === item.id ? null : item.id)} className="w-full flex items-center justify-between py-3 text-sm font-bold text-[#001D3D] hover:text-[#002E5B] font-nav uppercase">
+                        <span>{item.label}</span>
+                        <ChevronDown className={`w-4 h-4 transition-transform duration-200 text-[#002E5B] ${activeAccordion === item.id ? 'rotate-180' : ''}`} />
+                      </button>
+                      {activeAccordion === item.id && (
+                        <div className="pl-3 pb-3 space-y-2">
+                          {item.dropdownType === 'megamenu'
+                            ? [...solutionsCol1, ...solutionsCol2].map((s) => (
+                                <a key={s.num} href={s.href} onClick={(e) => { handleNavClick(s.viewId, e, s.href); setMobileMenuOpen(false); }} className="block py-1.5 text-xs font-semibold text-slate-700 hover:text-[#002E5B] font-nav">{s.title}</a>
+                              ))
+                            : item.dropdownItems.map((sub, sIdx) => (
+                                <a key={sIdx} href={sub.href} onClick={(e) => { handleNavClick(sub.viewId, e, sub.href); setMobileMenuOpen(false); }} className="block py-1.5 text-xs font-semibold text-slate-700 hover:text-[#002E5B] font-nav">{sub.label}</a>
+                              ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
-            <div className="pb-4 pt-2 border-t border-sky-100 flex flex-col gap-2.5">
+            <div className="mt-6 pt-4 border-t border-slate-200">
               <button
-                onClick={() => { onOpenAuth('login', 'client'); setMobileMenuOpen(false); }}
-                className="btn-orange w-full justify-center"
+                onClick={() => { onOpenAuth && onOpenAuth('login', 'client'); setMobileMenuOpen(false); }}
+                className="px-6 py-3.5 bg-[#002E5B] text-white hover:bg-[#001D3D] transition-all font-nav text-xs font-black uppercase rounded-sm border-2 border-[#002E5B] w-full justify-center flex items-center gap-2"
               >
-                {t.clientSpace}
-              </button>
-              <button
-                onClick={() => { onOpenAuth('login', 'member'); setMobileMenuOpen(false); }}
-                className="btn-outline-navy w-full justify-center"
-              >
-                {t.memberSpace}
+                <User className="w-4 h-4" />
+                <span>Espace client</span>
               </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-
     </header>
   );
 }

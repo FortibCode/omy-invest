@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\MarketDataController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -13,6 +14,9 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+// Endpoint API pour les cotations boursières en direct (Ticker Boursier)
+Route::get('/api/market-data', [MarketDataController::class, 'index']);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

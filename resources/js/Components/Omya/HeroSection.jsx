@@ -1,168 +1,279 @@
-import React, { useEffect, useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowRight, ShieldCheck, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import OmyaLogo from '@/Components/Omya/OmyaLogo';
+import { resolveAnchor } from '@/utils/viewAnchors';
 
-const imgSlide = {
-  enter:  { opacity: 0, scale: 1.04 },
-  center: { opacity: 1, scale: 1, transition: { duration: 1.2, ease: [0.25, 1, 0.5, 1] } },
-  exit:   { opacity: 0, scale: 0.98, transition: { duration: 0.8 } },
+const HERO_SLIDES = [
+  {
+    id: 1,
+    // tag: 'AGRÉMENT COSUMAF-SDB-01/2025 — FILIALE DU GROUPE YAO CORP',
+    titleLine1: 'Vos capitaux méritent',
+    titleHighlight: 'mieux',
+    titleLine2: "qu'un compte qui dort.",
+    description: 'OMYA INVEST connecte d’une part, les agents à besoin de financement (États, entreprises et institutionnels) de la zone CEMAC, et d’autre part, les agents à capacité de financement (particuliers/personnes physiques, États, les entreprises et les investisseurs institutionnels) de la CEMAC et du reste du monde.',
+    primaryBtnText: 'Je souhaite investir',
+    primaryBtnHref: '#investir',
+    secondaryBtnText: 'Je recherche un financement',
+    secondaryBtnHref: '#financer',
+    image: '/images/image-hero-1.jpeg',
+    category: 'OMYA INVEST',
+  },
+  {
+    id: 2,
+    // tag: 'PARCOURS INVESTISSEUR — AGENTS À CAPACITÉ DE FINANCEMENT',
+    titleLine1: 'Vous souhaitez',
+    titleHighlight: 'investir ?',
+    titleLine2: '',
+    description: 'Pour les agents à capacité de financement : OMYA INVEST vous accompagne (en fonction de vos besoins, de vos objectifs, de vos contraintes et de votre horizon temporel) vers les placements les plus sûrs et les plus rentables.',
+    primaryBtnText: 'Découvrir nos solutions',
+    primaryBtnHref: '#investir',
+    secondaryBtnText: 'Nos 7 services',
+    secondaryBtnHref: '#nos-solutions',
+    image: '/images/image-hero-2.jpeg',
+    category: 'Investir',
+  },
+  {
+    id: 3,
+    // tag: 'PARCOURS ÉMETTEURS & ÉTATS — AGENTS À BESOIN DE FINANCEMENT',
+    titleLine1: 'Vous recherchez un',
+    titleHighlight: 'financement ?',
+    titleLine2: '',
+    description: 'Pour les agents à besoin de financement : OMYA INVEST structure pour vous les opérations d’emprunt obligataire, d’ouverture du capital, de financement structuré, …',
+    primaryBtnText: 'Présenter mon projet',
+    primaryBtnHref: '#financer',
+    secondaryBtnText: 'Structuration financière',
+    secondaryBtnHref: '#solutions-structuration',
+    image: '/images/image-hero-3.jpeg',
+    category: 'Financer',
+  },
+  {
+    id: 4,
+    // tag: 'APPORTEURS D\'AFFAIRES & PARTENAIRES',
+    titleLine1: 'Partenariats &',
+    titleHighlight: 'Alliances',
+    titleLine2: 'fiables.',
+    description: 'OMYA INVEST accueille les apporteurs d’affaires et des partenaires fiables et dont les apports cadrent avec ses activités.',
+    primaryBtnText: 'Devenir partenaire',
+    primaryBtnHref: '#contact',
+    secondaryBtnText: 'Nos partenaires',
+    secondaryBtnHref: '#partenaires',
+    image: '/images/image-hero-6.jpeg',
+    category: 'Partenaires',
+  },
+];
+
+// Animation variants for smooth horizontal slider motion
+const slideVariants = {
+  enter: (direction) => ({
+    x: direction > 0 ? '100%' : '-100%',
+    opacity: 0.2,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+    transition: {
+      x: { type: 'spring', stiffness: 300, damping: 30 },
+      opacity: { duration: 0.4 },
+    },
+  },
+  exit: (direction) => ({
+    x: direction < 0 ? '100%' : '-100%',
+    opacity: 0,
+    transition: {
+      x: { type: 'spring', stiffness: 300, damping: 30 },
+      opacity: { duration: 0.3 },
+    },
+  }),
 };
 
-export default function HeroSection() {
-  const [active, setActive] = useState(0);
-  const [direction, setDirection] = useState(1);
-  const [imgError, setImgError] = useState(false);
+export default function HeroSection({ onSelectView }) {
+  const [[page, direction], setPage] = useState([0, 0]);
+  const [isPlaying, setIsPlaying] = useState(true);
 
-  /* 9 Hero images from public/images/ */
-  const slides = [
-    { image: '/images/image-hero-1.jpeg' },
-    { image: '/images/image-hero-2.jpeg' },
-    { image: '/images/image-hero-3.jpeg' },
-    { image: '/images/image-hero-4.jpeg' },
-    // { image: '/images/image-hero-5.jpeg' },
-    // { image: '/images/image-hero-6.jpeg' },
-    // { image: '/images/image-hero-7.jpeg' },
-    // { image: '/images/image-hero-8.jpeg' },
-    // { image: '/images/image-hero-9.jpeg' },
-  ];
+  const slideIndex = Math.abs(page % HERO_SLIDES.length);
 
-  /* Auto-advance background image every 5 seconds */
-  useEffect(() => {
-    const id = setInterval(() => {
-      setDirection(1);
-      setActive(prev => (prev + 1) % slides.length);
-    }, 5000);
-    return () => clearInterval(id);
-  }, [slides.length]);
-
-  const goTo = (idx) => {
-    setDirection(idx > active ? 1 : -1);
-    setActive(idx);
+  const paginate = (newDirection) => {
+    setPage([page + newDirection, newDirection]);
   };
-  const prev = () => { setDirection(-1); setActive((active - 1 + slides.length) % slides.length); };
-  const next = () => { setDirection(1);  setActive((active + 1) % slides.length); };
 
-  const slide = slides[active];
+  const goToSlide = (index) => {
+    const dir = index > slideIndex ? 1 : -1;
+    setPage([index, dir]);
+  };
+
+  // Auto-play timer (7s)
+  useEffect(() => {
+    if (!isPlaying) return;
+    const timer = setInterval(() => {
+      paginate(1);
+    }, 7000);
+    return () => clearInterval(timer);
+  }, [page, isPlaying]);
+
+  const activeSlide = HERO_SLIDES[slideIndex];
+
+  const handleCtaClick = (e, href) => {
+    e.preventDefault();
+    const { viewId, anchorId } = resolveAnchor(href);
+    if (onSelectView) onSelectView(viewId, anchorId);
+  };
 
   return (
-    <section id="accueil" className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-slate-950">
+    <section id="accueil" className="relative bg-white text-slate-800 pt-6 pb-12 overflow-hidden font-sans select-none border-b border-slate-200">
       
-      {/* ── Background Image Slider (Only images animate automatically) ── */}
-      <AnimatePresence custom={direction} initial={false}>
-        <motion.div
-          key={`bg-${active}`}
-          custom={direction}
-          variants={imgSlide}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url(${slide.image})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
-      </AnimatePresence>
+      {/* PURE WHITE LEFT & RIGHT SIDES / MARGINS */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-      {/* ── Ultra-Clear Background Overlay (Images hyper claires et bien visibles) ── */}
-      <div 
-        className="absolute inset-0 z-0 pointer-events-none" 
-        style={{
-          background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.20) 0%, rgba(15, 23, 42, 0.08) 50%, rgba(15, 23, 42, 0.25) 100%)',
-        }} 
-      />
+        {/* ── MAIN SWIPER SLIDER CAROUSEL CONTAINER (Navy Blue Card on White Background) ── */}
+        <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-300 bg-[#001D3D] min-h-[500px] lg:min-h-[540px] flex flex-col justify-between">
+          
+          {/* SLIDE BACKGROUND IMAGE & SLIDE CONTENT */}
+          <AnimatePresence initial={false} custom={direction} mode="popLayout">
+            <motion.div
+              key={page}
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="absolute inset-0 z-0 flex items-center"
+            >
+              {/* Background Image */}
+              <div
+                className="absolute inset-0 bg-cover bg-right bg-no-repeat z-0"
+                style={{
+                  backgroundImage: `url('${activeSlide.image}')`,
+                }}
+              />
 
-      {/* ── Slide Navigation Buttons (Subtle On Edges) ── */}
-      <button
-        onClick={prev}
-        aria-label="Previous Image"
-        className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-slate-900/40 backdrop-blur-md border border-white/30 flex items-center justify-center text-white hover:bg-sky-500 hover:border-sky-400 transition-all duration-300 shadow-lg"
-      >
-        <ChevronLeft className="w-6 h-6" />
-      </button>
+              {/* Gradient Overlays for crystal clear readability */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#001D3D] via-[#002E5B]/95 to-[#002E5B]/40 z-10" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#001D3D] via-transparent to-black/30 z-10" />
 
-      <button
-        onClick={next}
-        aria-label="Next Image"
-        className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-slate-900/40 backdrop-blur-md border border-white/30 flex items-center justify-center text-white hover:bg-sky-500 hover:border-sky-400 transition-all duration-300 shadow-lg"
-      >
-        <ChevronRight className="w-6 h-6" />
-      </button>
+              {/* Dot Pattern Overlay */}
+              <div
+                className="absolute inset-0 opacity-[0.05] z-10"
+                style={{
+                  backgroundImage: `radial-gradient(#FFFFFF 1.5px, transparent 1.5px)`,
+                  backgroundSize: '30px 30px',
+                }}
+              />
 
-      {/* ── Slide Indicators (9 Dots) ── */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-slate-950/50 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full">
-        {slides.map((_, i) => (
+              {/* Slide Text Content */}
+              <div className="relative z-20 p-8 sm:p-14 lg:p-16 max-w-3xl space-y-6">
+                
+                {/* Badge Tag */}
+                {/* <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-sm bg-white/10 border-l-4 border-white text-white font-nav text-[11px] sm:text-xs font-bold uppercase tracking-wider backdrop-blur-md">
+                  <ShieldCheck className="w-4 h-4 text-white" />
+                  <span>{activeSlide.tag}</span>
+                </div> */}
+
+                {/* Main Headline */}
+                <h1
+                  className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight"
+                  style={{ fontFamily: "'Open Sans', sans-serif" }}
+                >
+                  {activeSlide.titleLine1}{' '}
+                  <span className="text-white">
+                    {activeSlide.titleHighlight}
+                  </span>{' '}
+                  {activeSlide.titleLine2}
+                </h1>
+
+                {/* Paragraph Description */}
+                <p className="text-slate-100 text-xs sm:text-base leading-relaxed font-poppins font-light bg-[#001D3D]/80 p-5 rounded-md border border-slate-700/60 backdrop-blur-md">
+                  {activeSlide.description}
+                </p>
+
+                {/* Action CTA Buttons */}
+                <div className="flex flex-wrap gap-4 pt-2">
+                  <a href={activeSlide.primaryBtnHref} onClick={(e) => handleCtaClick(e, activeSlide.primaryBtnHref)} className="btn-bvmac-white">
+                    <span>{activeSlide.primaryBtnText}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </a>
+                  <a href={activeSlide.secondaryBtnHref} onClick={(e) => handleCtaClick(e, activeSlide.secondaryBtnHref)} className="btn-bvmac-outline-white">
+                    <span>{activeSlide.secondaryBtnText}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </a>
+                </div>
+
+              </div>
+
+            </motion.div>
+          </AnimatePresence>
+
+          {/* ── SIDE NAVIGATION ARROWS (LEFT / RIGHT) ── */}
           <button
-            key={i}
-            onClick={() => goTo(i)}
-            aria-label={`Slide ${i + 1}`}
-            className={`rounded-full transition-all duration-500 ${
-              i === active
-                ? 'w-6 h-2 bg-sky-400 shadow-[0_0_10px_#38BDF8]'
-                : 'w-2 h-2 bg-white/40 hover:bg-white/70'
-            }`}
-          />
-        ))}
-      </div>
+            onClick={() => paginate(-1)}
+            className="absolute left-3 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/90 border border-slate-300 hover:bg-[#002E5B] hover:text-white text-[#001D3D] transition-all flex items-center justify-center shadow-xl backdrop-blur-md group"
+            title="Diapositive précédente"
+          >
+            <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" />
+          </button>
 
-      {/* ── MAIN HERO CENTERED CONTENT (STATIC CONTAINER - NO RE-ANIMATION ON SLIDE CHANGE) ── */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 sm:px-8 py-16 flex items-center justify-center">
-        
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="w-full"
-        >
-          {/* Glassmorphic Container Card (Static) */}
-          <div className="bg-slate-950/70 backdrop-blur-2xl border border-white/35 shadow-[0_25px_70px_rgba(0,0,0,0.5)] rounded-3xl p-6 sm:p-10 md:p-12 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10 lg:gap-12 text-center md:text-left relative overflow-hidden group">
+          <button
+            onClick={() => paginate(1)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/90 border border-slate-300 hover:bg-[#002E5B] hover:text-white text-[#001D3D] transition-all flex items-center justify-center shadow-xl backdrop-blur-md group"
+            title="Diapositive suivante"
+          >
+            <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
+          </button>
+
+          {/* ── BOTTOM CAROUSEL TABS & CONTROLS ── */}
+          <div className="relative z-30 bg-[#001D3D]/95 backdrop-blur-md px-6 py-4 border-t border-white/20 flex flex-col sm:flex-row items-center justify-between gap-4">
             
-            {/* Ambient Glow Effects */}
-            <div className="absolute -top-24 -left-24 w-48 h-48 bg-sky-400/20 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-cyan-400/20 rounded-full blur-3xl pointer-events-none" />
-
-            {/* 1. LEFT SIDE: OMYA Invest Logo (Slightly reduced size for optimal message clearance) */}
-            <div className="shrink-0 flex items-center justify-center p-4 sm:p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/25 shadow-xl transition-transform duration-300 hover:scale-105">
-              {!imgError ? (
-                <img 
-                  src="/images/logo-omya.png" 
-                  alt="OMYA INVEST" 
-                  onError={() => setImgError(true)}
-                  className="h-12 sm:h-14 md:h-16 lg:h-18 w-auto object-contain filter drop-shadow-[0_4px_12px_rgba(255,255,255,0.4)]"
-                />
-              ) : (
-                <OmyaLogo light={true} className="h-12 sm:h-14 md:h-16 lg:h-18" />
-              )}
+            {/* Slide Category Tabs */}
+            <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto">
+              {HERO_SLIDES.map((slide, idx) => (
+                <button
+                  key={slide.id}
+                  onClick={() => goToSlide(idx)}
+                  className={`px-3.5 py-1.5 rounded-sm font-nav text-xs font-bold uppercase transition-all duration-300 flex items-center gap-2 ${
+                    idx === slideIndex
+                      ? 'bg-white text-[#001D3D] shadow-md'
+                      : 'bg-white/10 text-slate-300 hover:bg-white/20 hover:text-white border border-slate-700/50'
+                  }`}
+                >
+                  <span className="font-mono text-[10px]">0{slide.id}</span>
+                  <span>{slide.category}</span>
+                </button>
+              ))}
             </div>
 
-            {/* VERTICAL DIVIDER LINE (Desktop) */}
-            <div className="hidden md:block w-px h-24 bg-gradient-to-b from-transparent via-sky-400/60 to-transparent shrink-0" />
+            {/* Controls & Progress */}
+            <div className="flex items-center gap-4 text-xs">
+              <button
+                onClick={() => setIsPlaying(!isPlaying)}
+                className="flex items-center gap-1.5 text-slate-300 hover:text-white transition font-nav uppercase font-semibold text-[11px]"
+                title={isPlaying ? 'Mettre en pause' : 'Lecture automatique'}
+              >
+                {isPlaying ? <Pause className="w-3.5 h-3.5 text-white" /> : <Play className="w-3.5 h-3.5 text-white" />}
+                <span>{isPlaying ? 'Pause' : 'Play'}</span>
+              </button>
 
-            {/* HORIZONTAL DIVIDER LINE (Mobile) */}
-            <div className="block md:hidden w-28 h-px bg-gradient-to-r from-transparent via-sky-400/60 to-transparent shrink-0" />
+              <div className="h-4 w-px bg-slate-700" />
 
-            {/* 2. RIGHT SIDE: Text Message (Displayed prominently and legibly) */}
-            <div className="space-y-2.5 max-w-xl flex-1 flex flex-col items-center md:items-start">
-              
-              {/* Line 1 */}
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white leading-tight tracking-tight drop-shadow-md">
-                Certaines choses ne se précipitent pas.
-              </h1>
-
-              {/* Line 2 */}
-              <p className="text-lg sm:text-xl lg:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-sky-200 to-cyan-300 leading-snug drop-shadow-sm">
-                Notre site arrive prochainement.
-              </p>
-
+              <span className="font-mono font-bold text-slate-200 text-xs">
+                <span className="text-white">0{slideIndex + 1}</span> / 0{HERO_SLIDES.length}
+              </span>
             </div>
 
           </div>
-        </motion.div>
+
+          {/* Active progress bar */}
+          <div className="relative z-30 h-1 w-full bg-slate-900 overflow-hidden">
+            <motion.div
+              key={page}
+              initial={{ width: '0%' }}
+              animate={{ width: isPlaying ? '100%' : '0%' }}
+              transition={{ duration: isPlaying ? 7 : 0, ease: 'linear' }}
+              className="h-full bg-white"
+            />
+          </div>
+
+        </div>
 
       </div>
-
     </section>
   );
 }

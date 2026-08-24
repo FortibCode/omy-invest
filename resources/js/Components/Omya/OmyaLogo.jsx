@@ -7,8 +7,8 @@ export default function OmyaLogo({ className = "h-9", light = false }) {
   return (
     <div className={`inline-flex flex-col items-center justify-center select-none ${className}`}>
       {/* SVG Vector Reproduction of OMYA INVEST Logo */}
-      <svg 
-        viewBox="0 0 320 75" 
+      <svg
+        viewBox="0 0 222 75"
         className="h-full w-auto"
         fill="none" 
         xmlns="http://www.w3.org/2000/svg"

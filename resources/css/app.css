@@ -1,606 +1,348 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Poppins:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Open+Sans:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    background-color: #FFFFFF;
-    color: #1F2937;
+    font-family: 'Poppins', 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #F4F6FA;
+    color: #001D3D;
     overflow-x: hidden;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Open Sans', 'Exo 2', sans-serif;
+    letter-spacing: -0.01em;
+    font-weight: 700;
+  }
+
+  .font-nav {
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 600;
+  }
+
+  .font-serif-luxury {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .font-poppins {
+    font-family: 'Poppins', sans-serif;
   }
 }
 
 /* ─────────────────────────────────────────────────
-   CSS VARIABLES — Palette Consult
+   COLOR PALETTE — NAVY BLUE & WHITE ONLY
+   Primary Navy: #001D3D (Deep Navy) & #002E5B (Navy Blue)
+   Pure White: #FFFFFF
 ───────────────────────────────────────────────── */
 :root {
-  --navy: #0369A1;
-  --navy-dark: #0C4A6E;
-  --navy-mid: #0284C7;
-  --navy-light: #0EA5E9;
-  --orange: #0EA5E9;
-  --orange-dark: #0284C7;
-  --orange-light: #38BDF8;
-  --white: #FFFFFF;
-  --gray-50: #F0F9FF;
-  --gray-100: #F1F5F9;
-  --gray-600: #4B5563;
-  --gray-800: #1F2937;
+  --bvmac-navy: #002E5B;
+  --bvmac-navy-mid: #0A3D78;
+  --bvmac-navy-light: #1A4E8F;
+  --bvmac-navy-dark: #001D3D;
+
+  --bvmac-white: #FFFFFF;
+  --bvmac-white-soft: #F4F6FA;
+
+  --text-dark: #001D3D;
+  --text-mid: #1E293B;
+  --text-muted: #64748B;
+  --text-light: #FFFFFF;
+
+  --border-light: #E2E8F0;
+  --border-mid: #CBD5E1;
 }
 
 /* ─────────────────────────────────────────────────
-   BUTTON SYSTEM — Consult Style
+   ACCESSIBILITY — visible keyboard focus
+   Un site financier régulé doit rester navigable au clavier
+───────────────────────────────────────────────── */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--bvmac-navy);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ─────────────────────────────────────────────────
+   FINANCIAL FIGURES — tabular numerals
+   Les cours, variations et statistiques doivent s'aligner en colonne
+───────────────────────────────────────────────── */
+.font-mono {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─────────────────────────────────────────────────
+   BUTTON SYSTEM — WHITE & NAVY BLUE ONLY
 ───────────────────────────────────────────────── */
 
-/* Primary Button — Orange */
-.btn-orange {
+/* Navy Blue Button */
+.btn-bvmac-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%);
-  color: #ffffff;
+  gap: 0.55rem;
+  background-color: #002E5B;
+  color: #FFFFFF;
+  font-family: 'Exo 2', sans-serif;
   font-weight: 700;
   font-size: 0.82rem;
   letter-spacing: 0.04em;
-  padding: 0.85rem 2rem;
-  border-radius: 0.5rem;
-  border: none;
-  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  padding: 0.8rem 2rem;
+  border-radius: 0.35rem;
+  border: 2px solid #002E5B;
+  box-shadow: 0 4px 16px rgba(0, 46, 91, 0.25);
+  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   text-decoration: none;
 }
 
-.btn-orange:hover {
-  background: linear-gradient(135deg, #0369A1 0%, #0284C7 100%);
-  box-shadow: 0 10px 28px rgba(14, 165, 233, 0.55);
+.btn-bvmac-primary:hover {
+  background-color: #FFFFFF;
+  border-color: #FFFFFF;
+  color: #001D3D;
+  box-shadow: 0 6px 24px rgba(255, 255, 255, 0.4);
   transform: translateY(-2px);
-  color: #ffffff;
 }
 
-/* Primary Button — Navy */
-.btn-navy {
+/* White Button (for dark navy sections) */
+.btn-bvmac-white {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  background: linear-gradient(135deg, #0C4A6E 0%, #0369A1 100%);
-  color: #ffffff;
-  font-weight: 700;
+  gap: 0.55rem;
+  background-color: #FFFFFF;
+  color: #001D3D;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
   font-size: 0.82rem;
   letter-spacing: 0.04em;
-  padding: 0.85rem 2rem;
-  border-radius: 0.5rem;
-  border: none;
-  box-shadow: 0 6px 20px rgba(3, 105, 161, 0.4);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  padding: 0.8rem 2rem;
+  border-radius: 0.35rem;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.3);
+  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   text-decoration: none;
 }
 
-.btn-navy:hover {
-  background: linear-gradient(135deg, #0369A1 0%, #0284C7 100%);
-  box-shadow: 0 10px 28px rgba(3, 105, 161, 0.55);
+.btn-bvmac-white:hover {
+  background-color: #002E5B;
+  border-color: #002E5B;
+  color: #FFFFFF;
+  box-shadow: 0 6px 24px rgba(0, 46, 91, 0.5);
   transform: translateY(-2px);
-  color: #ffffff;
 }
 
 /* Outline Button */
-.btn-outline-navy {
+.btn-bvmac-outline {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.55rem;
   background: transparent;
-  color: var(--navy);
+  color: #002E5B;
+  font-family: 'Exo 2', sans-serif;
   font-weight: 700;
   font-size: 0.82rem;
   letter-spacing: 0.04em;
-  padding: 0.85rem 2rem;
-  border-radius: 0.5rem;
-  border: 2px solid var(--navy);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  padding: 0.8rem 2rem;
+  border-radius: 0.35rem;
+  border: 2px solid #002E5B;
+  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   text-decoration: none;
 }
 
-.btn-outline-navy:hover {
-  background: var(--navy);
-  color: #fff;
+.btn-bvmac-outline:hover {
+  background-color: #002E5B;
+  color: #FFFFFF;
   transform: translateY(-2px);
 }
 
-/* Keeps old btn-primary for compatibility */
-.btn-primary {
+/* Outline Button (for dark navy sections) */
+.btn-bvmac-outline-white {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%);
-  color: #ffffff;
+  gap: 0.55rem;
+  background: transparent;
+  color: #FFFFFF;
+  font-family: 'Exo 2', sans-serif;
   font-weight: 700;
   font-size: 0.82rem;
   letter-spacing: 0.04em;
-  padding: 0.85rem 2rem;
-  border-radius: 0.5rem;
-  border: none;
-  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  padding: 0.8rem 2rem;
+  border-radius: 0.35rem;
+  border: 2px solid #FFFFFF;
+  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   text-decoration: none;
 }
 
-.btn-primary:hover {
-  background: linear-gradient(135deg, #0369A1 0%, #0284C7 100%);
-  box-shadow: 0 10px 28px rgba(14, 165, 233, 0.55);
-  transform: translateY(-2px);
-  color: #ffffff;
-}
-
-/* btn-secondary for compatibility */
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background: transparent;
-  color: var(--navy);
-  font-weight: 700;
-  font-size: 0.82rem;
-  letter-spacing: 0.04em;
-  padding: 0.85rem 2rem;
-  border-radius: 0.5rem;
-  border: 2px solid var(--navy);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-}
-
-.btn-secondary:hover {
-  background: var(--navy);
-  color: #fff;
+.btn-bvmac-outline-white:hover {
+  background-color: #FFFFFF;
+  color: #001D3D;
   transform: translateY(-2px);
 }
 
-/* Small size modifier */
 .btn-sm {
-  padding: 0.55rem 1.25rem;
+  padding: 0.55rem 1.4rem;
   font-size: 0.75rem;
 }
 
 /* ─────────────────────────────────────────────────
-   CARD SYSTEM — Consult Style
+   SECTION TAGS — WHITE & NAVY BLUE
 ───────────────────────────────────────────────── */
-
-/* White card with shadow */
-.consult-card {
-  background: #FFFFFF;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 24px rgba(3, 105, 161, 0.08), 0 1px 3px rgba(0,0,0,0.04);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(3, 105, 161, 0.08);
-}
-
-.consult-card:hover {
-  box-shadow: 0 12px 40px rgba(3, 105, 161, 0.15);
-  transform: translateY(-4px);
-}
-
-/* Navy card */
-.navy-card {
-  background: var(--navy);
-  border-radius: 0.75rem;
-  color: #fff;
-  box-shadow: 0 8px 32px rgba(3, 105, 161, 0.3);
-  transition: all 0.3s ease;
-}
-
-/* Glass panel — restyled for light theme */
-.glass-panel-global {
-  background: #FFFFFF;
-  border: 1px solid rgba(3, 105, 161, 0.1);
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 24px rgba(3, 105, 161, 0.08);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.glass-panel-global:hover {
-  box-shadow: 0 12px 40px rgba(3, 105, 161, 0.14);
-  transform: translateY(-3px);
-  border-color: rgba(3, 105, 161, 0.2);
-}
-
-/* Blue card kept for market table */
-.glass-card-blue {
-  background: #F0F9FF;
-  border: 1px solid rgba(3, 105, 161, 0.12);
-  border-radius: 0.75rem;
-  box-shadow: 0 2px 12px rgba(3, 105, 161, 0.06);
-  transition: all 0.3s ease;
-}
-
-.glass-card-blue:hover {
-  border-color: rgba(3, 105, 161, 0.25);
-  box-shadow: 0 8px 24px rgba(3, 105, 161, 0.12);
-  transform: translateY(-2px);
-}
-
-/* ─────────────────────────────────────────────────
-   SECTION BACKGROUNDS
-───────────────────────────────────────────────── */
-
-/* White section */
-.section-white {
-  background: #FFFFFF;
-}
-
-/* Alternate light blue-gray */
-.section-light {
-  background: #F0F9FF;
-}
-
-/* Navy section */
-.section-navy {
-  background: linear-gradient(135deg, #0C4A6E 0%, #0369A1 100%);
-  color: #FFFFFF;
-}
-
-/* Navy diagonal split */
-.section-navy-split {
-  position: relative;
-  overflow: hidden;
-}
-
-/* Section dividers */
-.section-divider {
-  border-top: 1px solid rgba(3, 105, 161, 0.08);
-}
-
-/* ─────────────────────────────────────────────────
-   TYPOGRAPHY
-───────────────────────────────────────────────── */
-
-.section-tag {
-  display: inline-block;
+.section-tag-bvmac {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Exo 2', sans-serif;
   font-size: 0.7rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--orange);
-  margin-bottom: 0.5rem;
+  letter-spacing: 0.2em;
+  color: #002E5B;
+  margin-bottom: 0.75rem;
 }
 
-.section-tag::before {
-  content: '';
-  display: inline-block;
-  width: 2rem;
-  height: 2px;
-  background: var(--orange);
-  vertical-align: middle;
-  margin-right: 0.5rem;
-}
-
-.section-title {
-  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-  font-weight: 900;
-  color: var(--navy-dark);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-}
-
-.navy-gradient-text {
-  background: linear-gradient(135deg, #0369A1 0%, #0EA5E9 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.orange-gradient-text {
-  background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* kept for compatibility */
-.blue-gradient-text {
-  background: linear-gradient(135deg, #0369A1 0%, #0EA5E9 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.gold-gradient-text {
-  background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* White variant — for use on dark navy section backgrounds where navy text has no contrast */
+.section-tag-light {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #FFFFFF;
+  margin-bottom: 0.75rem;
 }
 
 /* ─────────────────────────────────────────────────
-   ORANGE ACCENT DECORATION
+   CARD SYSTEM — WHITE & NAVY BLUE
 ───────────────────────────────────────────────── */
 
-.orange-bar {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
+.bvmac-card {
+  background: #FFFFFF;
+  border-radius: 0.5rem;
+  border: 1px solid #E2E8F0;
+  border-left: 4px solid transparent;
+  box-shadow: 0 2px 12px rgba(0, 29, 61, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.orange-bar::before {
-  content: '';
-  display: block;
-  width: 4px;
-  min-height: 3.5rem;
-  background: var(--orange);
-  border-radius: 2px;
-  flex-shrink: 0;
-  margin-top: 0.2rem;
+.bvmac-card:hover {
+  border-left-color: #002E5B;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 29, 61, 0.12);
+}
+
+.bvmac-card-dark {
+  background: #001D3D;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-left: 4px solid transparent;
+  border-radius: 0.5rem;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bvmac-card-dark:hover {
+  border-left-color: #FFFFFF;
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Glass card — frosted dark card for sections on the #0B192C background (border color set per-card via utility classes) */
+.glass-card-dark {
+  background: rgba(10, 17, 40, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-dark:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Hero Floating Cards */
+.bvmac-floating-card-white {
+  background: #FFFFFF;
+  color: #001D3D;
+  border-radius: 0.5rem;
+  padding: 2.25rem 2rem;
+  box-shadow: 0 16px 40px rgba(0, 29, 61, 0.15);
+  border-top: 4px solid #002E5B;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bvmac-floating-card-navy {
+  background: #002E5B;
+  color: #FFFFFF;
+  border-radius: 0.5rem;
+  padding: 2.25rem 2rem;
+  border-top: 4px solid #FFFFFF;
+  box-shadow: 0 16px 40px rgba(0, 46, 91, 0.45);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bvmac-floating-card-navy:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 52px rgba(0, 46, 91, 0.6);
 }
 
 /* ─────────────────────────────────────────────────
-   ANIMATIONS
+   ANIMATIONS & SCROLL UTILITIES
 ───────────────────────────────────────────────── */
-
 @keyframes ticker {
   0% { transform: translate3d(0, 0, 0); }
   100% { transform: translate3d(-50%, 0, 0); }
 }
+
 .animate-ticker {
   display: inline-flex;
   white-space: nowrap;
   animation: ticker 40s linear infinite;
 }
+
 .animate-ticker:hover {
   animation-play-state: paused;
 }
 
-@keyframes floatUp {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
 }
-.animate-float {
-  animation: floatUp 6s ease-in-out infinite;
+::-webkit-scrollbar-track {
+  background: #F4F6FA;
 }
-
-@keyframes countUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+::-webkit-scrollbar-thumb {
+  background: #002E5B;
+  border-radius: 4px;
 }
-.animate-count-up {
-  animation: countUp 0.4s ease-out forwards;
-}
-
-/* Counter badge pulse */
-@keyframes softPulse {
-  0%, 100% { box-shadow: 0 8px 32px rgba(14, 165, 233, 0.3); }
-  50% { box-shadow: 0 12px 40px rgba(14, 165, 233, 0.5); }
-}
-.badge-pulse {
-  animation: softPulse 3s ease-in-out infinite;
-}
-
-/* Shimmer effect for images */
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-/* ─────────────────────────────────────────────────
-   ORANGE HOVER UNDERLINE (for nav links)
-───────────────────────────────────────────────── */
-
-.nav-link-hover {
-  position: relative;
-}
-
-.nav-link-hover::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--orange);
-  transition: width 0.25s ease;
-}
-
-.nav-link-hover:hover::after {
-  width: 100%;
-}
-
-/* ─────────────────────────────────────────────────
-   STAT COUNTER CARD
-───────────────────────────────────────────────── */
-
-.stat-card {
-  background: var(--navy);
-  color: #fff;
-  padding: 2rem 1.5rem;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: -30px;
-  right: -30px;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.05);
-}
-
-.stat-number {
-  font-size: 2.5rem;
-  font-weight: 900;
-  font-family: 'Outfit', sans-serif;
-  line-height: 1;
-}
-
-.stat-sup {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--orange);
-  vertical-align: super;
-}
-
-/* ─────────────────────────────────────────────────
-   TICKER BAR (navy)
-───────────────────────────────────────────────── */
-
-.ticker-bar {
-  background: var(--navy-dark);
-  border-bottom: 2px solid var(--orange);
-  color: #FFFFFF;
-}
-
-/* ─────────────────────────────────────────────────
-   MARKET TABLE (light)
-───────────────────────────────────────────────── */
-
-.market-row {
-  background: #FFFFFF;
-  border: 1px solid rgba(3, 105, 161, 0.08);
-  border-radius: 0.5rem;
-  padding: 0.875rem 1rem;
-  transition: all 0.2s ease;
-}
-
-.market-row:hover {
-  border-color: rgba(14, 165, 233, 0.4);
-  box-shadow: 0 4px 16px rgba(3, 105, 161, 0.1);
-  transform: translateX(4px);
-}
-
-/* ─────────────────────────────────────────────────
-   NEON COMPATIBILITY (kept but redefined)
-───────────────────────────────────────────────── */
-
-.neon-blue { box-shadow: 0 0 12px rgba(3, 105, 161, 0.3); }
-.neon-gold { box-shadow: 0 0 12px rgba(14, 165, 233, 0.4); }
-.neon-green { box-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
-
-/* ─────────────────────────────────────────────────
-   GOLD COMPATIBILITY
-───────────────────────────────────────────────── */
-
-.gold-bg-gradient {
-  background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%);
-}
-
-/* ─────────────────────────────────────────────────
-   CUSTOM SCROLLBAR
-───────────────────────────────────────────────── */
-
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #F1F5F9; }
-::-webkit-scrollbar-thumb { background: #0369A1; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #0EA5E9; }
-
-/* ─────────────────────────────────────────────────
-   HERO BANNER
-───────────────────────────────────────────────── */
-
-.hero-banner {
-  position: relative;
-  background-color: var(--navy-dark);
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  min-height: 420px;
-}
-
-.hero-banner-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    160deg,
-    rgba(12, 74, 110, 0.88) 0%,
-    rgba(3, 105, 161, 0.75) 50%,
-    rgba(12, 74, 110, 0.85) 100%
-  );
-}
-
-/* ─────────────────────────────────────────────────
-   PHOTO STACK (WhyChooseUs)
-───────────────────────────────────────────────── */
-
-.photo-stack {
-  position: relative;
-  height: 420px;
-}
-
-.photo-stack .photo-main {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 70%;
-  height: 320px;
-  object-fit: cover;
-  border-radius: 0.75rem;
-  box-shadow: 0 12px 40px rgba(3, 105, 161, 0.2);
-}
-
-.photo-stack .photo-secondary {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 60%;
-  height: 240px;
-  object-fit: cover;
-  border-radius: 0.75rem;
-  box-shadow: 0 12px 40px rgba(3, 105, 161, 0.25);
-  border: 4px solid #FFFFFF;
-}
-
-.photo-stack .counter-badge {
-  position: absolute;
-  bottom: 80px;
-  left: 0;
-  background: var(--navy);
-  color: #FFFFFF;
-  padding: 1rem 1.25rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 8px 32px rgba(3, 105, 161, 0.3);
-  text-align: center;
-  z-index: 10;
-  min-width: 120px;
-}
-
-/* ─────────────────────────────────────────────────
-   CTA BANNER
-───────────────────────────────────────────────── */
-
-.cta-banner {
-  background: linear-gradient(135deg, #0C4A6E 0%, #0369A1 60%, #0C4A6E 100%);
-  position: relative;
-  overflow: hidden;
-}
-
-.cta-banner::before {
-  content: '';
-  position: absolute;
-  top: -100px;
-  right: -100px;
-  width: 400px;
-  height: 400px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.03);
-}
-
-.cta-banner::after {
-  content: '';
-  position: absolute;
-  bottom: -80px;
-  left: -80px;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  background: rgba(14, 165, 233, 0.05);
+::-webkit-scrollbar-thumb:hover {
+  background: #001D3D;
 }

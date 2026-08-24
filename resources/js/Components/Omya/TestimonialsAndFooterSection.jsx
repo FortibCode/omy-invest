@@ -436,7 +436,7 @@ export default function TestimonialsAndFooterSection() {
                 </motion.div>
                 <motion.div className="flex items-center gap-2" whileHover={{ x: 3 }}>
                   <Mail className="w-4 h-4 text-sky-400 shrink-0" />
-                  <span>contact@omyainvest.com</span>
+                  <span>contact@omya-invest.com</span>
                 </motion.div>
               </div>
 

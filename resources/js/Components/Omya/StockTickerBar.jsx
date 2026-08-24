@@ -1,131 +1,122 @@
-import React, { useEffect, useState } from 'react';
-import { ArrowUpRight, ArrowDownRight, User, Globe, ChevronDown } from 'lucide-react';
-import { useLanguage } from '@/Context/LanguageContext';
+import React, { useState, useEffect } from 'react';
 
-export default function StockTickerBar({ onOpenAuth }) {
-  const { currentLang, changeLanguage, t } = useLanguage();
-  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+/**
+ * StockTickerBar Component — Barre de cotation 100% DYNAMIQUE issue du serveur API Laravel
+ */
 
-  // Dynamic Stock Data state with live price fluctuation
-  const [stockItems, setStockItems] = useState([
-    { name: 'BVMAC ALL SHARE', value: 197.45, change: '+0.85%', positive: true },
-    { name: 'BVMAC 10', value: 156.78, change: '+0.56%', positive: true },
-    { name: 'CAC 40', value: 7984.21, change: '+0.25%', positive: true },
-    { name: 'DOW JONES', value: 39065.26, change: '+0.35%', positive: true },
-    { name: 'PÉTROLE BRENT', value: 83.45, change: '-0.12%', positive: false },
-    { name: 'OR (GOLD)', value: 2342.10, change: '+0.45%', positive: true },
-    { name: 'SAFACAM (BVMAC)', value: 23500, change: '+1.20%', positive: true },
-    { name: 'SOCAPALM (BVMAC)', value: 48000, change: '+0.95%', positive: true },
-  ]);
+export default function StockTickerBar({ speed = 45 }) {
+  const [tickerItems, setTickerItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentTime, setCurrentTime] = useState('');
+  const [sessionDate, setSessionDate] = useState('');
 
-  // Simulate realistic real-time price updates every 3 seconds
+  // 1. Horloge & Date de séance dynamiques (Temps réel)
   useEffect(() => {
-    const interval = setInterval(() => {
-      setStockItems((prev) =>
-        prev.map((item) => {
-          if (Math.random() > 0.4) {
-            const delta = (Math.random() - 0.48) * (item.value > 1000 ? 5 : 0.2);
-            const newValue = Math.max(1, item.value + delta);
-            const isPos = delta >= 0;
-            return {
-              ...item,
-              value: parseFloat(newValue.toFixed(2)),
-              positive: isPos,
-              change: `${isPos ? '+' : ''}${(delta / item.value * 100).toFixed(2)}%`,
-            };
-          }
-          return item;
-        })
-      );
-    }, 3000);
+    const updateDateTime = () => {
+      const now = new Date();
+
+      // Heure en direct (GMT+1 Yaoundé / Brazzaville)
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      setCurrentTime(`${hours}:${minutes} (GMT+1)`);
+
+      // Date de séance dynamique en français
+      const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+      let formattedDate = now.toLocaleDateString('fr-FR', options);
+      formattedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+      setSessionDate(formattedDate);
+    };
+
+    updateDateTime();
+    const interval = setInterval(updateDateTime, 30000);
     return () => clearInterval(interval);
   }, []);
 
-  const languages = [
-    { code: 'FR', label: 'Français', flag: '🇫🇷' },
-    { code: 'PT', label: 'Português', flag: '🇵🇹' },
-    { code: 'EN', label: 'English', flag: '🇬🇧' },
-  ];
+  // 2. Chargement 100% DYNAMIQUE des cotations réelles depuis le serveur Laravel (/api/market-data)
+  useEffect(() => {
+    const fetchApiData = async () => {
+      try {
+        const response = await fetch('/api/market-data');
+        if (response.ok) {
+          const json = await response.json();
+          if (json.status === 'success' && Array.isArray(json.data) && json.data.length > 0) {
+            const formatted = json.data.map((item) => ({
+              symbol: item.symbol,
+              value:
+                typeof item.value === 'number'
+                  ? item.value.toLocaleString('fr-FR') + ' ' + (item.unit || '')
+                  : item.value,
+              change: (item.isPositive ? '+' : '') + item.change + ' %',
+              isPositive: item.isPositive,
+            }));
+            setTickerItems(formatted);
+            setLoading(false);
+          }
+        }
+      } catch (err) {
+        console.error('Erreur lors du chargement API des données de marché:', err);
+      }
+    };
+
+    fetchApiData();
+    // Rafraîchissement dynamique toutes les 30 secondes
+    const interval = setInterval(fetchApiData, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Duplication dynamique pour défilement en boucle infinie sans saut
+  const duplicatedItems = [...tickerItems, ...tickerItems];
 
   return (
-    <div className="bg-[#082F49]/90 text-sky-200 text-xs border-b border-sky-800/80 relative z-30 font-sans backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-10">
-        
-        {/* Real-time Ticker Marquee */}
-        <div className="flex-1 overflow-hidden mr-4">
-          <div className="animate-ticker space-x-6">
-            {stockItems.concat(stockItems).map((stock, idx) => (
-              <div key={idx} className="inline-flex items-center space-x-1.5 font-mono">
-                <span className="font-bold text-sky-300 text-[11px]">{stock.name}:</span>
-                <span className="text-white font-black text-[11px]">
-                  {typeof stock.value === 'number' ? stock.value.toLocaleString('fr-FR') : stock.value}
+    <div className="bg-[#020611] text-slate-200 text-[11px] py-1.5 px-3 border-b border-slate-900 flex items-center justify-between font-sans relative z-50 select-none">
+      
+      {/* GAUCHE : SÉANCE DE COTATION DYNAMIQUE */}
+      <div className="shrink-0 flex items-center gap-1.5 pr-4 text-slate-300 font-medium">
+        <span className="w-4 h-4 rounded-full border border-slate-500 flex items-center justify-center text-[9px] font-bold text-[#38BDF8]">
+          A
+        </span>
+        <span className="uppercase tracking-wider font-semibold text-[10.5px]">
+          SÉANCE DE COTATION : {sessionDate || 'Chargement...'}
+        </span>
+      </div>
+
+      {/* CENTRE : TICKER DÉFILANT DYNAMIQUE (ISSU DE L'API) */}
+      <div className="flex-1 overflow-hidden mx-4 relative">
+        {loading || tickerItems.length === 0 ? (
+          <div className="text-slate-400 font-mono text-[11px] animate-pulse flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span>Chargement des cours réels du marché...</span>
+          </div>
+        ) : (
+          <div
+            className="animate-ticker flex items-center space-x-8 whitespace-nowrap"
+            style={{ animationDuration: `${speed}s` }}
+          >
+            {duplicatedItems.map((item, idx) => (
+              <div key={idx} className="inline-flex items-center space-x-1.5 font-mono text-[11px]">
+                {/* Flèche hausse / baisse */}
+                <span className={item.isPositive ? 'text-emerald-400 font-bold' : 'text-rose-500 font-bold'}>
+                  {item.isPositive ? '▲' : '▼'}
                 </span>
-                <span
-                  className={`inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-bold ${
-                    stock.positive
-                      ? 'text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 animate-pulse'
-                      : 'text-rose-400 bg-rose-950/60 border border-rose-500/30'
-                  }`}
-                >
-                  {stock.positive ? (
-                    <ArrowUpRight className="w-3 h-3 mr-0.5" />
-                  ) : (
-                    <ArrowDownRight className="w-3 h-3 mr-0.5" />
-                  )}
-                  {stock.change}
+
+                {/* Symbole */}
+                <span className="font-bold text-white uppercase">{item.symbol}</span>
+
+                {/* Valeur & Variation */}
+                <span className={item.isPositive ? 'text-emerald-400' : 'text-rose-400'}>
+                  {item.value} ({item.change})
                 </span>
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Right Controls: Trilingual Selector & Client Space */}
-        <div className="flex items-center space-x-4 shrink-0 font-medium">
-          
-          {/* Language Selector Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-              className="flex items-center space-x-1.5 text-sky-300 hover:text-white px-2 py-1 rounded-md hover:bg-sky-800/80 transition text-xs"
-            >
-              <Globe className="w-3.5 h-3.5 text-[#0284C7]" />
-              <span className="font-extrabold uppercase">{currentLang}</span>
-              <ChevronDown className="w-3 h-3 text-sky-400" />
-            </button>
-
-            {langDropdownOpen && (
-              <div className="absolute right-0 mt-1 w-32 bg-[#082F49] border border-sky-700 rounded-xl shadow-2xl py-1 z-50 text-xs">
-                {languages.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() => {
-                      changeLanguage(lang.code);
-                      setLangDropdownOpen(false);
-                    }}
-                    className={`w-full text-left px-3 py-1.5 flex items-center space-x-2 hover:bg-sky-800 transition ${
-                      currentLang === lang.code ? 'text-[#BAE6FD] font-bold bg-sky-800/60' : 'text-sky-300'
-                    }`}
-                  >
-                    <span>{lang.flag}</span>
-                    <span>{lang.label}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Client Space Button */}
-          <button
-            onClick={() => onOpenAuth('login', 'client')}
-            className="flex items-center space-x-1.5 text-[#BAE6FD] hover:text-white font-extrabold px-3 py-1 rounded-lg bg-[#0C4A6E] border border-[#0284C7]/60 hover:border-[#0284C7] transition shadow-sm text-xs uppercase tracking-wider"
-          >
-            <User className="w-3.5 h-3.5 text-[#0284C7]" />
-            <span>{t.clientSpace}</span>
-          </button>
-
-        </div>
-
+        )}
       </div>
+
+      {/* DROITE : HEURE DYNAMIQUE */}
+      <div className="shrink-0 pl-4 text-slate-400 font-mono text-[10.5px] hidden md:block">
+        Heure de Yaoundé / Brazzaville : {currentTime}
+      </div>
+
     </div>
   );
 }
