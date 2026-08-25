@@ -2,55 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { Landmark, ArrowRight, Coins, FileText, Building2, CheckCircle2, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { resolveAnchor } from '@/utils/viewAnchors';
+import { useLanguage } from '@/Context/LanguageContext';
 
-const OPERATIONS = [
-  {
-    id: 1,
-    num: '01',
-    title: 'Emprunt obligataire',
-    tag: 'Levée de Dette & Marché Obligataire',
-    desc: 'Montage, structuration et placement d\'émissions obligataires publiques (États, collectivités) ou privées (entreprises) sur le marché financier régional CEMAC.',
-    image: '/images/image-hero-4.jpeg',
-    btnText: 'Discuter d\'un emprunt obligataire',
-    btnHref: '#contact',
-    detail: 'Structuration de dette souveraine & d\'entreprise',
-  },
-  {
-    id: 2,
-    num: '02',
-    title: 'Ouverture du capital',
-    tag: 'Equity & Fonds Propres',
-    desc: 'Accompagnement rigoureux à l\'introduction en bourse (IPO sur la BVMAC) et augmentations de capital pour financer le développement et la croissance.',
-    image: '/images/image-hero-9.jpeg',
-    btnText: 'Découvrir l\'ouverture du capital',
-    btnHref: '#contact',
-    detail: 'Introduction BVMAC & Augmentation de capital',
-  },
-  {
-    id: 3,
-    num: '03',
-    title: 'Financement structuré',
-    tag: 'Ingénierie Financière Sur-Mesure',
-    desc: 'Ingénierie financière avancée pour la réalisation et le bouclage financier de grands projets d\'infrastructures, d\'énergie et d\'investissements d\'envergure.',
-    image: '/images/image-hero-7.jpeg',
-    btnText: 'Structurer un projet d\'infrastructure',
-    btnHref: '#contact',
-    detail: 'Projets d\'infrastructures & Financements complexes',
-  },
-  {
-    id: 4,
-    num: '04',
-    title: 'Conseil en financement',
-    tag: 'Accompagnement Stratégique Émetteurs',
-    desc: 'Conseil stratégique aux émetteurs pour déterminer les meilleures options de financement, optimiser la structure bilancielle et préparer l\'agrément COSUMAF.',
-    image: '/images/image-hero-5.jpeg',
-    btnText: 'Solliciter un conseil stratégique',
-    btnHref: '#contact',
-    detail: 'Optimisation bilancielle & Dossiers COSUMAF',
-  },
+// Métadonnées non traduisibles (image, ancre du bouton) — fusionnées avec le texte traduit par index.
+const OPERATIONS_META = [
+  { id: 1, image: '/images/image-hero-4.jpeg', btnHref: '#contact' },
+  { id: 2, image: '/images/image-hero-9.jpeg', btnHref: '#contact' },
+  { id: 3, image: '/images/image-hero-7.jpeg', btnHref: '#contact' },
+  { id: 4, image: '/images/image-hero-5.jpeg', btnHref: '#contact' },
 ];
 
 export default function IssuerPathwaySection({ onSelectView }) {
+  const { t } = useLanguage();
+  const OPERATIONS = OPERATIONS_META.map((meta, idx) => ({
+    ...meta,
+    num: String(idx + 1).padStart(2, '0'),
+    ...t.issuer.operations[idx],
+  }));
+
   const handleLinkClick = (e, href) => {
     e.preventDefault();
     const { viewId, anchorId } = resolveAnchor(href);
@@ -88,13 +57,13 @@ export default function IssuerPathwaySection({ onSelectView }) {
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-14">
           <div className="section-tag-light justify-center">
             <Landmark className="w-4 h-4 text-white" />
-            <span className="text-white">Agents à Besoin de Financement</span>
+            <span className="text-white">{t.issuer.tag}</span>
           </div>
           <h2 className="text-4xl sm:text-6xl font-bold text-white leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
-            Vous recherchez un financement ?
+            {t.issuer.title}
           </h2>
           <p className="text-slate-200 text-sm sm:text-base leading-relaxed bg-[#002E5B]/90 p-6 rounded-md border border-white/20 shadow-xl font-poppins">
-            « Pour les agents à besoin de financement (États, entreprises et institutionnels) : <strong className="text-white font-semibold">OMYA INVEST</strong> structure pour vous les opérations d’emprunt obligataire, d’ouverture du capital, de financement structuré, … »
+            {t.issuer.quote}
           </p>
         </div>
 
@@ -163,21 +132,21 @@ export default function IssuerPathwaySection({ onSelectView }) {
                       <button
                         onClick={() => setIsPlaying(!isPlaying)}
                         className="text-slate-300 hover:text-white text-xs font-nav font-bold uppercase mr-2"
-                        title={isPlaying ? 'Pause' : 'Lecture'}
+                        title={isPlaying ? t.common.pause : t.common.lecture}
                       >
                         {isPlaying ? <Pause className="w-4 h-4 inline text-white" /> : <Play className="w-4 h-4 inline text-white" />}
                       </button>
                       <button
                         onClick={() => setActiveOpIndex((prev) => (prev - 1 + OPERATIONS.length) % OPERATIONS.length)}
                         className="w-9 h-9 rounded-sm bg-[#001D3D] hover:bg-white hover:text-[#001D3D] transition flex items-center justify-center text-white border border-slate-700"
-                        title="Opération précédente"
+                        title={t.issuer.prevOp}
                       >
                         <ChevronLeft className="w-5 h-5" />
                       </button>
                       <button
                         onClick={() => setActiveOpIndex((prev) => (prev + 1) % OPERATIONS.length)}
                         className="w-9 h-9 rounded-sm bg-[#001D3D] hover:bg-white hover:text-[#001D3D] transition flex items-center justify-center text-white border border-slate-700"
-                        title="Opération suivante"
+                        title={t.issuer.nextOp}
                       >
                         <ChevronRight className="w-5 h-5" />
                       </button>
@@ -214,14 +183,14 @@ export default function IssuerPathwaySection({ onSelectView }) {
         <div className="bg-white text-[#001D3D] p-8 sm:p-10 rounded-xl border-2 border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
           <div className="space-y-1 text-center md:text-left">
             <h4 className="text-xl sm:text-2xl font-bold text-[#002E5B]" style={{ fontFamily: "'Open Sans', sans-serif" }}>
-              Vous êtes un État, une Entreprise publique/privée ou un Institutionnel ?
+              {t.issuer.bannerTitle}
             </h4>
             <p className="text-xs sm:text-sm text-slate-600 font-poppins">
-              Nos experts en ingénierie financière et développement d'affaires sont à votre disposition à Brazzaville et dans toute la zone CEMAC.
+              {t.issuer.bannerDesc}
             </p>
           </div>
           <a href="#contact" onClick={(e) => handleLinkClick(e, '#contact')} className="btn-bvmac-primary text-xs shrink-0">
-            <span>Présenter mon projet</span>
+            <span>{t.issuer.bannerBtn}</span>
             <ArrowRight className="w-4 h-4" />
           </a>
         </div>

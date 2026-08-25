@@ -2,8 +2,10 @@ import React from 'react';
 import { Newspaper, Calendar, ArrowRight, ShieldCheck, FileText, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { resolveAnchor } from '@/utils/viewAnchors';
+import { useLanguage } from '@/Context/LanguageContext';
 
 export default function NewsSection({ onSelectView }) {
+  const { t } = useLanguage();
   // En attente des communiqués et publications réels d'OMYA INVEST à publier ici.
   const newsItems = [];
 
@@ -30,13 +32,13 @@ export default function NewsSection({ onSelectView }) {
         <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
           <div className="section-tag-light justify-center">
             <Newspaper className="w-4 h-4 text-[#FFFFFF]" />
-            <span>Presse & Communiqués Officiels</span>
+            <span>{t.news.tag}</span>
           </div>
           <h2 className="text-4xl sm:text-6xl font-bold text-white leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
-            Actualités & Publications Officieuses
+            {t.news.title}
           </h2>
           <p className="text-slate-300 text-sm leading-relaxed font-poppins">
-            Retrouvez les communiqués de presse, avis officiels et notes d'information boursière d'OMYA INVEST.
+            {t.news.desc}
           </p>
         </div>
 
@@ -84,7 +86,7 @@ export default function NewsSection({ onSelectView }) {
           <div className="max-w-xl mx-auto text-center bvmac-card-dark p-10 border border-white/10">
             <Newspaper className="w-9 h-9 text-white/30 mx-auto mb-4" />
             <p className="text-sm text-slate-300 font-poppins">
-              Aucune actualité publiée pour le moment. Revenez bientôt pour retrouver nos communiqués et publications.
+              {t.news.emptyState}
             </p>
           </div>
         )}

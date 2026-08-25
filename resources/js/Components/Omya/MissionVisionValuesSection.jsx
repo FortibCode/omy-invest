@@ -1,32 +1,18 @@
 import React from 'react';
 import { Target, Eye, ShieldCheck, Award, HeartHandshake, Compass, Building, User, Quote } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/Context/LanguageContext';
+
+const VALUES_ICONS = [ShieldCheck, Award, HeartHandshake, Compass];
 
 export default function MissionVisionValuesSection() {
-  const visionSteps = [
-    {
-      num: '01',
-      text: 'Contribuer à l\'approfondissement du marché des capitaux et au financement du développement économique de la sous-région',
-      title: 'Approfondissement du Marché CEMAC',
-    },
-    {
-      num: '02',
-      text: 'Être un acteur majeur de l’éducation financière',
-      title: 'Éducation Financière & Pédagogie',
-    },
-    {
-      num: '03',
-      text: 'Être une référence dans l’optimisation des capitaux.',
-      title: 'Référence en Optimisation',
-    },
-  ];
+  const { t } = useLanguage();
+  const visionSteps = t.missionVisionValues.visionSteps.map((step, idx) => ({
+    ...step,
+    num: String(idx + 1).padStart(2, '0'),
+  }));
 
-  const values = [
-    { title: 'Intégrité', icon: ShieldCheck },
-    { title: 'Rigueur professionnelle', icon: Award },
-    { title: 'Proximité avec les clients', icon: HeartHandshake },
-    { title: 'Engagement au service du développement', icon: Compass },
-  ];
+  const values = t.missionVisionValues.values.map((val, idx) => ({ ...val, icon: VALUES_ICONS[idx] }));
 
   return (
     <section className="py-24 bg-[#0B192C] text-white relative overflow-hidden">
@@ -39,13 +25,13 @@ export default function MissionVisionValuesSection() {
           <div className="text-center max-w-3xl mx-auto space-y-3">
             <div className="section-tag-light justify-center">
               <Target className="w-4 h-4 text-[#FFFFFF]" />
-              <span>Notre Mission</span>
+              <span>{t.missionVisionValues.missionTag}</span>
             </div>
             <h2 className="text-4xl sm:text-6xl font-bold font-serif-luxury text-white leading-tight">
-              « Un capital dormant ne construit rien : parlons de vos projets! »
+              {t.missionVisionValues.missionQuote}
             </h2>
             <p className="text-slate-400 text-sm">
-              OMYA INVEST adapte sa mission aux spécificités des personnes morales et des personnes physiques.
+              {t.missionVisionValues.missionSub}
             </p>
           </div>
 
@@ -64,13 +50,13 @@ export default function MissionVisionValuesSection() {
                     <Building className="w-6 h-6" />
                   </div>
                   <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#FFFFFF]">Dimension 01</span>
-                    <h3 className="text-xl font-bold font-serif-luxury text-white">Pour les Personnes Morales</h3>
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#FFFFFF]">{t.missionVisionValues.moralesLabel}</span>
+                    <h3 className="text-xl font-bold font-serif-luxury text-white">{t.missionVisionValues.moralesTitle}</h3>
                   </div>
                 </div>
 
                 <p className="text-sm text-slate-300 leading-relaxed bg-[#0A1128]/80 p-5 rounded-xl border border-slate-800">
-                  « Accompagner les États, les entreprises et les investisseurs institutionnels de la sous-région CEMAC dans la mobilisation de capitaux et la structuration de solutions de financement adaptées à leurs besoins, en s'appuyant sur une expertise pointue du marché des titres. »
+                  {t.missionVisionValues.moralesText}
                 </p>
               </div>
             </motion.div>
@@ -88,13 +74,13 @@ export default function MissionVisionValuesSection() {
                     <User className="w-6 h-6" />
                   </div>
                   <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-sky-400">Dimension 02</span>
-                    <h3 className="text-xl font-bold font-serif-luxury text-white">Pour les Personnes Physiques</h3>
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-sky-400">{t.missionVisionValues.physiquesLabel}</span>
+                    <h3 className="text-xl font-bold font-serif-luxury text-white">{t.missionVisionValues.physiquesTitle}</h3>
                   </div>
                 </div>
 
                 <p className="text-sm text-slate-300 leading-relaxed bg-[#0A1128]/80 p-5 rounded-xl border border-slate-800">
-                  « optimiser l’épargne des investisseurs en sélectionnant pour eux des meilleurs actifs en tenant compte du couple rendement/risque. »
+                  {t.missionVisionValues.physiquesText}
                 </p>
               </div>
             </motion.div>
@@ -110,10 +96,10 @@ export default function MissionVisionValuesSection() {
           <div className="text-center max-w-3xl mx-auto space-y-3">
             <div className="section-tag-light justify-center">
               <Eye className="w-4 h-4 text-[#FFFFFF]" />
-              <span>Notre Vision</span>
+              <span>{t.missionVisionValues.visionTag}</span>
             </div>
             <h2 className="text-4xl sm:text-5xl font-bold font-serif-luxury text-white leading-tight">
-              Trois Axes pour Façonner le Marché Financier Régional
+              {t.missionVisionValues.visionTitle}
             </h2>
           </div>
 
@@ -134,7 +120,7 @@ export default function MissionVisionValuesSection() {
                   {step.title}
                 </h3>
                 <p className="text-xs text-slate-300 leading-relaxed bg-[#0A1128]/60 p-4 rounded-xl border border-slate-800/80">
-                  « {step.text} »
+                  {step.text}
                 </p>
               </motion.div>
             ))}
@@ -149,13 +135,13 @@ export default function MissionVisionValuesSection() {
           <div className="text-center max-w-3xl mx-auto space-y-3">
             <div className="section-tag-light justify-center">
               <ShieldCheck className="w-4 h-4 text-[#FFFFFF]" />
-              <span>Nos Valeurs</span>
+              <span>{t.missionVisionValues.valeursTag}</span>
             </div>
             <h2 className="text-4xl sm:text-5xl font-bold font-serif-luxury text-white leading-tight">
-              Les Piliers Éthiques d'OMYA INVEST
+              {t.missionVisionValues.valeursTitle}
             </h2>
             <p className="text-xs text-slate-400 max-w-2xl mx-auto italic font-serif-luxury">
-              « Intégrité, rigueur professionnelle, proximité avec les clients et engagement au service du développement de la sous-région. »
+              {t.missionVisionValues.valeursQuote}
             </p>
           </div>
 

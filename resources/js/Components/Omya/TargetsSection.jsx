@@ -1,38 +1,13 @@
 import React from 'react';
 import { Building2, Landmark, Store, Users, CheckCircle2, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/Context/LanguageContext';
+
+const TARGETS_ICONS = [Building2, Landmark, Store, Users];
 
 export default function TargetsSection() {
-  const targets = [
-    {
-      title: 'Entreprises publiques et privées',
-      desc: 'Grandes entreprises seeking structural capital, debt issuance (emprunt obligataire), capital increases, or financial optimization.',
-      icon: Building2,
-      role: 'Émetteurs & Emprunteurs',
-      badge: 'Grande Entreprise',
-    },
-    {
-      title: 'Institutionnels',
-      desc: 'Caisses de retraite, fonds souverains, compagnies d\'assurance, banques et investisseurs institutionnels de la sous-région CEMAC.',
-      icon: Landmark,
-      role: 'Investisseurs Qualifiés',
-      badge: 'Investisseurs Pro',
-    },
-    {
-      title: 'PME / PMI',
-      desc: 'Petites et moyennes entreprises en pleine croissance nécessitant un accompagnement sur-mesure pour lever des fonds et structurer leur bilan.',
-      icon: Store,
-      role: 'Croissance & Structuration',
-      badge: 'Développement',
-    },
-    {
-      title: 'Particuliers',
-      desc: 'Personnes physiques désireuses de faire fructifier leur épargne, d\'accéder aux actions/obligations de la BVMAC et de diversifier leur patrimoine.',
-      icon: Users,
-      role: 'Épargnants & Investisseurs',
-      badge: 'Personnes Physiques',
-    },
-  ];
+  const { t } = useLanguage();
+  const targets = t.targets.items.map((item, idx) => ({ ...item, icon: TARGETS_ICONS[idx] }));
 
   return (
     <section id="cibles" className="py-24 bg-[#0B192C] text-white relative overflow-hidden border-t border-slate-800">
@@ -42,13 +17,13 @@ export default function TargetsSection() {
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
           <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#FFFFFF]">
-            <span>Périmètre d'Intervention</span>
+            <span>{t.targets.tag}</span>
           </span>
           <h2 className="text-4xl sm:text-6xl font-black text-white leading-tight">
-            Nos Cibles
+            {t.targets.title}
           </h2>
           <p className="text-slate-300 text-sm leading-relaxed">
-            OMYA INVEST s'adresse à l'ensemble des acteurs économiques de la zone CEMAC et du reste du monde.
+            {t.targets.desc}
           </p>
         </div>
 

@@ -2,8 +2,10 @@ import React from 'react';
 import { FolderDown, FileText, Download, ShieldCheck, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { resolveAnchor } from '@/utils/viewAnchors';
+import { useLanguage } from '@/Context/LanguageContext';
 
 export default function DocumentsSection({ onSelectView }) {
+  const { t } = useLanguage();
   const handleLinkClick = (e, href) => {
     e.preventDefault();
     const { viewId, anchorId } = resolveAnchor(href);
@@ -22,13 +24,13 @@ export default function DocumentsSection({ onSelectView }) {
         <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
           <div className="section-tag-bvmac justify-center">
             <FolderDown className="w-4 h-4 text-[#002E5B]" />
-            <span>Centre de Documentation</span>
+            <span>{t.documents.tag}</span>
           </div>
           <h2 className="text-4xl sm:text-6xl font-bold text-[#002E5B] leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
-            Bibliothèque Documentaire Institutionnelle
+            {t.documents.title}
           </h2>
           <p className="text-slate-600 text-sm leading-relaxed font-poppins">
-            Téléchargez l'ensemble des règlements, notices d'information, prospectus d'émissions obligataires et formulaires officiels d'OMYA INVEST.
+            {t.documents.desc}
           </p>
         </div>
 
@@ -77,7 +79,7 @@ export default function DocumentsSection({ onSelectView }) {
           <div className="max-w-xl mx-auto text-center bvmac-card p-10 bg-white border border-[#D4DCE8]">
             <FolderDown className="w-9 h-9 text-[#002E5B]/40 mx-auto mb-4" />
             <p className="text-sm text-slate-600 font-poppins">
-              Aucun document publié pour le moment. Revenez bientôt pour retrouver nos règlements, prospectus et formulaires officiels.
+              {t.documents.emptyState}
             </p>
           </div>
         )}

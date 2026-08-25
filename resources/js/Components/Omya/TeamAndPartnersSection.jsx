@@ -3,8 +3,20 @@ import { Users, Handshake, Building, Pause, Play, Sparkles, X, ArrowRight, Exter
 import { motion, AnimatePresence } from 'framer-motion';
 import OmyaLogo from '@/Components/Omya/OmyaLogo';
 import { resolveAnchor } from '@/utils/viewAnchors';
+import { useLanguage } from '@/Context/LanguageContext';
+
+// NOTE: renseigner le nom complet et la photo (ex: '/images/equipe/prenom-nom.jpg') de chaque membre
+// dans TOUTES les langues n'est pas nécessaire — seuls le poste/département sont traduits ; le nom
+// (une fois renseigné ici) reste identique dans toutes les langues.
+const TEAM_META = [
+  { id: 1, name: '', photo: null },
+  { id: 2, name: '', photo: null },
+  { id: 3, name: '', photo: null },
+  { id: 4, name: '', photo: null },
+];
 
 export default function TeamAndPartnersSection({ onSelectView }) {
+  const { t } = useLanguage();
   const handleLinkClick = (e, href) => {
     e.preventDefault();
     const { viewId, anchorId } = resolveAnchor(href);
@@ -16,14 +28,18 @@ export default function TeamAndPartnersSection({ onSelectView }) {
   const [hoveredPartner, setHoveredPartner] = useState(null);
   const [modalPartner, setModalPartner] = useState(null); // Selected partner for enlarged modal view
 
-  // NOTE: renseigner le nom complet, le poste exact et la photo (ex: '/images/equipe/prenom-nom.jpg')
-  // de chaque membre. Sans photo, un avatar avec les initiales du nom s'affiche automatiquement.
-  const teamMembers = [
-    { id: 1, name: '', position: 'Direction Générale', department: 'Gestion stratégique & Gouvernance institutionnelle', photo: null },
-    { id: 2, name: '', position: 'Responsable Structuration', department: 'Ingénierie financière & Émissions de titres', photo: null },
-    { id: 3, name: '', position: 'Responsable Négociation & Courtage', department: 'Exécution d\'ordres et Animation du marché BVMAC', photo: null },
-    { id: 4, name: '', position: 'Responsable Conformité & Contrôle', department: 'Réglementation COSUMAF & Gestion des Risques', photo: null },
+  const positionKeys = ['Direction Générale', 'Responsable Structuration', 'Responsable Négociation & Courtage', 'Responsable Conformité & Contrôle'];
+  const departmentKeys = [
+    'Gestion stratégique & Gouvernance institutionnelle',
+    'Ingénierie financière & Émissions de titres',
+    "Exécution d'ordres et Animation du marché BVMAC",
+    'Réglementation COSUMAF & Gestion des Risques',
   ];
+  const teamMembers = TEAM_META.map((meta, idx) => ({
+    ...meta,
+    position: t.team.positions[positionKeys[idx]],
+    department: t.team.departments[departmentKeys[idx]],
+  }));
 
   const getInitials = (fullName) => fullName
     .split(' ')
@@ -90,13 +106,13 @@ export default function TeamAndPartnersSection({ onSelectView }) {
           <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
             <div className="section-tag-bvmac justify-center">
               <Users className="w-4 h-4 text-[#002E5B]" />
-              <span>Gouvernance & Leadership</span>
+              <span>{t.team.tag}</span>
             </div>
             <h2 className="text-4xl sm:text-6xl font-bold text-[#002E5B] leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
-              Notre Équipe d'Experts Certifiés
+              {t.team.title}
             </h2>
             <p className="text-slate-600 text-sm font-poppins">
-              Une équipe pluridisciplinaire d'ingénieurs financiers, de traders agréés et de juristes au service de vos opérations.
+              {t.team.desc}
             </p>
           </div>
 
@@ -123,7 +139,7 @@ export default function TeamAndPartnersSection({ onSelectView }) {
                 )}
 
                 <h3 className="text-base font-bold text-[#002E5B] group-hover:text-[#002E5B] transition-colors" style={{ fontFamily: "'Open Sans', sans-serif" }}>
-                  {member.name || 'Nom à renseigner'}
+                  {member.name || t.team.nameNotSet}
                 </h3>
                 <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#002E5B] bg-[#EEF2F8] px-2.5 py-0.5 rounded-sm font-nav mt-1.5 border border-slate-200">
                   {member.position}
@@ -154,13 +170,13 @@ export default function TeamAndPartnersSection({ onSelectView }) {
           <div className="text-center max-w-3xl mx-auto space-y-3 mb-8">
             <div className="section-tag-light justify-center">
               <Handshake className="w-4 h-4 text-[#FFFFFF]" />
-              <span>Réseau & Partenariats Certifiés</span>
+              <span>{t.team.partnersTag}</span>
             </div>
             <h2 className="text-4xl sm:text-6xl font-bold text-white leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
-              Nos Partenaires en Rotation Continue
+              {t.team.partnersTitle}
             </h2>
             <p className="text-slate-300 text-sm font-poppins">
-              Cliquez sur un logo en orbite pour l'afficher en grand et découvrir ses détails.
+              {t.team.partnersDesc}
             </p>
           </div>
 
@@ -171,7 +187,7 @@ export default function TeamAndPartnersSection({ onSelectView }) {
               className="px-4 py-1.5 rounded-full bg-[#002E5B] hover:bg-[#FFFFFF] hover:text-[#001D3D] transition text-xs font-nav uppercase font-bold flex items-center gap-2 border border-[#FFFFFF]/30"
             >
               {isRotating ? <Pause className="w-3.5 h-3.5 text-[#FFFFFF]" /> : <Play className="w-3.5 h-3.5 text-[#FFFFFF]" />}
-              <span>{isRotating ? 'Mettre en pause l\'orbite' : 'Lancer l\'orbite continu'}</span>
+              <span>{isRotating ? t.team.pauseOrbit : t.team.playOrbit}</span>
             </button>
           </div>
 
@@ -268,7 +284,7 @@ export default function TeamAndPartnersSection({ onSelectView }) {
                   </div>
                   <div className="text-left">
                     <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#FFFFFF] font-nav">
-                      Partenaire Officiel
+                      {t.team.officialPartner}
                     </span>
                     <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight group-hover:text-[#FFFFFF] transition-colors" style={{ fontFamily: "'Open Sans', sans-serif" }}>
                       {featuredPartner.name}
@@ -278,7 +294,7 @@ export default function TeamAndPartnersSection({ onSelectView }) {
 
                 <div className="pt-2 text-center">
                   <span className="text-[11px] font-bold text-[#FFFFFF] font-nav uppercase inline-flex items-center gap-1 group-hover:underline">
-                    <span>Cliquer pour agrandir le logo</span>
+                    <span>{t.team.clickToEnlarge}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
@@ -299,7 +315,7 @@ export default function TeamAndPartnersSection({ onSelectView }) {
                       ? 'border-2 border-[#FFFFFF] shadow-[0_0_20px_rgba(255, 255, 255,0.8)] scale-110 ring-2 ring-[#FFFFFF]'
                       : 'border-slate-700 opacity-60 hover:opacity-100 hover:border-[#FFFFFF]'
                   }`}
-                  title={`${partner.name} - Cliquer pour agrandir`}
+                  title={`${partner.name} - ${t.team.clickToEnlargeTitle}`}
                 >
                   <img
                     src={partner.logo}
@@ -351,7 +367,7 @@ export default function TeamAndPartnersSection({ onSelectView }) {
 
               {/* Partner Details */}
               <span className="text-xs font-extrabold uppercase tracking-widest text-[#FFFFFF] font-nav bg-[#FFFFFF]/15 px-3.5 py-1 rounded-sm border border-[#FFFFFF]/30 inline-block mb-3">
-                Partenaire Officiel
+                {t.team.officialPartner}
               </span>
 
               <h3 className="text-2xl sm:text-3xl font-bold text-white mb-8" style={{ fontFamily: "'Open Sans', sans-serif" }}>
@@ -364,7 +380,7 @@ export default function TeamAndPartnersSection({ onSelectView }) {
                   onClick={(e) => { handleLinkClick(e, '#contact'); setModalPartner(null); }}
                   className="btn-bvmac-primary text-xs"
                 >
-                  <span>Prendre contact au sujet de ce partenariat</span>
+                  <span>{t.team.contactAboutPartnership}</span>
                   <ArrowRight className="w-4 h-4" />
                 </a>
                 {modalPartner.website && (
@@ -374,7 +390,7 @@ export default function TeamAndPartnersSection({ onSelectView }) {
                     rel="noopener noreferrer"
                     className="btn-bvmac-outline-white text-xs"
                   >
-                    <span>Visiter le site officiel</span>
+                    <span>{t.team.visitOfficialSite}</span>
                     <ExternalLink className="w-4 h-4" />
                   </a>
                 )}

@@ -2,8 +2,10 @@ import React from 'react';
 import { ShieldCheck, MapPin, Building2, TrendingUp, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { resolveAnchor } from '@/utils/viewAnchors';
+import { useLanguage } from '@/Context/LanguageContext';
 
 export default function AboutSection({ onSelectView }) {
+  const { t } = useLanguage();
   const handleLinkClick = (e, href) => {
     e.preventDefault();
     const { viewId, anchorId } = resolveAnchor(href);
@@ -26,29 +28,28 @@ export default function AboutSection({ onSelectView }) {
             className="lg:col-span-6 space-y-6"
           >
             <div className="section-tag-bvmac">
-              <span>À propos d'OMYA INVEST</span>
+              <span>{t.about.tag}</span>
             </div>
 
             <h2 className="text-4xl sm:text-6xl font-bold text-[#002E5B] leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
-              Une Société de Bourse Agréée sur le Marché Régional CEMAC
+              {t.about.title}
             </h2>
 
             {/* EXACT FORM TEXT IN A CLEAN SPACIATION */}
             <div className="text-slate-600 text-sm sm:text-base leading-relaxed space-y-4 font-poppins">
               <p className="bg-white p-6 rounded-md border border-[#D4DCE8] shadow-sm">
-                <strong className="text-[#002E5B] font-semibold">OMYA INVEST</strong>, filiale du groupe{' '}
-                <strong className="text-[#002E5B] font-semibold">YAO CORP</strong>, est une société de bourse agréée par la Commission de Surveillance du Marché Financier de l'Afrique Centrale (COSUMAF) sous le numéro d'agrément{' '}
+                {t.about.p1}{' '}
                 <span className="inline-block font-mono font-bold text-[#002E5B] bg-[#F4F6FA] px-2.5 py-0.5 rounded border border-[#002E5B]/50">
                   COSUMAF-SDB-01/2025
                 </span>.
               </p>
-              
+
               <p className="text-slate-600">
-                Basée à Brazzaville (République du Congo), elle intervient sur l'ensemble du marché financier régional CEMAC, au service des États, des entreprises publiques et privées, des institutionnels ainsi que particuliers.
+                {t.about.p2}
               </p>
 
               <p className="text-slate-600">
-                Ses activités couvrent : le courtage des titres financiers, la structuration financière et le développement d'affaires institutionnel.
+                {t.about.p3}
               </p>
             </div>
 
@@ -56,21 +57,21 @@ export default function AboutSection({ onSelectView }) {
             <div className="pt-2 grid grid-cols-1 sm:grid-cols-3 gap-3 font-poppins">
               <div className="flex items-center gap-2 p-3 bg-white rounded-md border border-[#D4DCE8]">
                 <CheckCircle2 className="w-4 h-4 text-[#002E5B] shrink-0" />
-                <span className="text-xs font-bold text-[#002E5B]">Courtage de titres</span>
+                <span className="text-xs font-bold text-[#002E5B]">{t.about.activity1}</span>
               </div>
               <div className="flex items-center gap-2 p-3 bg-white rounded-md border border-[#D4DCE8]">
                 <CheckCircle2 className="w-4 h-4 text-[#002E5B] shrink-0" />
-                <span className="text-xs font-bold text-[#002E5B]">Structuration</span>
+                <span className="text-xs font-bold text-[#002E5B]">{t.about.activity2}</span>
               </div>
               <div className="flex items-center gap-2 p-3 bg-white rounded-md border border-[#D4DCE8]">
                 <CheckCircle2 className="w-4 h-4 text-[#002E5B] shrink-0" />
-                <span className="text-xs font-bold text-[#002E5B]">Développement</span>
+                <span className="text-xs font-bold text-[#002E5B]">{t.about.activity3}</span>
               </div>
             </div>
 
             <div className="pt-4">
               <a href="#nos-solutions" onClick={(e) => handleLinkClick(e, '#nos-solutions')} className="btn-bvmac-primary">
-                <span>Découvrir nos 7 expertises</span>
+                <span>{t.about.ctaBtn}</span>
                 <ArrowRight className="w-4 h-4" />
               </a>
             </div>
@@ -94,7 +95,7 @@ export default function AboutSection({ onSelectView }) {
               <div className="relative rounded-lg overflow-hidden shadow-xl border-4 border-white bg-[#002E5B]">
                 <img
                   src="/images/image-hero-8.jpeg"
-                  alt="OMYA INVEST — Société de Bourse COSUMAF-SDB-01/2025"
+                  alt={t.about.photoAlt}
                   className="w-full h-[400px] object-cover"
                 />
                 
@@ -107,12 +108,12 @@ export default function AboutSection({ onSelectView }) {
                       <ShieldCheck className="w-6 h-6" />
                     </div>
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-[#002E5B] font-nav tracking-wider block">Agrément COSUMAF</span>
+                      <span className="text-[10px] uppercase font-bold text-[#002E5B] font-nav tracking-wider block">{t.about.agreementLabel}</span>
                       <strong className="text-sm font-mono text-white">COSUMAF-SDB-01/2025</strong>
                     </div>
                   </div>
                   <span className="text-[10px] font-nav uppercase tracking-widest text-slate-300 font-bold bg-white/10 px-2.5 py-1 rounded-sm hidden sm:block">
-                    Zone CEMAC
+                    {t.about.zoneLabel}
                   </span>
                 </div>
               </div>

@@ -6,10 +6,10 @@
 
         <title inertia>{{ config('app.name', 'OMYA CAPITAL') }}</title>
 
-        <!-- Favicon Officiel OMYA CAPITAL PNG -->
-        <link rel="icon" type="image/png" href="/favicon.png" />
-        <link rel="shortcut icon" type="image/png" href="/favicon.png" />
-        <link rel="apple-touch-icon" href="/favicon.png" />
+        <!-- Favicon Officiel OMYA INVEST PNG -->
+        <link rel="icon" type="image/png" href="/favicon.png?v=2" />
+        <link rel="shortcut icon" type="image/png" href="/favicon.png?v=2" />
+        <link rel="apple-touch-icon" href="/favicon.png?v=2" />
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">

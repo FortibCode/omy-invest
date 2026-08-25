@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, CheckCircle2, Clock, CalendarCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/Context/LanguageContext';
+
+const CONTACT_ICONS = [MapPin, Phone, Mail, Clock];
+const CONTACT_HREFS = [null, 'tel:+242066426989', 'mailto:contact@omya-invest.com', null];
 
 export default function ContactSection() {
+  const { t } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     nom: '',
@@ -18,34 +23,11 @@ export default function ContactSection() {
     setSubmitted(true);
   };
 
-  const contactInfos = [
-    {
-      icon: MapPin,
-      title: 'Siège Social',
-      detail: '76 Avenue Amilcar Cabral, Centre-ville',
-      sub: 'Immeuble Villarecci, en face du Radisson — Brazzaville',
-    },
-    {
-      icon: Phone,
-      title: 'Téléphone',
-      detail: '+242 06 642 69 89',
-      sub: 'Appels & WhatsApp',
-      href: 'tel:+242066426989',
-    },
-    {
-      icon: Mail,
-      title: 'Email',
-      detail: 'contact@omya-invest.com',
-      sub: 'Réponse sous 24 à 48h',
-      href: 'mailto:contact@omya-invest.com',
-    },
-    {
-      icon: Clock,
-      title: 'Horaires',
-      detail: 'Lundi – Vendredi',
-      sub: '08:00 – 17:30 (GMT+1)',
-    },
-  ];
+  const contactInfos = t.contact.infoCards.map((card, idx) => ({
+    ...card,
+    icon: CONTACT_ICONS[idx],
+    href: CONTACT_HREFS[idx],
+  }));
 
   return (
     <section id="contact" className="py-28 bg-[#F4F6FA] text-slate-800 relative overflow-hidden border-t-4 border-t-[#002E5B] select-none">
@@ -68,13 +50,13 @@ export default function ContactSection() {
             <div className="space-y-4">
               <div className="section-tag-bvmac">
                 <Mail className="w-4 h-4 text-[#002E5B]" />
-                <span>Prendre Contact</span>
+                <span>{t.contact.tag}</span>
               </div>
               <h2 className="text-4xl sm:text-6xl font-bold text-[#002E5B] leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
-                Parlons de Votre Projet ou de Vos Capitaux
+                {t.contact.title}
               </h2>
               <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-poppins">
-                Notre équipe d'experts est à votre écoute, que vous souhaitiez investir, trouver un financement ou établir un partenariat institutionnel.
+                {t.contact.desc}
               </p>
             </div>
 
@@ -120,8 +102,8 @@ export default function ContactSection() {
                   <CalendarCheck className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-[#001D3D] font-nav uppercase">Formulaire de Prise en Charge</h3>
-                  <p className="text-xs text-slate-500 font-poppins">Décrivez votre demande ou votre projet</p>
+                  <h3 className="text-base font-bold text-[#001D3D] font-nav uppercase">{t.contact.formTitle}</h3>
+                  <p className="text-xs text-slate-500 font-poppins">{t.contact.formSub}</p>
                 </div>
               </div>
 
@@ -130,15 +112,15 @@ export default function ContactSection() {
                   <div className="w-16 h-16 rounded-full bg-[#002E5B]/10 text-[#002E5B] flex items-center justify-center mx-auto border-2 border-[#002E5B]">
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
-                  <h3 className="text-2xl font-bold text-[#001D3D]" style={{ fontFamily: "'Open Sans', sans-serif" }}>Message Envoyé !</h3>
+                  <h3 className="text-2xl font-bold text-[#001D3D]" style={{ fontFamily: "'Open Sans', sans-serif" }}>{t.contact.sentTitle}</h3>
                   <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed font-poppins">
-                    Merci d'avoir contacté OMYA INVEST. Notre équipe traitera votre demande dans les meilleurs délais et vous répondra sous 48h ouvrables.
+                    {t.contact.sentDesc}
                   </p>
                   <button
                     onClick={() => setSubmitted(false)}
                     className="btn-bvmac-outline text-xs mt-4"
                   >
-                    Envoyer un autre message
+                    {t.contact.sendAnother}
                   </button>
                 </div>
               ) : (
@@ -146,24 +128,24 @@ export default function ContactSection() {
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-xs font-bold text-[#001D3D] mb-1.5 font-nav uppercase">Nom *</label>
+                      <label className="block text-xs font-bold text-[#001D3D] mb-1.5 font-nav uppercase">{t.contact.labelNom}</label>
                       <input
                         type="text"
                         required
                         value={formData.nom}
                         onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
-                        placeholder="Votre nom"
+                        placeholder={t.contact.placeholderNom}
                         className="w-full bg-[#F4F6FA] border border-slate-300 rounded-md px-4 py-3 text-xs text-[#001D3D] placeholder-slate-400 focus:outline-none focus:border-[#002E5B] focus:bg-white transition font-poppins font-medium"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-[#001D3D] mb-1.5 font-nav uppercase">Prénom *</label>
+                      <label className="block text-xs font-bold text-[#001D3D] mb-1.5 font-nav uppercase">{t.contact.labelPrenom}</label>
                       <input
                         type="text"
                         required
                         value={formData.prenom}
                         onChange={(e) => setFormData({ ...formData, prenom: e.target.value })}
-                        placeholder="Votre prénom"
+                        placeholder={t.contact.placeholderPrenom}
                         className="w-full bg-[#F4F6FA] border border-slate-300 rounded-md px-4 py-3 text-xs text-[#001D3D] placeholder-slate-400 focus:outline-none focus:border-[#002E5B] focus:bg-white transition font-poppins font-medium"
                       />
                     </div>
@@ -171,53 +153,53 @@ export default function ContactSection() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-xs font-bold text-[#001D3D] mb-1.5 font-nav uppercase">Email *</label>
+                      <label className="block text-xs font-bold text-[#001D3D] mb-1.5 font-nav uppercase">{t.contact.labelEmail}</label>
                       <input
                         type="email"
                         required
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="votre.email@exemple.com"
+                        placeholder={t.contact.placeholderEmail}
                         className="w-full bg-[#F4F6FA] border border-slate-300 rounded-md px-4 py-3 text-xs text-[#001D3D] placeholder-slate-400 focus:outline-none focus:border-[#002E5B] focus:bg-white transition font-poppins font-medium"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-[#001D3D] mb-1.5 font-nav uppercase">Téléphone</label>
+                      <label className="block text-xs font-bold text-[#001D3D] mb-1.5 font-nav uppercase">{t.contact.labelTelephone}</label>
                       <input
                         type="tel"
                         value={formData.telephone}
                         onChange={(e) => setFormData({ ...formData, telephone: e.target.value })}
-                        placeholder="+242 06 --- ----"
+                        placeholder={t.contact.placeholderTelephone}
                         className="w-full bg-[#F4F6FA] border border-slate-300 rounded-md px-4 py-3 text-xs text-[#001D3D] placeholder-slate-400 focus:outline-none focus:border-[#002E5B] focus:bg-white transition font-poppins font-medium"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-[#001D3D] mb-1.5 font-nav uppercase">Objet de votre demande *</label>
+                    <label className="block text-xs font-bold text-[#001D3D] mb-1.5 font-nav uppercase">{t.contact.labelObjet}</label>
                     <select
                       required
                       value={formData.objet}
                       onChange={(e) => setFormData({ ...formData, objet: e.target.value })}
                       className="w-full bg-[#F4F6FA] border border-slate-300 rounded-md px-4 py-3 text-xs text-[#001D3D] focus:outline-none focus:border-[#002E5B] focus:bg-white transition font-poppins font-medium"
                     >
-                      <option value="">Sélectionnez l'objet de votre message</option>
-                      <option value="investir">Je souhaite investir (Agent à capacité de financement)</option>
-                      <option value="financer">Je recherche un financement (Agent à besoin de financement)</option>
-                      <option value="partenaire">Apporteur d'affaires / Partenariat</option>
-                      <option value="gestion">Gestion de portefeuille ou mandat discrétionnaire</option>
-                      <option value="autre">Autre demande</option>
+                      <option value="">{t.contact.objetPlaceholder}</option>
+                      <option value="investir">{t.contact.objetInvestir}</option>
+                      <option value="financer">{t.contact.objetFinancer}</option>
+                      <option value="partenaire">{t.contact.objetPartenaire}</option>
+                      <option value="gestion">{t.contact.objetGestion}</option>
+                      <option value="autre">{t.contact.objetAutre}</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-[#001D3D] mb-1.5 font-nav uppercase">Message *</label>
+                    <label className="block text-xs font-bold text-[#001D3D] mb-1.5 font-nav uppercase">{t.contact.labelMessage}</label>
                     <textarea
                       rows={4}
                       required
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      placeholder="Décrivez votre demande, votre projet ou vos objectifs financiers..."
+                      placeholder={t.contact.placeholderMessage}
                       className="w-full bg-[#F4F6FA] border border-slate-300 rounded-md px-4 py-3 text-xs text-[#001D3D] placeholder-slate-400 focus:outline-none focus:border-[#002E5B] focus:bg-white transition resize-none font-poppins font-medium"
                     />
                   </div>
@@ -227,11 +209,11 @@ export default function ContactSection() {
                     className="btn-bvmac-primary w-full justify-center text-xs py-3.5"
                   >
                     <Send className="w-4 h-4" />
-                    <span>Envoyer mon message à OMYA INVEST</span>
+                    <span>{t.contact.submitBtn}</span>
                   </button>
 
                   <p className="text-[10px] text-slate-500 text-center font-poppins">
-                    Vos données sont traitées de façon confidentielle conformément à nos obligations réglementaires.
+                    {t.contact.privacyNote}
                   </p>
 
                 </form>

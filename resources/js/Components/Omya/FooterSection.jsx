@@ -3,8 +3,10 @@ import { ShieldCheck, ArrowRight, Phone, Mail, MapPin } from 'lucide-react';
 import OmyaLogo from '@/Components/Omya/OmyaLogo';
 import { LinkedInIcon, XIcon, FacebookIcon, YouTubeIcon } from '@/Components/Omya/SocialIcons';
 import { resolveAnchor } from '@/utils/viewAnchors';
+import { useLanguage } from '@/Context/LanguageContext';
 
 export default function FooterSection({ onSelectView }) {
+  const { t } = useLanguage();
   const year = new Date().getFullYear();
 
   const handleLinkClick = (e, href) => {
@@ -13,35 +15,9 @@ export default function FooterSection({ onSelectView }) {
     if (onSelectView) onSelectView(viewId, anchorId);
   };
 
-  const solutionsLinks = [
-    { label: 'Structuration financière', href: '#solutions-structuration' },
-    { label: 'Développement d\'affaires', href: '#solutions-developpement' },
-    { label: 'Placements financiers', href: '#solutions-placements' },
-    { label: 'Conseil en financement', href: '#solutions-conseil' },
-    { label: 'Exécution d\'ordre', href: '#solutions-execution' },
-    { label: 'Conservation & tenue de compte-titre', href: '#solutions-conservation' },
-    { label: 'Gestion de portefeuille', href: '#solutions-gestion' },
-  ];
-
-  const navLinks = [
-    { label: 'Accueil', href: '#accueil' },
-    { label: 'À propos & Agrément', href: '#presentation' },
-    { label: 'Notre Mission', href: '#mission' },
-    { label: 'Notre Vision', href: '#vision' },
-    { label: 'Nos Valeurs', href: '#valeurs' },
-    { label: 'Nos Cibles', href: '#cibles' },
-    { label: 'Équipe & Partenaires', href: '#equipe' },
-  ];
-
-  const marketLinks = [
-    { label: 'Marché Financier CEMAC', href: '#marche-financier' },
-    { label: 'Parcours Investir', href: '#investir' },
-    { label: 'Parcours Financer', href: '#financer' },
-    { label: 'Partenaires Officiels', href: '#partenaires' },
-    { label: 'Actualités & Communiqués', href: '#actualites' },
-    { label: 'Centre de Documentation', href: '#documents' },
-    { label: 'Contact & Support', href: '#contact' },
-  ];
+  const solutionsLinks = t.footer.solutionsLinks;
+  const navLinks = t.footer.navLinks;
+  const marketLinks = t.footer.marketLinks;
 
   const socialLinks = [
     { icon: LinkedInIcon, label: 'LinkedIn', href: '#' },
@@ -65,24 +41,24 @@ export default function FooterSection({ onSelectView }) {
 
             <p className="text-sm text-slate-600 leading-relaxed max-w-xs font-poppins">
               <strong className="text-[#002E5B] italic font-serif-luxury block mb-1">
-                « Vos capitaux méritent mieux qu'un compte qui dort. »
+                {t.footer.tagline}
               </strong>
-              OMYA INVEST connecte les agents à besoin de financement et les agents à capacité de financement de la zone CEMAC et du reste du monde.
+              {t.footer.brandDesc}
             </p>
 
             {/* Contact mini infos */}
             <div className="space-y-2.5 pt-2 text-sm text-slate-600 font-poppins">
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-[#002E5B] shrink-0 mt-0.5" />
-                <span>76 Avenue Amilcar Cabral, Centre-ville, Immeuble Villarecci, en face du Radisson — Brazzaville</span>
+                <span>{t.contact.infoCards[0].detail}, {t.contact.infoCards[0].sub}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-[#002E5B] shrink-0" />
-                <a href="tel:+242066426989" className="hover:text-[#002E5B] transition-colors">+242 06 642 69 89</a>
+                <a href="tel:+242066426989" className="hover:text-[#002E5B] transition-colors">{t.contact.infoCards[1].detail}</a>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-[#002E5B] shrink-0" />
-                <a href="mailto:contact@omya-invest.com" className="hover:text-[#002E5B] transition-colors">contact@omya-invest.com</a>
+                <a href="mailto:contact@omya-invest.com" className="hover:text-[#002E5B] transition-colors">{t.contact.infoCards[2].detail}</a>
               </div>
             </div>
 
@@ -107,7 +83,7 @@ export default function FooterSection({ onSelectView }) {
           {/* ── Column 1: Navigation ── */}
           <div className="space-y-4">
             <h4 className="text-sm font-bold text-[#002E5B] uppercase tracking-wider border-b border-slate-200 pb-3 font-nav">
-              Institution
+              {t.footer.colInstitution}
             </h4>
             <ul className="space-y-2">
               {navLinks.map((link) => (
@@ -128,7 +104,7 @@ export default function FooterSection({ onSelectView }) {
           {/* ── Column 2: Solutions ── */}
           <div className="space-y-4">
             <h4 className="text-sm font-bold text-[#002E5B] uppercase tracking-wider border-b border-slate-200 pb-3 font-nav">
-              Nos Solutions
+              {t.footer.colSolutions}
             </h4>
             <ul className="space-y-2">
               {solutionsLinks.map((link) => (
@@ -149,7 +125,7 @@ export default function FooterSection({ onSelectView }) {
           {/* ── Column 3: Market & Press ── */}
           <div className="space-y-4">
             <h4 className="text-sm font-bold text-[#002E5B] uppercase tracking-wider border-b border-slate-200 pb-3 font-nav">
-              Marché & Presse
+              {t.footer.colMarket}
             </h4>
             <ul className="space-y-2">
               {marketLinks.map((link) => (
@@ -168,9 +144,9 @@ export default function FooterSection({ onSelectView }) {
 
             {/* CTA Newsletter Placeholder */}
             <div className="pt-4 mt-2 border-t border-slate-200">
-              <p className="text-xs text-slate-500 mb-2 font-poppins">Restez informé des opportunités de marché :</p>
+              <p className="text-xs text-slate-500 mb-2 font-poppins">{t.footer.newsletterText}</p>
               <a href="#contact" onClick={(e) => handleLinkClick(e, '#contact')} className="btn-bvmac-primary text-xs w-full justify-center py-2.5">
-                <span>Abonnement Newsletter</span>
+                <span>{t.footer.newsletterBtn}</span>
               </a>
             </div>
           </div>
@@ -182,15 +158,14 @@ export default function FooterSection({ onSelectView }) {
       <div className="bg-[#F4F6FA] py-5 px-4 border-t border-slate-200 text-slate-600 text-xs">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center">
           <p className="font-poppins">
-            © {year} <strong className="text-[#002E5B]">OMYA INVEST</strong> — Tous droits réservés.
-            Filiale du Groupe <strong className="text-[#002E5B]">YAO CORP</strong>. Agréée par la COSUMAF.
+            {t.footer.rightsText(year)}
           </p>
           <div className="flex items-center gap-3 font-poppins">
-            <span className="hover:text-[#002E5B] cursor-pointer transition">Avis Réglementaire COSUMAF-SDB-01/2025</span>
+            <span className="hover:text-[#002E5B] cursor-pointer transition">{t.footer.legalNotice}</span>
             <span className="text-slate-300">•</span>
-            <span className="hover:text-[#002E5B] cursor-pointer transition">Politique de Confidentialité</span>
+            <span className="hover:text-[#002E5B] cursor-pointer transition">{t.footer.privacyPolicy}</span>
             <span className="text-slate-300">•</span>
-            <span className="hover:text-[#002E5B] cursor-pointer transition">Mentions Légales</span>
+            <span className="hover:text-[#002E5B] cursor-pointer transition">{t.footer.legalMentions}</span>
           </div>
         </div>
       </div>

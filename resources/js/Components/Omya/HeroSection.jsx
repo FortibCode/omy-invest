@@ -2,64 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight, ShieldCheck, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { resolveAnchor } from '@/utils/viewAnchors';
+import { useLanguage } from '@/Context/LanguageContext';
 
-const HERO_SLIDES = [
-  {
-    id: 1,
-    // tag: 'AGRÉMENT COSUMAF-SDB-01/2025 — FILIALE DU GROUPE YAO CORP',
-    titleLine1: 'Vos capitaux méritent',
-    titleHighlight: 'mieux',
-    titleLine2: "qu'un compte qui dort.",
-    description: 'OMYA INVEST connecte d’une part, les agents à besoin de financement (États, entreprises et institutionnels) de la zone CEMAC, et d’autre part, les agents à capacité de financement (particuliers/personnes physiques, États, les entreprises et les investisseurs institutionnels) de la CEMAC et du reste du monde.',
-    primaryBtnText: 'Je souhaite investir',
-    primaryBtnHref: '#investir',
-    secondaryBtnText: 'Je recherche un financement',
-    secondaryBtnHref: '#financer',
-    image: '/images/image-hero-1.jpeg',
-    category: 'OMYA INVEST',
-  },
-  {
-    id: 2,
-    // tag: 'PARCOURS INVESTISSEUR — AGENTS À CAPACITÉ DE FINANCEMENT',
-    titleLine1: 'Vous souhaitez',
-    titleHighlight: 'investir ?',
-    titleLine2: '',
-    description: 'Pour les agents à capacité de financement : OMYA INVEST vous accompagne (en fonction de vos besoins, de vos objectifs, de vos contraintes et de votre horizon temporel) vers les placements les plus sûrs et les plus rentables.',
-    primaryBtnText: 'Découvrir nos solutions',
-    primaryBtnHref: '#investir',
-    secondaryBtnText: 'Nos 7 services',
-    secondaryBtnHref: '#nos-solutions',
-    image: '/images/image-hero-2.jpeg',
-    category: 'Investir',
-  },
-  {
-    id: 3,
-    // tag: 'PARCOURS ÉMETTEURS & ÉTATS — AGENTS À BESOIN DE FINANCEMENT',
-    titleLine1: 'Vous recherchez un',
-    titleHighlight: 'financement ?',
-    titleLine2: '',
-    description: 'Pour les agents à besoin de financement : OMYA INVEST structure pour vous les opérations d’emprunt obligataire, d’ouverture du capital, de financement structuré, …',
-    primaryBtnText: 'Présenter mon projet',
-    primaryBtnHref: '#financer',
-    secondaryBtnText: 'Structuration financière',
-    secondaryBtnHref: '#solutions-structuration',
-    image: '/images/image-hero-3.jpeg',
-    category: 'Financer',
-  },
-  {
-    id: 4,
-    // tag: 'APPORTEURS D\'AFFAIRES & PARTENAIRES',
-    titleLine1: 'Partenariats &',
-    titleHighlight: 'Alliances',
-    titleLine2: 'fiables.',
-    description: 'OMYA INVEST accueille les apporteurs d’affaires et des partenaires fiables et dont les apports cadrent avec ses activités.',
-    primaryBtnText: 'Devenir partenaire',
-    primaryBtnHref: '#contact',
-    secondaryBtnText: 'Nos partenaires',
-    secondaryBtnHref: '#partenaires',
-    image: '/images/image-hero-6.jpeg',
-    category: 'Partenaires',
-  },
+// Métadonnées non traduisibles (images, ancres) — fusionnées avec le texte traduit par index de slide.
+const HERO_SLIDES_META = [
+  { id: 1, primaryBtnHref: '#investir', secondaryBtnHref: '#financer', image: '/images/image-hero-1.jpeg' },
+  { id: 2, primaryBtnHref: '#investir', secondaryBtnHref: '#nos-solutions', image: '/images/image-hero-2.jpeg' },
+  { id: 3, primaryBtnHref: '#financer', secondaryBtnHref: '#solutions-structuration', image: '/images/image-hero-3.jpeg' },
+  { id: 4, primaryBtnHref: '#contact', secondaryBtnHref: '#partenaires', image: '/images/image-hero-6.jpeg' },
 ];
 
 // Animation variants for smooth horizontal slider motion
@@ -87,6 +37,8 @@ const slideVariants = {
 };
 
 export default function HeroSection({ onSelectView }) {
+  const { t } = useLanguage();
+  const HERO_SLIDES = HERO_SLIDES_META.map((meta, idx) => ({ ...meta, ...t.hero.slides[idx] }));
   const [[page, direction], setPage] = useState([0, 0]);
   const [isPlaying, setIsPlaying] = useState(true);
 
@@ -206,7 +158,7 @@ export default function HeroSection({ onSelectView }) {
           <button
             onClick={() => paginate(-1)}
             className="absolute left-3 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/90 border border-slate-300 hover:bg-[#002E5B] hover:text-white text-[#001D3D] transition-all flex items-center justify-center shadow-xl backdrop-blur-md group"
-            title="Diapositive précédente"
+            title={t.hero.prevSlide}
           >
             <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" />
           </button>
@@ -214,7 +166,7 @@ export default function HeroSection({ onSelectView }) {
           <button
             onClick={() => paginate(1)}
             className="absolute right-3 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/90 border border-slate-300 hover:bg-[#002E5B] hover:text-white text-[#001D3D] transition-all flex items-center justify-center shadow-xl backdrop-blur-md group"
-            title="Diapositive suivante"
+            title={t.hero.nextSlide}
           >
             <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
           </button>
@@ -245,10 +197,10 @@ export default function HeroSection({ onSelectView }) {
               <button
                 onClick={() => setIsPlaying(!isPlaying)}
                 className="flex items-center gap-1.5 text-slate-300 hover:text-white transition font-nav uppercase font-semibold text-[11px]"
-                title={isPlaying ? 'Mettre en pause' : 'Lecture automatique'}
+                title={isPlaying ? t.hero.pauseAuto : t.hero.playAuto}
               >
                 {isPlaying ? <Pause className="w-3.5 h-3.5 text-white" /> : <Play className="w-3.5 h-3.5 text-white" />}
-                <span>{isPlaying ? 'Pause' : 'Play'}</span>
+                <span>{isPlaying ? t.common.pause : t.common.play}</span>
               </button>
 
               <div className="h-4 w-px bg-slate-700" />

@@ -1,7 +1,9 @@
 import React from 'react';
 import { Home, ChevronRight } from 'lucide-react';
+import { useLanguage } from '@/Context/LanguageContext';
 
 export default function SectionPageHeader({ icon: Icon, title, description, breadcrumbLabel, onSelectView }) {
+  const { t } = useLanguage();
   return (
     <section className="relative bg-[#001D3D] text-white py-10 sm:py-14 overflow-hidden border-b border-white/10">
       <div
@@ -21,7 +23,7 @@ export default function SectionPageHeader({ icon: Icon, title, description, brea
             className="flex items-center gap-1 hover:text-white transition"
           >
             <Home className="w-3 h-3" />
-            <span>Accueil</span>
+            <span>{t.sectionHeaderHome}</span>
           </button>
           <ChevronRight className="w-3 h-3" />
           <span className="text-white font-bold">{breadcrumbLabel}</span>

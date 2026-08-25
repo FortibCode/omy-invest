@@ -2,67 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { Landmark, Briefcase, TrendingUp, Award, ArrowRight, ShieldCheck, Layers, Handshake, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { resolveAnchor } from '@/utils/viewAnchors';
+import { useLanguage } from '@/Context/LanguageContext';
 
-const SERVICES = [
-  {
-    num: '01',
-    id: 'solutions-structuration',
-    title: 'Structuration financière',
-    desc: 'Montage et structuration des opérations d\'emprunts obligataires et d’ouverture du capital ; Financement structuré ...',
-    icon: Landmark,
-    tag: 'Émetteurs & Structuration',
-  },
-  {
-    num: '02',
-    id: 'solutions-developpement',
-    title: 'Développement d\'affaires',
-    desc: 'Accompagnement des États, des entreprises publiques et privées et des institutionnels dans leurs recherches de financement',
-    icon: Briefcase,
-    tag: 'Institutionnels & États',
-  },
-  {
-    num: '03',
-    id: 'solutions-placements',
-    title: 'Placements financiers',
-    desc: 'Placer les actifs financiers pour le compte tiers sur le marché des capitaux de la CEMAC',
-    icon: TrendingUp,
-    tag: 'Marchés Financiers CEMAC',
-  },
-  {
-    num: '04',
-    id: 'solutions-conseil',
-    title: 'Conseil en financement',
-    desc: 'Conseil aux émetteurs et aux investisseurs dans la structuration de leurs opérations sur le marché des titres.',
-    icon: Award,
-    tag: 'Conseil Stratégique',
-  },
-  {
-    num: '05',
-    id: 'solutions-execution',
-    title: 'Exécution d\'ordre',
-    desc: 'Exécuter les ordres d’achat et de vente des titres pour le compte des investisseurs',
-    icon: Handshake,
-    tag: 'Courtage & Bourse',
-  },
-  {
-    num: '06',
-    id: 'solutions-conservation',
-    title: 'Conservation & tenue de compte-titre',
-    desc: 'Agréé par le dépositaire central unique (DCU) dont la fonction est assurée par la Banque des Etats de l’Afrique Centrale (BEAC)',
-    icon: ShieldCheck,
-    tag: 'Agréé DCU / BEAC',
-  },
-  {
-    num: '07',
-    id: 'solutions-gestion',
-    title: 'Gestion de portefeuille',
-    desc: 'Mandat discrétionnaire et conseil en investissement',
-    icon: Layers,
-    tag: 'Gestion Sur-mesure',
-  },
+// Métadonnées non traduisibles (icône, ancre) — fusionnées avec le texte traduit par index.
+const SERVICES_META = [
+  { id: 'solutions-structuration', icon: Landmark },
+  { id: 'solutions-developpement', icon: Briefcase },
+  { id: 'solutions-placements', icon: TrendingUp },
+  { id: 'solutions-conseil', icon: Award },
+  { id: 'solutions-execution', icon: Handshake },
+  { id: 'solutions-conservation', icon: ShieldCheck },
+  { id: 'solutions-gestion', icon: Layers },
 ];
 
 export default function SolutionsSection({ onSelectView }) {
+  const { t } = useLanguage();
+  const SERVICES = SERVICES_META.map((meta, idx) => ({
+    ...meta,
+    num: String(idx + 1).padStart(2, '0'),
+    ...t.solutions.services[idx],
+  }));
+
   const handleLinkClick = (e, href) => {
     e.preventDefault();
     const { viewId, anchorId } = resolveAnchor(href);
@@ -105,13 +65,13 @@ export default function SolutionsSection({ onSelectView }) {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
           <div className="section-tag-bvmac justify-center">
-            <span>Offre Institutionnelle Certifiée</span>
+            <span>{t.solutions.tag}</span>
           </div>
           <h2 className="text-4xl sm:text-6xl font-bold text-[#002E5B] leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
-            Nos Solutions & Services Financiers
+            {t.solutions.title}
           </h2>
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-poppins">
-            Société de bourse agréée par la COSUMAF sous le numéro <strong className="text-[#002E5B] font-mono">COSUMAF-SDB-01/2025</strong>, OMYA INVEST intervient sur l'ensemble des marchés de la zone CEMAC.
+            {t.solutions.descBefore} <strong className="text-[#002E5B] font-mono">COSUMAF-SDB-01/2025</strong>{t.solutions.descAfter}
           </p>
         </div>
 
@@ -158,7 +118,7 @@ export default function SolutionsSection({ onSelectView }) {
                   {prevService.desc}
                 </p>
                 <div className="mt-4 pt-2 border-t border-slate-200 text-[10px] text-[#002E5B] font-nav uppercase font-bold flex items-center gap-1">
-                  <span>← Précédent</span>
+                  <span>{t.solutions.prevArrow}</span>
                 </div>
               </div>
             </div>
@@ -186,7 +146,7 @@ export default function SolutionsSection({ onSelectView }) {
                         {activeService.num}
                       </span>
                       <span className="text-[10px] font-nav uppercase tracking-widest text-slate-500 font-bold">
-                        Service 0{activeIndex + 1} / 07
+                        {t.solutions.serviceCounter(activeIndex + 1)}
                       </span>
                     </div>
                   </div>
@@ -205,12 +165,12 @@ export default function SolutionsSection({ onSelectView }) {
 
                   <div className="mt-8 pt-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4">
                     <a href="#contact" onClick={(e) => handleLinkClick(e, '#contact')} className="btn-bvmac-primary text-xs">
-                      <span>Nous consulter pour ce service</span>
+                      <span>{t.solutions.consultBtn}</span>
                       <ArrowRight className="w-4 h-4" />
                     </a>
 
                     <span className="text-[11px] font-nav font-bold uppercase text-slate-500">
-                      Agrément COSUMAF-SDB-01/2025
+                      {t.solutions.agreementBadge}
                     </span>
                   </div>
 
@@ -238,7 +198,7 @@ export default function SolutionsSection({ onSelectView }) {
                   {nextService.desc}
                 </p>
                 <div className="mt-4 pt-2 border-t border-slate-200 text-[10px] text-[#002E5B] font-nav uppercase font-bold flex items-center justify-end gap-1">
-                  <span>Suivant →</span>
+                  <span>{t.solutions.nextArrow}</span>
                 </div>
               </div>
             </div>
@@ -249,7 +209,7 @@ export default function SolutionsSection({ onSelectView }) {
           <button
             onClick={handlePrev}
             className="absolute left-0 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-[#002E5B] text-white hover:bg-[#001D3D] transition-all flex items-center justify-center shadow-xl border border-slate-300"
-            title="Service précédent"
+            title={t.solutions.prevService}
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
@@ -257,7 +217,7 @@ export default function SolutionsSection({ onSelectView }) {
           <button
             onClick={handleNext}
             className="absolute right-0 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-[#002E5B] text-white hover:bg-[#001D3D] transition-all flex items-center justify-center shadow-xl border border-slate-300"
-            title="Service suivant"
+            title={t.solutions.nextService}
           >
             <ChevronRight className="w-6 h-6" />
           </button>
@@ -271,13 +231,13 @@ export default function SolutionsSection({ onSelectView }) {
             className="flex items-center gap-1.5 text-[#002E5B] font-nav font-bold uppercase hover:underline transition"
           >
             {isPlaying ? <Pause className="w-4 h-4 text-[#002E5B]" /> : <Play className="w-4 h-4 text-[#002E5B]" />}
-            <span>{isPlaying ? 'Pause' : 'Lecture'}</span>
+            <span>{isPlaying ? t.common.pause : t.common.lecture}</span>
           </button>
 
           <span className="font-mono text-slate-300">•</span>
 
           <span className="font-mono font-bold text-[#002E5B]">
-            0{activeIndex + 1} / 07 Services Certifiés
+            {t.solutions.footerCounter(activeIndex + 1)}
           </span>
         </div>
 

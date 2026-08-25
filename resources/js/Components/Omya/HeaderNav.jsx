@@ -1,14 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ChevronDown, User, ArrowRight, ChevronRight, Landmark, Briefcase, TrendingUp, Award, Shield, Layers } from 'lucide-react';
+import { Menu, X, ChevronDown, User, ArrowRight, ChevronRight, Landmark, Briefcase, TrendingUp, Award, Shield, Layers, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import OmyaLogo from '@/Components/Omya/OmyaLogo';
 import StockTickerBar from '@/Components/Omya/StockTickerBar';
+import { resolveAnchor } from '@/utils/viewAnchors';
+import { useLanguage } from '@/Context/LanguageContext';
+
+// Type de menu déroulant par item (structure, non traduisible) — 'nos-solutions' seul utilise le mega-menu.
+const DROPDOWN_TYPE = {
+  'a-propos': 'list',
+  'nos-solutions': 'megamenu',
+  investir: 'list',
+  financer: 'list',
+  'marche-financier': 'list',
+  'actualites-documents': 'list',
+};
+
+const SOLUTIONS_COL1_ICONS = [Landmark, Briefcase, TrendingUp, Award];
+const SOLUTIONS_COL2_ICONS = [ArrowRight, Shield, Layers];
 
 export default function HeaderNav({ onOpenAuth, onSelectView }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [scrolled, setScrolled] = useState(false);
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const { t, currentLang, changeLanguage, languages } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 30);
@@ -16,81 +33,21 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleNavClick = (viewId, e, href) => {
+  const handleNavClick = (e, href) => {
     if (e) e.preventDefault();
-    const anchorId = href && href.startsWith('#') && href.length > 1 ? href.slice(1) : null;
+    const { viewId, anchorId } = resolveAnchor(href);
     if (onSelectView) {
       onSelectView(viewId, anchorId);
     }
   };
 
-  const solutionsCol1 = [
-    { num: '01', title: 'Structuration financière', desc: 'Montage d\'opérations obligataires et d\'ouverture du capital', viewId: 'nos-solutions', href: '#solutions-structuration', icon: Landmark },
-    { num: '02', title: 'Développement d\'affaires', desc: 'Accompagnement des États, entreprises et institutionnels', viewId: 'nos-solutions', href: '#solutions-developpement', icon: Briefcase },
-    { num: '03', title: 'Placements financiers', desc: 'Placer les actifs sur le marché des capitaux CEMAC', viewId: 'investir', href: '#solutions-placements', icon: TrendingUp },
-    { num: '04', title: 'Conseil en financement', desc: 'Conseil aux émetteurs et aux investisseurs', viewId: 'financer', href: '#solutions-conseil', icon: Award },
-  ];
+  const navMenuItems = t.headerNav.items.map((item) => ({
+    ...item,
+    dropdownType: DROPDOWN_TYPE[item.id],
+  }));
 
-  const solutionsCol2 = [
-    { num: '05', title: 'Exécution d\'ordre', desc: 'Ordres d\'achat et de vente des titres', viewId: 'investir', href: '#solutions-execution', icon: ArrowRight },
-    { num: '06', title: 'Conservation & compte-titre', desc: 'Agréé par le dépositaire central BEAC (DCU)', viewId: 'nos-solutions', href: '#solutions-conservation', icon: Shield },
-    { num: '07', title: 'Gestion de portefeuille', desc: 'Mandat discrétionnaire et conseil en investissement', viewId: 'investir', href: '#solutions-gestion', icon: Layers },
-  ];
-
-  const navMenuItems = [
-    { id: 'accueil', label: 'Accueil', href: '#accueil', viewId: 'accueil' },
-    {
-      id: 'a-propos', label: 'À propos', href: '#presentation', viewId: 'a-propos', dropdownType: 'list',
-      dropdownItems: [
-        { label: 'Présentation', desc: 'Agrément COSUMAF & Groupe YAO CORP', viewId: 'a-propos', href: '#presentation' },
-        { label: 'Notre mission', desc: 'Accompagnement personnes morales & physiques', viewId: 'a-propos', href: '#mission' },
-        { label: 'Notre vision', desc: '3 axes pour le marché CEMAC', viewId: 'a-propos', href: '#vision' },
-        { label: 'Nos valeurs', desc: 'Intégrité, Rigueur & Proximité', viewId: 'a-propos', href: '#valeurs' },
-        { label: 'Nos cibles', desc: 'États, Entreprises, PME & Particuliers', viewId: 'a-propos', href: '#cibles' },
-      ],
-    },
-    { id: 'nos-solutions', label: 'Nos solutions', href: '#nos-solutions', viewId: 'nos-solutions', dropdownType: 'megamenu' },
-    {
-      id: 'investir', label: 'Investir', href: '#investir', viewId: 'investir', dropdownType: 'list',
-      dropdownItems: [
-        { label: 'Pourquoi investir ?', desc: 'Optimiser et sécuriser votre capital', viewId: 'investir', href: '#pourquoi-investir' },
-        { label: 'Placements financiers', desc: 'Titres et opportunités sur la CEMAC', viewId: 'investir', href: '#solutions-placements' },
-        { label: 'Gestion de portefeuille', desc: 'Mandat discrétionnaire sur-mesure', viewId: 'investir', href: '#solutions-gestion' },
-        { label: 'Exécution d\'ordre', desc: 'Transactions rapides et sécurisées', viewId: 'investir', href: '#solutions-execution' },
-        { label: 'Comprendre la bourse', desc: 'Guide pédagogique pour investisseurs', viewId: 'marche-financier', href: '#marche-financier' },
-      ],
-    },
-    {
-      id: 'financer', label: 'Financer', href: '#financer', viewId: 'financer', dropdownType: 'list',
-      dropdownItems: [
-        { label: 'Besoin de financement ?', desc: 'Mobilisation de capitaux structurés', viewId: 'financer', href: '#besoin-financement' },
-        { label: 'Structuration financière', desc: 'Montage sur-mesure pour émetteurs', viewId: 'financer', href: '#solutions-structuration' },
-        { label: 'Emprunt obligataire', desc: 'Levée de fonds sur le marché obligataire', viewId: 'financer', href: '#emprunt-obligataire' },
-        { label: 'Ouverture du capital', desc: 'Introduction en bourse & equity', viewId: 'financer', href: '#ouverture-capital' },
-        { label: 'Conseil en financement', desc: 'Accompagnement stratégique des émetteurs', viewId: 'financer', href: '#solutions-conseil' },
-      ],
-    },
-    { id: 'partenaires', label: 'Partenaires', href: '#partenaires', viewId: 'partenaires' },
-    {
-      id: 'marche-financier', label: 'Marché financier', href: '#marche-financier', viewId: 'marche-financier', dropdownType: 'list',
-      dropdownItems: [
-        { label: 'Comprendre le marché CEMAC', desc: 'Organisation et cadre COSUMAF', viewId: 'marche-financier', href: '#marche-cemac' },
-        { label: 'Actions', desc: 'Titres de propriété cotés sur la BVMAC', viewId: 'marche-financier', href: '#instruments-actions' },
-        { label: 'Obligations', desc: 'Titres de créances d\'États et entreprises', viewId: 'marche-financier', href: '#instruments-obligations' },
-        { label: 'Éducation financière', desc: 'Pédagogie et guides de marché', viewId: 'marche-financier', href: '#education-financiere' },
-      ],
-    },
-    {
-      id: 'actualites-documents', label: 'Presse & Doc', href: '#actualites', viewId: 'actualites-documents', dropdownType: 'list',
-      dropdownItems: [
-        { label: 'Actualités', desc: 'Dernières nouvelles du marché CEMAC', viewId: 'actualites-documents', href: '#actualites-recents' },
-        { label: 'Publications', desc: 'Analyses et rapports d\'experts', viewId: 'actualites-documents', href: '#publications' },
-        { label: 'Communiqués', desc: 'Annonces officielles OMYA INVEST', viewId: 'actualites-documents', href: '#communiques' },
-        { label: 'Documents', desc: 'Règlements, prospectus & formulaires', viewId: 'actualites-documents', href: '#documents' },
-      ],
-    },
-    { id: 'contact', label: 'Contact', href: '#contact', viewId: 'contact' },
-  ];
+  const solutionsCol1 = t.headerNav.solutionsCol1.map((item, idx) => ({ ...item, icon: SOLUTIONS_COL1_ICONS[idx] }));
+  const solutionsCol2 = t.headerNav.solutionsCol2.map((item, idx) => ({ ...item, icon: SOLUTIONS_COL2_ICONS[idx] }));
 
   return (
     <header className="sticky top-0 left-0 right-0 z-50 shadow-md">
@@ -104,7 +61,7 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
           <div className="flex items-center justify-between gap-6 h-[76px]">
 
             {/* Logo */}
-            <a href="#" onClick={(e) => handleNavClick('accueil', e)} className="flex items-center shrink-0 mr-2">
+            <a href="#" onClick={(e) => handleNavClick(e, '#accueil')} className="flex items-center shrink-0 mr-2">
               <OmyaLogo light={false} className="h-10 sm:h-11 w-auto" />
             </a>
 
@@ -119,7 +76,7 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                 >
                   <a
                     href={item.href}
-                    onClick={(e) => handleNavClick(item.viewId, e, item.href)}
+                    onClick={(e) => handleNavClick(e, item.href)}
                     className={`font-nav inline-flex items-center gap-1 px-3 py-2.5 text-[12.5px] font-bold tracking-wide transition-all uppercase rounded-sm border-b-2 whitespace-nowrap ${
                       activeDropdown === item.id
                         ? 'text-[#002E5B] border-b-[#002E5B] bg-slate-100'
@@ -146,7 +103,7 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                           <a
                             key={idx}
                             href={sub.href}
-                            onClick={(e) => handleNavClick(sub.viewId, e, sub.href)}
+                            onClick={(e) => handleNavClick(e, sub.href)}
                             className="block px-4 py-3 hover:bg-[#F4F6FA] border-b border-slate-100 last:border-none transition group"
                           >
                             <div className="text-[12.5px] font-bold font-nav text-[#001D3D] group-hover:text-[#002E5B] transition flex items-center justify-between">
@@ -172,11 +129,11 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                       >
                         <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-200">
                           <div>
-                            <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#002E5B] font-nav">Agrément COSUMAF-SDB-01/2025</span>
-                            <h4 className="text-sm font-bold text-[#001D3D] mt-0.5 font-nav">Nos 7 Solutions & Services Financiers</h4>
+                            <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#002E5B] font-nav">{t.headerNav.solutionsMegaAgrement}</span>
+                            <h4 className="text-sm font-bold text-[#001D3D] mt-0.5 font-nav">{t.headerNav.solutionsMegaTitle}</h4>
                           </div>
-                          <a href="#nos-solutions" onClick={(e) => handleNavClick('nos-solutions', e, '#nos-solutions')} className="text-xs font-bold text-[#002E5B] hover:underline inline-flex items-center gap-1 font-nav uppercase">
-                            <span>Voir tout</span>
+                          <a href="#nos-solutions" onClick={(e) => handleNavClick(e, '#nos-solutions')} className="text-xs font-bold text-[#002E5B] hover:underline inline-flex items-center gap-1 font-nav uppercase">
+                            <span>{t.headerNav.solutionsMegaSeeAll}</span>
                             <ArrowRight className="w-3.5 h-3.5" />
                           </a>
                         </div>
@@ -186,7 +143,7 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                             {solutionsCol1.map((svc) => {
                               const Icon = svc.icon;
                               return (
-                                <a key={svc.num} href={svc.href} onClick={(e) => handleNavClick(svc.viewId, e, svc.href)} className="flex items-start gap-3 p-3 hover:bg-[#F4F6FA] transition group rounded-md">
+                                <a key={svc.num} href={svc.href} onClick={(e) => handleNavClick(e, svc.href)} className="flex items-start gap-3 p-3 hover:bg-[#F4F6FA] transition group rounded-md">
                                   <div className="shrink-0 w-8 h-8 rounded-sm bg-[#002E5B] text-white flex items-center justify-center">
                                     <Icon className="w-4 h-4" />
                                   </div>
@@ -202,7 +159,7 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                             {solutionsCol2.map((svc) => {
                               const Icon = svc.icon;
                               return (
-                                <a key={svc.num} href={svc.href} onClick={(e) => handleNavClick(svc.viewId, e, svc.href)} className="flex items-start gap-3 p-3 hover:bg-[#F4F6FA] transition group rounded-md">
+                                <a key={svc.num} href={svc.href} onClick={(e) => handleNavClick(e, svc.href)} className="flex items-start gap-3 p-3 hover:bg-[#F4F6FA] transition group rounded-md">
                                   <div className="shrink-0 w-8 h-8 rounded-sm bg-[#002E5B] text-white flex items-center justify-center">
                                     <Icon className="w-4 h-4" />
                                   </div>
@@ -222,14 +179,55 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
               ))}
             </nav>
 
-            {/* CTA ESPACE CLIENT — BLEU NUIT AGRANDI */}
+            {/* CTA ESPACE CLIENT + SÉLECTEUR DE LANGUE — BLEU NUIT AGRANDI */}
             <div className="hidden 2xl:flex items-center gap-2 shrink-0">
+
+              {/* Language Switcher */}
+              <div
+                className="relative"
+                onMouseEnter={() => setLangMenuOpen(true)}
+                onMouseLeave={() => setLangMenuOpen(false)}
+              >
+                <button
+                  className="px-3 py-3 border border-slate-300 text-[#001D3D] hover:border-[#002E5B] hover:text-[#002E5B] transition-all duration-300 font-nav text-xs font-black uppercase rounded-sm flex items-center gap-1.5"
+                  aria-label={t.languageSelect}
+                >
+                  <Globe className="w-4 h-4" />
+                  <span>{currentLang}</span>
+                  <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${langMenuOpen ? 'rotate-180' : ''}`} />
+                </button>
+                <AnimatePresence>
+                  {langMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 8 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute top-full right-0 mt-0 w-44 bg-white border border-slate-200 border-t-2 border-t-[#002E5B] shadow-2xl z-50 rounded-b-md overflow-hidden"
+                    >
+                      {languages.map((lng) => (
+                        <button
+                          key={lng.code}
+                          onClick={() => { changeLanguage(lng.code); setLangMenuOpen(false); }}
+                          className={`w-full text-left px-4 py-2.5 text-xs font-bold font-nav transition flex items-center justify-between ${
+                            currentLang === lng.code ? 'bg-[#F4F6FA] text-[#002E5B]' : 'text-[#001D3D] hover:bg-[#F4F6FA]'
+                          }`}
+                        >
+                          <span>{lng.label}</span>
+                          <span className="text-[10px] text-slate-400 font-mono">{lng.short}</span>
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
               <button
                 onClick={() => onOpenAuth && onOpenAuth('login', 'client')}
                 className="px-7 py-3 bg-[#002E5B] text-white hover:bg-[#001D3D] transition-all duration-300 font-nav text-xs font-black uppercase rounded-sm border-2 border-[#002E5B] shadow-xl flex items-center gap-2 shrink-0 tracking-wider"
               >
                 <User className="w-4 h-4 text-white" />
-                <span>Espace client</span>
+                <span>{t.headerNav.espaceClient}</span>
               </button>
             </div>
 
@@ -254,11 +252,29 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
             transition={{ duration: 0.3 }}
             className="2xl:hidden bg-white border-b-2 border-[#002E5B] px-4 pt-2 pb-6 shadow-2xl"
           >
+            {/* Language Switcher — Mobile */}
+            <div className="flex items-center gap-2 py-3 border-b border-slate-100">
+              <Globe className="w-4 h-4 text-[#002E5B] shrink-0" />
+              {languages.map((lng) => (
+                <button
+                  key={lng.code}
+                  onClick={() => changeLanguage(lng.code)}
+                  className={`px-3 py-1.5 rounded-sm text-xs font-bold font-nav uppercase transition ${
+                    currentLang === lng.code
+                      ? 'bg-[#002E5B] text-white'
+                      : 'bg-[#F4F6FA] text-[#001D3D] hover:bg-slate-200'
+                  }`}
+                >
+                  {lng.short}
+                </button>
+              ))}
+            </div>
+
             <div className="space-y-0.5">
               {navMenuItems.map((item) => (
                 <div key={item.id} className="border-b border-slate-100 last:border-none">
                   {!item.dropdownType ? (
-                    <a href={item.href} onClick={(e) => { handleNavClick(item.viewId, e, item.href); setMobileMenuOpen(false); }} className="block py-3 text-sm font-bold text-[#001D3D] hover:text-[#002E5B] font-nav uppercase">
+                    <a href={item.href} onClick={(e) => { handleNavClick(e, item.href); setMobileMenuOpen(false); }} className="block py-3 text-sm font-bold text-[#001D3D] hover:text-[#002E5B] font-nav uppercase">
                       {item.label}
                     </a>
                   ) : (
@@ -271,10 +287,10 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                         <div className="pl-3 pb-3 space-y-2">
                           {item.dropdownType === 'megamenu'
                             ? [...solutionsCol1, ...solutionsCol2].map((s) => (
-                                <a key={s.num} href={s.href} onClick={(e) => { handleNavClick(s.viewId, e, s.href); setMobileMenuOpen(false); }} className="block py-1.5 text-xs font-semibold text-slate-700 hover:text-[#002E5B] font-nav">{s.title}</a>
+                                <a key={s.num} href={s.href} onClick={(e) => { handleNavClick(e, s.href); setMobileMenuOpen(false); }} className="block py-1.5 text-xs font-semibold text-slate-700 hover:text-[#002E5B] font-nav">{s.title}</a>
                               ))
                             : item.dropdownItems.map((sub, sIdx) => (
-                                <a key={sIdx} href={sub.href} onClick={(e) => { handleNavClick(sub.viewId, e, sub.href); setMobileMenuOpen(false); }} className="block py-1.5 text-xs font-semibold text-slate-700 hover:text-[#002E5B] font-nav">{sub.label}</a>
+                                <a key={sIdx} href={sub.href} onClick={(e) => { handleNavClick(e, sub.href); setMobileMenuOpen(false); }} className="block py-1.5 text-xs font-semibold text-slate-700 hover:text-[#002E5B] font-nav">{sub.label}</a>
                               ))}
                         </div>
                       )}
@@ -289,7 +305,7 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                 className="px-6 py-3.5 bg-[#002E5B] text-white hover:bg-[#001D3D] transition-all font-nav text-xs font-black uppercase rounded-sm border-2 border-[#002E5B] w-full justify-center flex items-center gap-2"
               >
                 <User className="w-4 h-4" />
-                <span>Espace client</span>
+                <span>{t.headerNav.espaceClient}</span>
               </button>
             </div>
           </motion.div>
