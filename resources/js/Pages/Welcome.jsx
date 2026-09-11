@@ -82,12 +82,12 @@ function WelcomeContent({ auth }) {
         <HeaderNav onOpenAuth={handleOpenAuth} onSelectView={handleSelectView} />
 
         {/* ── SUB-NAVBAR QUICK TAB BAR ── */}
-        <div className="sticky top-[108px] z-40 bg-[#001D3D] border-b border-[#FFFFFF]/30 shadow-md py-2 px-4">
-          <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 overflow-x-auto font-nav text-xs uppercase tracking-wider">
-            <span className="text-[10px] font-bold text-[#FFFFFF] hidden sm:block shrink-0 mr-2">
+        <div className="relative sticky top-[108px] z-40 bg-[#001D3D] border-b border-[#FFFFFF]/30 shadow-md py-2 px-4">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 font-nav text-sm uppercase tracking-wider">
+            <span className="text-xs font-bold text-[#FFFFFF] hidden sm:block shrink-0 mr-2">
               {t.categoryRubric} :
             </span>
-            <div className="flex items-center gap-1 overflow-x-auto py-0.5">
+            <div className="flex items-center gap-1 overflow-x-auto py-0.5 scrollbar-none">
               {viewTabs.map((tab) => {
                 const TabIcon = tab.icon;
                 const isActive = activeView === tab.id;
@@ -108,6 +108,8 @@ function WelcomeContent({ auth }) {
               })}
             </div>
           </div>
+          {/* Indice visuel de défilement (mobile) */}
+          <div className="absolute right-0 top-0 bottom-0 w-10 bg-gradient-to-l from-[#001D3D] to-transparent pointer-events-none sm:hidden" />
         </div>
 
         <main className="relative z-10">
@@ -144,7 +146,7 @@ function WelcomeContent({ auth }) {
                     description={sh['a-propos'].description}
                     onSelectView={handleSelectView}
                   />
-                  <AboutSection onSelectView={handleSelectView} />
+                  <AboutSection onSelectView={handleSelectView} hideTag />
                   <MissionVisionValuesSection />
                   <TargetsSection />
                 </>

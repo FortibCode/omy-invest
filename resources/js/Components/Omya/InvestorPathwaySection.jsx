@@ -52,7 +52,7 @@ export default function InvestorPathwaySection({ onSelectView }) {
           <h2 className="text-4xl sm:text-6xl font-bold text-[#002E5B] leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
             {t.investor.title}
           </h2>
-          <p className="text-slate-700 text-sm sm:text-base leading-relaxed bg-[#F4F6FA] p-6 rounded-md border-l-4 border-l-[#002E5B] border border-slate-200 shadow-sm font-poppins">
+          <p className="text-slate-700 text-base sm:text-lg leading-relaxed bg-[#F4F6FA] p-6 rounded-md border-l-4 border-l-[#002E5B] border border-slate-200 shadow-sm font-poppins">
             {t.investor.quote}
           </p>
         </div>
@@ -64,27 +64,30 @@ export default function InvestorPathwaySection({ onSelectView }) {
             <h3 className="text-xl font-bold text-[#001D3D] font-nav uppercase tracking-wide">
               {t.investor.stepperTitle}
             </h3>
-            <p className="text-xs text-slate-500 mt-1 font-poppins">
+            <p className="text-sm text-slate-500 mt-1 font-poppins">
               {t.investor.stepperSub}
             </p>
           </div>
 
           {/* Step Navigation Tabs Bar */}
-          <div className="flex items-center justify-between gap-2 overflow-x-auto pb-4 mb-6 border-b border-slate-200">
-            {journeySteps.map((step, idx) => (
-              <button
-                key={step.num}
-                onClick={() => setActiveStep(idx)}
-                className={`px-4 py-2.5 rounded-sm font-nav text-xs font-bold uppercase transition-all duration-300 flex items-center gap-2 shrink-0 ${
-                  idx === activeStep
-                    ? 'bg-[#002E5B] text-white shadow-lg scale-105 ring-2 ring-[#002E5B]/40'
-                    : 'bg-[#F4F6FA] text-slate-700 hover:text-[#002E5B] hover:bg-slate-200 border border-slate-200'
-                }`}
-              >
-                <span className="font-mono text-[11px]">{step.num}</span>
-                <span>{step.title}</span>
-              </button>
-            ))}
+          <div className="relative mb-6">
+            <div className="flex items-center gap-2 overflow-x-auto pb-4 border-b border-slate-200 scrollbar-none">
+              {journeySteps.map((step, idx) => (
+                <button
+                  key={step.num}
+                  onClick={() => setActiveStep(idx)}
+                  className={`px-4 py-2.5 rounded-sm font-nav text-[13px] font-bold uppercase transition-all duration-300 flex items-center gap-2 shrink-0 ${
+                    idx === activeStep
+                      ? 'bg-[#002E5B] text-white shadow-lg scale-105 ring-2 ring-[#002E5B]/40'
+                      : 'bg-[#F4F6FA] text-slate-700 hover:text-[#002E5B] hover:bg-slate-200 border border-slate-200'
+                  }`}
+                >
+                  <span className="font-mono text-[11px]">{step.num}</span>
+                  <span>{step.title}</span>
+                </button>
+              ))}
+            </div>
+            <div className="absolute right-0 top-0 bottom-4 w-10 bg-gradient-to-l from-white to-transparent pointer-events-none sm:hidden" />
           </div>
 
           {/* Active Step Showcase Card */}
@@ -115,7 +118,7 @@ export default function InvestorPathwaySection({ onSelectView }) {
                   </span>
                 </div>
 
-                <p className="text-sm sm:text-base text-slate-700 leading-relaxed font-poppins font-normal max-w-4xl">
+                <p className="text-base sm:text-lg text-slate-700 leading-relaxed font-poppins font-normal max-w-4xl">
                   {currentStepData.desc}
                 </p>
 
@@ -159,10 +162,10 @@ export default function InvestorPathwaySection({ onSelectView }) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bvmac-card p-6 border-l-4 border-l-[#002E5B] bg-white border border-slate-200 shadow-md hover:shadow-xl transition-all">
             <h4 className="text-base font-bold text-[#002E5B] mb-2" style={{ fontFamily: "'Open Sans', sans-serif" }}>{t.investor.overviewCards[0].title}</h4>
-            <p className="text-xs text-slate-600 leading-relaxed mb-4 font-poppins">
+            <p className="text-sm text-slate-600 leading-relaxed mb-4 font-poppins">
               {t.investor.overviewCards[0].desc}
             </p>
-            <a href="#solutions-placements" onClick={(e) => handleLinkClick(e, '#solutions-placements')} className="text-xs font-bold text-[#002E5B] hover:underline inline-flex items-center gap-1 font-nav uppercase">
+            <a href="#solutions-placements" onClick={(e) => handleLinkClick(e, '#solutions-placements')} className="text-[13px] font-bold text-[#002E5B] hover:underline inline-flex items-center gap-1 font-nav uppercase">
               <span>{t.common.enSavoirPlus}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </a>
@@ -170,10 +173,10 @@ export default function InvestorPathwaySection({ onSelectView }) {
 
           <div className="bvmac-card p-6 border-l-4 border-l-[#002E5B] bg-white border border-slate-200 shadow-md hover:shadow-xl transition-all">
             <h4 className="text-base font-bold text-[#002E5B] mb-2" style={{ fontFamily: "'Open Sans', sans-serif" }}>{t.investor.overviewCards[1].title}</h4>
-            <p className="text-xs text-slate-600 leading-relaxed mb-4 font-poppins">
+            <p className="text-sm text-slate-600 leading-relaxed mb-4 font-poppins">
               {t.investor.overviewCards[1].desc}
             </p>
-            <a href="#solutions-gestion" onClick={(e) => handleLinkClick(e, '#solutions-gestion')} className="text-xs font-bold text-[#002E5B] hover:underline inline-flex items-center gap-1 font-nav uppercase">
+            <a href="#solutions-gestion" onClick={(e) => handleLinkClick(e, '#solutions-gestion')} className="text-[13px] font-bold text-[#002E5B] hover:underline inline-flex items-center gap-1 font-nav uppercase">
               <span>{t.common.enSavoirPlus}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </a>
@@ -181,10 +184,10 @@ export default function InvestorPathwaySection({ onSelectView }) {
 
           <div className="bvmac-card p-6 border-l-4 border-l-[#002E5B] bg-white border border-slate-200 shadow-md hover:shadow-xl transition-all">
             <h4 className="text-base font-bold text-[#002E5B] mb-2" style={{ fontFamily: "'Open Sans', sans-serif" }}>{t.investor.overviewCards[2].title}</h4>
-            <p className="text-xs text-slate-600 leading-relaxed mb-4 font-poppins">
+            <p className="text-sm text-slate-600 leading-relaxed mb-4 font-poppins">
               {t.investor.overviewCards[2].desc}
             </p>
-            <a href="#solutions-execution" onClick={(e) => handleLinkClick(e, '#solutions-execution')} className="text-xs font-bold text-[#002E5B] hover:underline inline-flex items-center gap-1 font-nav uppercase">
+            <a href="#solutions-execution" onClick={(e) => handleLinkClick(e, '#solutions-execution')} className="text-[13px] font-bold text-[#002E5B] hover:underline inline-flex items-center gap-1 font-nav uppercase">
               <span>{t.common.enSavoirPlus}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </a>

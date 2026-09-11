@@ -88,7 +88,7 @@ export default function HeroSection({ onSelectView }) {
               initial="enter"
               animate="center"
               exit="exit"
-              className="absolute inset-0 z-0 flex items-center"
+              className="relative z-0 flex items-center"
             >
               {/* Background Image */}
               <div
@@ -133,7 +133,7 @@ export default function HeroSection({ onSelectView }) {
                 </h1>
 
                 {/* Paragraph Description */}
-                <p className="text-slate-100 text-xs sm:text-base leading-relaxed font-poppins font-light bg-[#001D3D]/80 p-5 rounded-md border border-slate-700/60 backdrop-blur-md">
+                <p className="text-slate-100 text-base sm:text-lg leading-relaxed font-poppins font-light bg-[#001D3D]/80 p-5 rounded-md border border-slate-700/60 backdrop-blur-md">
                   {activeSlide.description}
                 </p>
 
@@ -175,21 +175,24 @@ export default function HeroSection({ onSelectView }) {
           <div className="relative z-30 bg-[#001D3D]/95 backdrop-blur-md px-6 py-4 border-t border-white/20 flex flex-col sm:flex-row items-center justify-between gap-4">
             
             {/* Slide Category Tabs */}
-            <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto">
-              {HERO_SLIDES.map((slide, idx) => (
-                <button
-                  key={slide.id}
-                  onClick={() => goToSlide(idx)}
-                  className={`px-3.5 py-1.5 rounded-sm font-nav text-xs font-bold uppercase transition-all duration-300 flex items-center gap-2 ${
-                    idx === slideIndex
-                      ? 'bg-white text-[#001D3D] shadow-md'
-                      : 'bg-white/10 text-slate-300 hover:bg-white/20 hover:text-white border border-slate-700/50'
-                  }`}
-                >
-                  <span className="font-mono text-[10px]">0{slide.id}</span>
-                  <span>{slide.category}</span>
-                </button>
-              ))}
+            <div className="relative w-full sm:w-auto">
+              <div className="flex items-center gap-2 overflow-x-auto scrollbar-none">
+                {HERO_SLIDES.map((slide, idx) => (
+                  <button
+                    key={slide.id}
+                    onClick={() => goToSlide(idx)}
+                    className={`px-3.5 py-1.5 rounded-sm font-nav text-xs font-bold uppercase transition-all duration-300 flex items-center gap-2 shrink-0 ${
+                      idx === slideIndex
+                        ? 'bg-white text-[#001D3D] shadow-md'
+                        : 'bg-white/10 text-slate-300 hover:bg-white/20 hover:text-white border border-slate-700/50'
+                    }`}
+                  >
+                    <span className="font-mono text-[10px]">0{slide.id}</span>
+                    <span>{slide.category}</span>
+                  </button>
+                ))}
+              </div>
+              <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#001D3D] to-transparent pointer-events-none sm:hidden" />
             </div>
 
             {/* Controls & Progress */}

@@ -1,5 +1,5 @@
 /**
- * animations.js — Framer Motion variants & helpers for OMYA CAPITAL
+ * animations.js — Framer Motion variants & helpers for OMYA INVEST
  * Utiliser avec motion.div et useInView/useAnimation de framer-motion
  */
 

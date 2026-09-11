@@ -39,7 +39,7 @@ export default function FinancialMarketSection({ onSelectView }) {
           <h2 className="text-4xl sm:text-6xl font-bold text-white leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
             {t.financialMarket.title}
           </h2>
-          <p className="text-slate-300 text-sm leading-relaxed font-poppins">
+          <p className="text-slate-300 text-base leading-relaxed font-poppins">
             {t.financialMarket.desc}
           </p>
         </div>
@@ -49,7 +49,7 @@ export default function FinancialMarketSection({ onSelectView }) {
           <div className="inline-flex p-1.5 rounded-md bg-[#001D3D] border border-[#FFFFFF]/30 space-x-2">
             <button
               onClick={() => setActiveTab('instruments')}
-              className={`px-6 py-2.5 rounded-sm text-xs font-bold font-nav uppercase transition-all ${
+              className={`px-6 py-2.5 rounded-sm text-[13px] font-bold font-nav uppercase transition-all ${
                 activeTab === 'instruments'
                   ? 'bg-[#FFFFFF] text-[#001D3D] shadow-lg'
                   : 'text-slate-300 hover:text-white'
@@ -59,7 +59,7 @@ export default function FinancialMarketSection({ onSelectView }) {
             </button>
             <button
               onClick={() => setActiveTab('acteurs')}
-              className={`px-6 py-2.5 rounded-sm text-xs font-bold font-nav uppercase transition-all ${
+              className={`px-6 py-2.5 rounded-sm text-[13px] font-bold font-nav uppercase transition-all ${
                 activeTab === 'acteurs'
                   ? 'bg-[#FFFFFF] text-[#001D3D] shadow-lg'
                   : 'text-slate-300 hover:text-white'
@@ -88,7 +88,7 @@ export default function FinancialMarketSection({ onSelectView }) {
                   <h3 className="text-xl font-bold text-white mt-4 mb-2" style={{ fontFamily: "'Open Sans', sans-serif" }}>
                     {inst.type}
                   </h3>
-                  <p className="text-xs text-slate-300 leading-relaxed font-poppins">
+                  <p className="text-sm text-slate-300 leading-relaxed font-poppins">
                     {inst.desc}
                   </p>
                 </div>
@@ -121,7 +121,7 @@ export default function FinancialMarketSection({ onSelectView }) {
                   <h3 className="text-lg font-bold text-white mt-2 mb-2" style={{ fontFamily: "'Open Sans', sans-serif" }}>
                     {actor.name}
                   </h3>
-                  <p className="text-xs text-slate-300 leading-relaxed font-poppins">
+                  <p className="text-sm text-slate-300 leading-relaxed font-poppins">
                     {actor.desc}
                   </p>
                 </div>
@@ -131,7 +131,7 @@ export default function FinancialMarketSection({ onSelectView }) {
         )}
 
         {/* Informative Banner */}
-        <div className="mt-12 p-6 bg-[#001D3D] rounded-md border border-[#FFFFFF]/30 flex items-center gap-4 text-xs text-slate-300 font-poppins">
+        <div className="mt-12 p-6 bg-[#001D3D] rounded-md border border-[#FFFFFF]/30 flex items-center gap-4 text-sm text-slate-300 font-poppins">
           <Info className="w-6 h-6 text-[#FFFFFF] shrink-0" />
           <p>
             {t.financialMarket.bannerText}

@@ -1,8 +1,21 @@
 import React from 'react';
 
 export default function OmyaLogo({ className = "h-9", light = false }) {
-  const textColor = light ? "#FFFFFF" : "#075985";
-  const investColor = light ? "#38BDF8" : "#0284C7";
+  // Logo officiel OMYA INVEST (fichier réel fourni, fond transparent).
+  // Utilisé sur tous les fonds clairs. Sur fond sombre, aucun fichier officiel
+  // en blanc n'existe : on garde une reproduction vectorielle fidèle en blanc.
+  if (!light) {
+    return (
+      <img
+        src="/images/omya-invest-logo.png"
+        alt="OMYA INVEST"
+        className={`inline-block object-contain select-none ${className}`}
+      />
+    );
+  }
+
+  const textColor = "#FFFFFF";
+  const investColor = "#38BDF8";
 
   return (
     <div className={`inline-flex flex-col items-center justify-center select-none ${className}`}>

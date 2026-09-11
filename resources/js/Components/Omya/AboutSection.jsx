@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { resolveAnchor } from '@/utils/viewAnchors';
 import { useLanguage } from '@/Context/LanguageContext';
 
-export default function AboutSection({ onSelectView }) {
+export default function AboutSection({ onSelectView, hideTag = false }) {
   const { t } = useLanguage();
   const handleLinkClick = (e, href) => {
     e.preventDefault();
@@ -27,17 +27,19 @@ export default function AboutSection({ onSelectView }) {
             transition={{ duration: 0.6 }}
             className="lg:col-span-6 space-y-6"
           >
-            <div className="section-tag-bvmac">
-              <span>{t.about.tag}</span>
-            </div>
+            {!hideTag && (
+              <div className="section-tag-bvmac">
+                <span>{t.about.tag}</span>
+              </div>
+            )}
 
             <h2 className="text-4xl sm:text-6xl font-bold text-[#002E5B] leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
               {t.about.title}
             </h2>
 
             {/* EXACT FORM TEXT IN A CLEAN SPACIATION */}
-            <div className="text-slate-600 text-sm sm:text-base leading-relaxed space-y-4 font-poppins">
-              <p className="bg-white p-6 rounded-md border border-[#D4DCE8] shadow-sm">
+            <div className="text-slate-600 text-base sm:text-lg leading-relaxed space-y-4 font-poppins bg-white p-6 rounded-md border border-[#D4DCE8] shadow-sm">
+              <p>
                 {t.about.p1}{' '}
                 <span className="inline-block font-mono font-bold text-[#002E5B] bg-[#F4F6FA] px-2.5 py-0.5 rounded border border-[#002E5B]/50">
                   COSUMAF-SDB-01/2025
@@ -104,11 +106,11 @@ export default function AboutSection({ onSelectView }) {
                 {/* Clean Stamp Banner at Bottom */}
                 <div className="absolute bottom-5 left-5 right-5 bg-[#001D3D]/95 backdrop-blur-md p-4 rounded-md border border-[#002E5B]/40 flex items-center justify-between text-white font-poppins">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-sm bg-[#002E5B] text-[#001D3D] flex items-center justify-center shrink-0 font-bold">
+                    <div className="w-10 h-10 rounded-sm bg-[#002E5B] text-white flex items-center justify-center shrink-0 font-bold">
                       <ShieldCheck className="w-6 h-6" />
                     </div>
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-[#002E5B] font-nav tracking-wider block">{t.about.agreementLabel}</span>
+                      <span className="text-xs uppercase font-bold text-slate-300 font-nav tracking-wider block">{t.about.agreementLabel}</span>
                       <strong className="text-sm font-mono text-white">COSUMAF-SDB-01/2025</strong>
                     </div>
                   </div>

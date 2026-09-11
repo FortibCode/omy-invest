@@ -62,7 +62,7 @@ export default function IssuerPathwaySection({ onSelectView }) {
           <h2 className="text-4xl sm:text-6xl font-bold text-white leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
             {t.issuer.title}
           </h2>
-          <p className="text-slate-200 text-sm sm:text-base leading-relaxed bg-[#002E5B]/90 p-6 rounded-md border border-white/20 shadow-xl font-poppins">
+          <p className="text-slate-200 text-base sm:text-lg leading-relaxed bg-[#002E5B]/90 p-6 rounded-md border border-white/20 shadow-xl font-poppins">
             {t.issuer.quote}
           </p>
         </div>
@@ -71,21 +71,24 @@ export default function IssuerPathwaySection({ onSelectView }) {
         <div className="mb-14">
           
           {/* Top Operation Navigation Tabs */}
-          <div className="flex items-center justify-between gap-2 overflow-x-auto pb-4 mb-6 border-b border-slate-700/60">
-            {OPERATIONS.map((op, idx) => (
-              <button
-                key={op.id}
-                onClick={() => setActiveOpIndex(idx)}
-                className={`px-4 py-2.5 rounded-sm font-nav text-xs font-bold uppercase transition-all duration-300 flex items-center gap-2 shrink-0 ${
-                  idx === activeOpIndex
-                    ? 'bg-white text-[#001D3D] shadow-xl scale-105 font-black'
-                    : 'bg-[#002E5B] text-slate-300 hover:text-white border border-slate-700'
-                }`}
-              >
-                <span className="font-mono text-[11px]">{op.num}</span>
-                <span>{op.title}</span>
-              </button>
-            ))}
+          <div className="relative mb-6">
+            <div className="flex items-center gap-2 overflow-x-auto pb-4 border-b border-slate-700/60 scrollbar-none">
+              {OPERATIONS.map((op, idx) => (
+                <button
+                  key={op.id}
+                  onClick={() => setActiveOpIndex(idx)}
+                  className={`px-4 py-2.5 rounded-sm font-nav text-[13px] font-bold uppercase transition-all duration-300 flex items-center gap-2 shrink-0 ${
+                    idx === activeOpIndex
+                      ? 'bg-white text-[#001D3D] shadow-xl scale-105 font-black'
+                      : 'bg-[#002E5B] text-slate-300 hover:text-white border border-slate-700'
+                  }`}
+                >
+                  <span className="font-mono text-[11px]">{op.num}</span>
+                  <span>{op.title}</span>
+                </button>
+              ))}
+            </div>
+            <div className="absolute right-0 top-0 bottom-4 w-10 bg-gradient-to-l from-[#001D3D] to-transparent pointer-events-none sm:hidden" />
           </div>
 
           {/* Active Operation Card (Synchronized Image + Text Transition) */}
@@ -117,7 +120,7 @@ export default function IssuerPathwaySection({ onSelectView }) {
                     {activeOp.title}
                   </h3>
 
-                  <p className="text-slate-100 text-sm sm:text-base leading-relaxed font-poppins font-light bg-[#001D3D]/80 p-5 rounded-md border border-slate-700/60">
+                  <p className="text-slate-100 text-base sm:text-lg leading-relaxed font-poppins font-light bg-[#001D3D]/80 p-5 rounded-md border border-slate-700/60">
                     {activeOp.desc}
                   </p>
 
@@ -185,7 +188,7 @@ export default function IssuerPathwaySection({ onSelectView }) {
             <h4 className="text-xl sm:text-2xl font-bold text-[#002E5B]" style={{ fontFamily: "'Open Sans', sans-serif" }}>
               {t.issuer.bannerTitle}
             </h4>
-            <p className="text-xs sm:text-sm text-slate-600 font-poppins">
+            <p className="text-sm sm:text-base text-slate-600 font-poppins">
               {t.issuer.bannerDesc}
             </p>
           </div>

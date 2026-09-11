@@ -30,7 +30,7 @@ export default function MissionVisionValuesSection() {
             <h2 className="text-4xl sm:text-6xl font-bold font-serif-luxury text-white leading-tight">
               {t.missionVisionValues.missionQuote}
             </h2>
-            <p className="text-slate-400 text-sm">
+            <p className="text-slate-400 text-base">
               {t.missionVisionValues.missionSub}
             </p>
           </div>
@@ -50,12 +50,12 @@ export default function MissionVisionValuesSection() {
                     <Building className="w-6 h-6" />
                   </div>
                   <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#FFFFFF]">{t.missionVisionValues.moralesLabel}</span>
+                    <span className="text-xs font-extrabold uppercase tracking-wider text-[#FFFFFF]">{t.missionVisionValues.moralesLabel}</span>
                     <h3 className="text-xl font-bold font-serif-luxury text-white">{t.missionVisionValues.moralesTitle}</h3>
                   </div>
                 </div>
 
-                <p className="text-sm text-slate-300 leading-relaxed bg-[#0A1128]/80 p-5 rounded-xl border border-slate-800">
+                <p className="text-base text-slate-300 leading-relaxed bg-[#0A1128]/80 p-5 rounded-xl border border-slate-800">
                   {t.missionVisionValues.moralesText}
                 </p>
               </div>
@@ -66,20 +66,20 @@ export default function MissionVisionValuesSection() {
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="glass-card-dark p-8 border border-sky-500/30 flex flex-col justify-between group"
+              className="glass-card-dark p-8 border border-[#FFFFFF]/30 flex flex-col justify-between group"
             >
               <div>
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400">
+                  <div className="w-12 h-12 rounded-xl bg-[#FFFFFF]/15 border border-[#FFFFFF]/30 flex items-center justify-center text-[#FFFFFF]">
                     <User className="w-6 h-6" />
                   </div>
                   <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-sky-400">{t.missionVisionValues.physiquesLabel}</span>
+                    <span className="text-xs font-extrabold uppercase tracking-wider text-[#FFFFFF]">{t.missionVisionValues.physiquesLabel}</span>
                     <h3 className="text-xl font-bold font-serif-luxury text-white">{t.missionVisionValues.physiquesTitle}</h3>
                   </div>
                 </div>
 
-                <p className="text-sm text-slate-300 leading-relaxed bg-[#0A1128]/80 p-5 rounded-xl border border-slate-800">
+                <p className="text-base text-slate-300 leading-relaxed bg-[#0A1128]/80 p-5 rounded-xl border border-slate-800">
                   {t.missionVisionValues.physiquesText}
                 </p>
               </div>
@@ -119,7 +119,7 @@ export default function MissionVisionValuesSection() {
                 <h3 className="text-lg font-bold font-serif-luxury text-white mb-3">
                   {step.title}
                 </h3>
-                <p className="text-xs text-slate-300 leading-relaxed bg-[#0A1128]/60 p-4 rounded-xl border border-slate-800/80">
+                <p className="text-sm text-slate-300 leading-relaxed bg-[#0A1128]/60 p-4 rounded-xl border border-slate-800/80">
                   {step.text}
                 </p>
               </motion.div>
@@ -140,7 +140,7 @@ export default function MissionVisionValuesSection() {
             <h2 className="text-4xl sm:text-5xl font-bold font-serif-luxury text-white leading-tight">
               {t.missionVisionValues.valeursTitle}
             </h2>
-            <p className="text-xs text-slate-400 max-w-2xl mx-auto italic font-serif-luxury">
+            <p className="text-sm text-slate-400 max-w-2xl mx-auto italic font-serif-luxury">
               {t.missionVisionValues.valeursQuote}
             </p>
           </div>

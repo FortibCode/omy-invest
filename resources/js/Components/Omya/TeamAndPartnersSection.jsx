@@ -144,7 +144,7 @@ export default function TeamAndPartnersSection({ onSelectView }) {
                 <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#002E5B] bg-[#EEF2F8] px-2.5 py-0.5 rounded-sm font-nav mt-1.5 border border-slate-200">
                   {member.position}
                 </span>
-                <p className="text-xs text-slate-500 mt-2 leading-relaxed font-poppins">
+                <p className="text-sm text-slate-500 mt-2 leading-relaxed font-poppins">
                   {member.department}
                 </p>
               </motion.div>

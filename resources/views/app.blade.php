@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>{{ config('app.name', 'OMYA CAPITAL') }}</title>
+        <title inertia>{{ config('app.name', 'OMYA INVEST') }}</title>
 
         <!-- Favicon Officiel OMYA INVEST PNG -->
         <link rel="icon" type="image/png" href="/favicon.png?v=2" />

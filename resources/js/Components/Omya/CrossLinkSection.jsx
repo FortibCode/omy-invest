@@ -16,7 +16,7 @@ export default function CrossLinkSection({ icon: Icon, title, description, ctas 
           {title}
         </h3>
 
-        <p className={`text-sm leading-relaxed max-w-xl mx-auto font-poppins ${dark ? 'text-slate-300' : 'text-slate-600'}`}>
+        <p className={`text-base leading-relaxed max-w-xl mx-auto font-poppins ${dark ? 'text-slate-300' : 'text-slate-600'}`}>
           {description}
         </p>
 

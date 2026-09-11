@@ -346,3 +346,12 @@ select:focus-visible,
 ::-webkit-scrollbar-thumb:hover {
   background: #001D3D;
 }
+
+/* Hides the scrollbar on horizontal tab/chip strips while keeping them scrollable */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}

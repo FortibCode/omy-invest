@@ -77,7 +77,7 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                   <a
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
-                    className={`font-nav inline-flex items-center gap-1 px-3 py-2.5 text-[12.5px] font-bold tracking-wide transition-all uppercase rounded-sm border-b-2 whitespace-nowrap ${
+                    className={`font-nav inline-flex items-center gap-1 px-3 py-2.5 text-[13.5px] font-bold tracking-wide transition-all uppercase rounded-sm border-b-2 whitespace-nowrap ${
                       activeDropdown === item.id
                         ? 'text-[#002E5B] border-b-[#002E5B] bg-slate-100'
                         : 'text-[#001D3D] hover:text-[#002E5B] hover:border-b-[#002E5B] hover:bg-slate-50'
@@ -106,11 +106,11 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                             onClick={(e) => handleNavClick(e, sub.href)}
                             className="block px-4 py-3 hover:bg-[#F4F6FA] border-b border-slate-100 last:border-none transition group"
                           >
-                            <div className="text-[12.5px] font-bold font-nav text-[#001D3D] group-hover:text-[#002E5B] transition flex items-center justify-between">
+                            <div className="text-sm font-bold font-nav text-[#001D3D] group-hover:text-[#002E5B] transition flex items-center justify-between">
                               <span>{sub.label}</span>
                               <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 text-[#002E5B] transition-all" />
                             </div>
-                            <div className="text-[11px] text-slate-500 leading-snug mt-0.5">{sub.desc}</div>
+                            <div className="text-xs text-slate-500 leading-snug mt-0.5">{sub.desc}</div>
                           </a>
                         ))}
                       </motion.div>
@@ -132,7 +132,7 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                             <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#002E5B] font-nav">{t.headerNav.solutionsMegaAgrement}</span>
                             <h4 className="text-sm font-bold text-[#001D3D] mt-0.5 font-nav">{t.headerNav.solutionsMegaTitle}</h4>
                           </div>
-                          <a href="#nos-solutions" onClick={(e) => handleNavClick(e, '#nos-solutions')} className="text-xs font-bold text-[#002E5B] hover:underline inline-flex items-center gap-1 font-nav uppercase">
+                          <a href="#nos-solutions" onClick={(e) => handleNavClick(e, '#nos-solutions')} className="text-[13px] font-bold text-[#002E5B] hover:underline inline-flex items-center gap-1 font-nav uppercase">
                             <span>{t.headerNav.solutionsMegaSeeAll}</span>
                             <ArrowRight className="w-3.5 h-3.5" />
                           </a>
@@ -148,8 +148,8 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                                     <Icon className="w-4 h-4" />
                                   </div>
                                   <div>
-                                    <h5 className="text-[12px] font-bold text-[#001D3D] group-hover:text-[#002E5B] transition font-nav">{svc.title}</h5>
-                                    <p className="text-[10.5px] text-slate-500 mt-0.5 leading-snug">{svc.desc}</p>
+                                    <h5 className="text-sm font-bold text-[#001D3D] group-hover:text-[#002E5B] transition font-nav">{svc.title}</h5>
+                                    <p className="text-xs text-slate-500 mt-0.5 leading-snug">{svc.desc}</p>
                                   </div>
                                 </a>
                               );
@@ -164,8 +164,8 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                                     <Icon className="w-4 h-4" />
                                   </div>
                                   <div>
-                                    <h5 className="text-[12px] font-bold text-[#001D3D] group-hover:text-[#002E5B] transition font-nav">{svc.title}</h5>
-                                    <p className="text-[10.5px] text-slate-500 mt-0.5 leading-snug">{svc.desc}</p>
+                                    <h5 className="text-sm font-bold text-[#001D3D] group-hover:text-[#002E5B] transition font-nav">{svc.title}</h5>
+                                    <p className="text-xs text-slate-500 mt-0.5 leading-snug">{svc.desc}</p>
                                   </div>
                                 </a>
                               );
@@ -189,7 +189,7 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                 onMouseLeave={() => setLangMenuOpen(false)}
               >
                 <button
-                  className="px-3 py-3 border border-slate-300 text-[#001D3D] hover:border-[#002E5B] hover:text-[#002E5B] transition-all duration-300 font-nav text-xs font-black uppercase rounded-sm flex items-center gap-1.5"
+                  className="px-3 py-3 border border-slate-300 text-[#001D3D] hover:border-[#002E5B] hover:text-[#002E5B] transition-all duration-300 font-nav text-[13px] font-black uppercase rounded-sm flex items-center gap-1.5"
                   aria-label={t.languageSelect}
                 >
                   <Globe className="w-4 h-4" />
@@ -209,12 +209,12 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                         <button
                           key={lng.code}
                           onClick={() => { changeLanguage(lng.code); setLangMenuOpen(false); }}
-                          className={`w-full text-left px-4 py-2.5 text-xs font-bold font-nav transition flex items-center justify-between ${
+                          className={`w-full text-left px-4 py-2.5 text-[13px] font-bold font-nav transition flex items-center justify-between ${
                             currentLang === lng.code ? 'bg-[#F4F6FA] text-[#002E5B]' : 'text-[#001D3D] hover:bg-[#F4F6FA]'
                           }`}
                         >
                           <span>{lng.label}</span>
-                          <span className="text-[10px] text-slate-400 font-mono">{lng.short}</span>
+                          <span className="text-[11px] text-slate-400 font-mono">{lng.short}</span>
                         </button>
                       ))}
                     </motion.div>
@@ -224,7 +224,7 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
 
               <button
                 onClick={() => onOpenAuth && onOpenAuth('login', 'client')}
-                className="px-7 py-3 bg-[#002E5B] text-white hover:bg-[#001D3D] transition-all duration-300 font-nav text-xs font-black uppercase rounded-sm border-2 border-[#002E5B] shadow-xl flex items-center gap-2 shrink-0 tracking-wider"
+                className="px-7 py-3 bg-[#002E5B] text-white hover:bg-[#001D3D] transition-all duration-300 font-nav text-[13px] font-black uppercase rounded-sm border-2 border-[#002E5B] shadow-xl flex items-center gap-2 shrink-0 tracking-wider"
               >
                 <User className="w-4 h-4 text-white" />
                 <span>{t.headerNav.espaceClient}</span>
@@ -259,7 +259,7 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                 <button
                   key={lng.code}
                   onClick={() => changeLanguage(lng.code)}
-                  className={`px-3 py-1.5 rounded-sm text-xs font-bold font-nav uppercase transition ${
+                  className={`px-3 py-1.5 rounded-sm text-[13px] font-bold font-nav uppercase transition ${
                     currentLang === lng.code
                       ? 'bg-[#002E5B] text-white'
                       : 'bg-[#F4F6FA] text-[#001D3D] hover:bg-slate-200'
@@ -287,10 +287,10 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                         <div className="pl-3 pb-3 space-y-2">
                           {item.dropdownType === 'megamenu'
                             ? [...solutionsCol1, ...solutionsCol2].map((s) => (
-                                <a key={s.num} href={s.href} onClick={(e) => { handleNavClick(e, s.href); setMobileMenuOpen(false); }} className="block py-1.5 text-xs font-semibold text-slate-700 hover:text-[#002E5B] font-nav">{s.title}</a>
+                                <a key={s.num} href={s.href} onClick={(e) => { handleNavClick(e, s.href); setMobileMenuOpen(false); }} className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-[#002E5B] font-nav">{s.title}</a>
                               ))
                             : item.dropdownItems.map((sub, sIdx) => (
-                                <a key={sIdx} href={sub.href} onClick={(e) => { handleNavClick(e, sub.href); setMobileMenuOpen(false); }} className="block py-1.5 text-xs font-semibold text-slate-700 hover:text-[#002E5B] font-nav">{sub.label}</a>
+                                <a key={sIdx} href={sub.href} onClick={(e) => { handleNavClick(e, sub.href); setMobileMenuOpen(false); }} className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-[#002E5B] font-nav">{sub.label}</a>
                               ))}
                         </div>
                       )}
@@ -302,7 +302,7 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
             <div className="mt-6 pt-4 border-t border-slate-200">
               <button
                 onClick={() => { onOpenAuth && onOpenAuth('login', 'client'); setMobileMenuOpen(false); }}
-                className="px-6 py-3.5 bg-[#002E5B] text-white hover:bg-[#001D3D] transition-all font-nav text-xs font-black uppercase rounded-sm border-2 border-[#002E5B] w-full justify-center flex items-center gap-2"
+                className="px-6 py-3.5 bg-[#002E5B] text-white hover:bg-[#001D3D] transition-all font-nav text-[13px] font-black uppercase rounded-sm border-2 border-[#002E5B] w-full justify-center flex items-center gap-2"
               >
                 <User className="w-4 h-4" />
                 <span>{t.headerNav.espaceClient}</span>

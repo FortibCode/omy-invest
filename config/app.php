@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'OMYA CAPITAL'),
+    'name' => env('APP_NAME', 'OMYA INVEST'),
 
     /*
     |--------------------------------------------------------------------------

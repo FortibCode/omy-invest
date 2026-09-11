@@ -70,27 +70,30 @@ export default function SolutionsSection({ onSelectView }) {
           <h2 className="text-4xl sm:text-6xl font-bold text-[#002E5B] leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
             {t.solutions.title}
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-poppins">
+          <p className="text-slate-600 text-base sm:text-lg leading-relaxed font-poppins">
             {t.solutions.descBefore} <strong className="text-[#002E5B] font-mono">COSUMAF-SDB-01/2025</strong>{t.solutions.descAfter}
           </p>
         </div>
 
         {/* Quick Tabs for all 7 Services */}
-        <div className="flex items-center justify-between gap-2 overflow-x-auto pb-4 mb-12 border-b border-slate-200">
-          {SERVICES.map((svc, idx) => (
-            <button
-              key={svc.num}
-              onClick={() => setActiveIndex(idx)}
-              className={`px-4 py-2 rounded-sm font-nav text-xs font-bold uppercase transition-all duration-300 flex items-center gap-2 shrink-0 ${
-                idx === activeIndex
-                  ? 'bg-[#002E5B] text-white shadow-md border-b-2 border-b-[#002E5B]'
-                  : 'bg-[#F4F6FA] text-slate-700 hover:text-[#002E5B] border border-slate-200'
-              }`}
-            >
-              <span className="font-mono text-[10px] text-[#002E5B] font-bold">{svc.num}</span>
-              <span>{svc.title}</span>
-            </button>
-          ))}
+        <div className="relative mb-12">
+          <div className="flex items-center gap-2 overflow-x-auto pb-4 border-b border-slate-200 scrollbar-none">
+            {SERVICES.map((svc, idx) => (
+              <button
+                key={svc.num}
+                onClick={() => setActiveIndex(idx)}
+                className={`px-4 py-2 rounded-sm font-nav text-[13px] font-bold uppercase transition-all duration-300 flex items-center gap-2 shrink-0 ${
+                  idx === activeIndex
+                    ? 'bg-[#002E5B] text-white shadow-md border-b-2 border-b-[#002E5B]'
+                    : 'bg-[#F4F6FA] text-slate-700 hover:text-[#002E5B] border border-slate-200'
+                }`}
+              >
+                <span className="font-mono text-[10px] text-[#002E5B] font-bold">{svc.num}</span>
+                <span>{svc.title}</span>
+              </button>
+            ))}
+          </div>
+          <div className="absolute right-0 top-0 bottom-4 w-10 bg-gradient-to-l from-white to-transparent pointer-events-none sm:hidden" />
         </div>
 
         {/* ── 3-CARD LATERAL CAROUSEL (LEFT PREVIEW - CENTER FEATURED - RIGHT PREVIEW) ── */}
@@ -114,7 +117,7 @@ export default function SolutionsSection({ onSelectView }) {
                 <h4 className="text-sm font-bold text-[#002E5B] line-clamp-1" style={{ fontFamily: "'Open Sans', sans-serif" }}>
                   {prevService.title}
                 </h4>
-                <p className="text-[11px] text-slate-500 mt-2 line-clamp-2 font-poppins">
+                <p className="text-sm text-slate-500 mt-2 line-clamp-2 font-poppins">
                   {prevService.desc}
                 </p>
                 <div className="mt-4 pt-2 border-t border-slate-200 text-[10px] text-[#002E5B] font-nav uppercase font-bold flex items-center gap-1">
@@ -159,7 +162,7 @@ export default function SolutionsSection({ onSelectView }) {
                     {activeService.title}
                   </h3>
 
-                  <p className="text-sm sm:text-base text-slate-700 leading-relaxed font-poppins font-light bg-[#F4F6FA] p-5 rounded-md border border-slate-200">
+                  <p className="text-base sm:text-lg text-slate-700 leading-relaxed font-poppins font-light bg-[#F4F6FA] p-5 rounded-md border border-slate-200">
                     {activeService.desc}
                   </p>
 
@@ -169,7 +172,7 @@ export default function SolutionsSection({ onSelectView }) {
                       <ArrowRight className="w-4 h-4" />
                     </a>
 
-                    <span className="text-[11px] font-nav font-bold uppercase text-slate-500">
+                    <span className="text-xs font-nav font-bold uppercase text-slate-500">
                       {t.solutions.agreementBadge}
                     </span>
                   </div>
@@ -194,7 +197,7 @@ export default function SolutionsSection({ onSelectView }) {
                 <h4 className="text-sm font-bold text-[#002E5B] line-clamp-1" style={{ fontFamily: "'Open Sans', sans-serif" }}>
                   {nextService.title}
                 </h4>
-                <p className="text-[11px] text-slate-500 mt-2 line-clamp-2 font-poppins">
+                <p className="text-sm text-slate-500 mt-2 line-clamp-2 font-poppins">
                   {nextService.desc}
                 </p>
                 <div className="mt-4 pt-2 border-t border-slate-200 text-[10px] text-[#002E5B] font-nav uppercase font-bold flex items-center justify-end gap-1">

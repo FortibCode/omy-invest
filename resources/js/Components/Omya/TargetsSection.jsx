@@ -22,7 +22,7 @@ export default function TargetsSection() {
           <h2 className="text-4xl sm:text-6xl font-black text-white leading-tight">
             {t.targets.title}
           </h2>
-          <p className="text-slate-300 text-sm leading-relaxed">
+          <p className="text-slate-300 text-base leading-relaxed">
             {t.targets.desc}
           </p>
         </div>
@@ -54,7 +54,7 @@ export default function TargetsSection() {
                     {item.title}
                   </h3>
 
-                  <p className="text-xs text-slate-300 mt-3 leading-relaxed">
+                  <p className="text-sm text-slate-300 mt-3 leading-relaxed">
                     {item.desc}
                   </p>
                 </div>

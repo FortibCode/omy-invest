@@ -40,7 +40,7 @@ export default function SectionPageHeader({ icon: Icon, title, description, brea
               {title}
             </h1>
             {description && (
-              <p className="text-slate-300 text-xs sm:text-sm mt-1.5 font-poppins max-w-2xl leading-relaxed">
+              <p className="text-slate-300 text-sm sm:text-base mt-1.5 font-poppins max-w-2xl leading-relaxed">
                 {description}
               </p>
             )}

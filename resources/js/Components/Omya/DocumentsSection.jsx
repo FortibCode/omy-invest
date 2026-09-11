@@ -29,7 +29,7 @@ export default function DocumentsSection({ onSelectView }) {
           <h2 className="text-4xl sm:text-6xl font-bold text-[#002E5B] leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
             {t.documents.title}
           </h2>
-          <p className="text-slate-600 text-sm leading-relaxed font-poppins">
+          <p className="text-slate-600 text-base leading-relaxed font-poppins">
             {t.documents.desc}
           </p>
         </div>
@@ -60,7 +60,7 @@ export default function DocumentsSection({ onSelectView }) {
                     {doc.title}
                   </h3>
 
-                  <p className="text-xs text-slate-600 leading-relaxed font-poppins">
+                  <p className="text-sm text-slate-600 leading-relaxed font-poppins">
                     {doc.desc}
                   </p>
                 </div>

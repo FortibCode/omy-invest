@@ -37,7 +37,7 @@ export default function NewsSection({ onSelectView }) {
           <h2 className="text-4xl sm:text-6xl font-bold text-white leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
             {t.news.title}
           </h2>
-          <p className="text-slate-300 text-sm leading-relaxed font-poppins">
+          <p className="text-slate-300 text-base leading-relaxed font-poppins">
             {t.news.desc}
           </p>
         </div>
@@ -68,7 +68,7 @@ export default function NewsSection({ onSelectView }) {
                     {item.title}
                   </h3>
 
-                  <p className="text-xs text-slate-300 leading-relaxed font-poppins">
+                  <p className="text-sm text-slate-300 leading-relaxed font-poppins">
                     {item.desc}
                   </p>
                 </div>
