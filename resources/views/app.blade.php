@@ -6,15 +6,16 @@
 
         <title inertia>{{ config('app.name', 'OMYA INVEST') }}</title>
 
-        <!-- Favicon Officiel OMYA INVEST PNG -->
-        <link rel="icon" type="image/png" href="/favicon.png?v=2" />
-        <link rel="shortcut icon" type="image/png" href="/favicon.png?v=2" />
-        <link rel="apple-touch-icon" href="/favicon.png?v=2" />
+        <!-- Favicon OMYA INVEST : le « O » du logo en blanc sur bleu marine (lisible à 16 px) -->
+        <link rel="icon" href="/favicon.ico?v=3" sizes="48x48" />
+        <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png?v=3" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3" />
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @routes

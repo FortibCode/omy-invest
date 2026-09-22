@@ -1,5 +1,5 @@
 import React from 'react';
-import { Building2, Landmark, Store, Users, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Building2, Landmark, Store, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/Context/LanguageContext';
 
@@ -7,62 +7,38 @@ const TARGETS_ICONS = [Building2, Landmark, Store, Users];
 
 export default function TargetsSection() {
   const { t } = useLanguage();
-  const targets = t.targets.items.map((item, idx) => ({ ...item, icon: TARGETS_ICONS[idx] }));
 
   return (
-    <section id="cibles" className="py-24 bg-[#0B192C] text-white relative overflow-hidden border-t border-slate-800">
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="cibles" className="py-24 bg-[#001D3D] text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
-          <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#FFFFFF]">
+        <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
+          <div className="section-tag-light justify-center">
             <span>{t.targets.tag}</span>
-          </span>
-          <h2 className="text-4xl sm:text-6xl font-black text-white leading-tight">
+          </div>
+          <h2 className="text-3xl sm:text-5xl font-bold text-white leading-tight">
             {t.targets.title}
           </h2>
-          <p className="text-slate-300 text-base leading-relaxed">
+          <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
             {t.targets.desc}
           </p>
         </div>
 
-        {/* 4 Blocks Premium Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {targets.map((item, idx) => {
-            const IconComp = item.icon;
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {t.targets.items.map((item, idx) => {
+            const Icon = TARGETS_ICONS[idx];
             return (
               <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
+                key={item.title}
+                initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="glass-card-dark p-7 flex flex-col justify-between group border border-slate-800 hover:border-[#FFFFFF]/40 transition-all"
+                transition={{ duration: 0.4, delay: idx * 0.07 }}
+                className="glass-card-dark border border-white/10 p-7"
               >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-[#FFFFFF]/15 border border-[#FFFFFF]/30 flex items-center justify-center text-[#FFFFFF] group-hover:scale-105 transition-transform">
-                      <IconComp className="w-6 h-6" />
-                    </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-slate-800 px-2.5 py-1 rounded-full">
-                      {item.badge}
-                    </span>
-                  </div>
-
-                  <h3 className="text-lg font-bold text-white group-hover:text-[#FFFFFF] transition-colors leading-snug">
-                    {item.title}
-                  </h3>
-
-                  <p className="text-sm text-slate-300 mt-3 leading-relaxed">
-                    {item.desc}
-                  </p>
-                </div>
-
-                <div className="mt-8 pt-4 border-t border-slate-800 flex items-center justify-between">
-                  <span className="text-[11px] font-semibold text-[#FFFFFF]">{item.role}</span>
-                  <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-[#FFFFFF] transition-colors" />
-                </div>
+                <Icon className="w-7 h-7 text-white mb-5" strokeWidth={1.5} />
+                <h3 className="text-lg font-bold text-white leading-snug mb-3">{item.title}</h3>
+                <p className="text-[15px] text-slate-300 leading-relaxed">{item.desc}</p>
               </motion.div>
             );
           })}

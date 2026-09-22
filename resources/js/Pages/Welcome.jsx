@@ -83,11 +83,8 @@ function WelcomeContent({ auth }) {
 
         {/* ── SUB-NAVBAR QUICK TAB BAR ── */}
         <div className="relative sticky top-[108px] z-40 bg-[#001D3D] border-b border-[#FFFFFF]/30 shadow-md py-2 px-4">
-          <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 font-nav text-sm uppercase tracking-wider">
-            <span className="text-xs font-bold text-[#FFFFFF] hidden sm:block shrink-0 mr-2">
-              {t.categoryRubric} :
-            </span>
-            <div className="flex items-center gap-1 overflow-x-auto py-0.5 scrollbar-none">
+          <div className="max-w-screen-2xl mx-auto sm:px-2 lg:px-4 flex items-center justify-center text-sm">
+            <div className="flex items-center gap-1 overflow-x-auto min-w-0 py-0.5 scrollbar-none">
               {viewTabs.map((tab) => {
                 const TabIcon = tab.icon;
                 const isActive = activeView === tab.id;
@@ -95,9 +92,9 @@ function WelcomeContent({ auth }) {
                   <button
                     key={tab.id}
                     onClick={() => handleSelectView(tab.id)}
-                    className={`px-3.5 py-1.5 rounded-sm font-bold transition-all duration-300 flex items-center gap-1.5 whitespace-nowrap ${
+                    className={`px-3.5 py-1.5 rounded font-semibold transition-colors flex items-center gap-1.5 whitespace-nowrap ${
                       isActive
-                        ? 'bg-[#FFFFFF] text-[#001D3D] shadow-md scale-105'
+                        ? 'bg-white text-[#001D3D]'
                         : 'text-slate-300 hover:text-white hover:bg-white/10'
                     }`}
                   >
@@ -209,7 +206,6 @@ function WelcomeContent({ auth }) {
                   />
                   <IssuerPathwaySection onSelectView={handleSelectView} />
                   <CrossLinkSection
-                    dark
                     icon={Briefcase}
                     title={cl.financerToSolutions.title}
                     description={cl.financerToSolutions.description}
@@ -231,7 +227,6 @@ function WelcomeContent({ auth }) {
                   />
                   <TeamAndPartnersSection onSelectView={handleSelectView} />
                   <CrossLinkSection
-                    dark
                     icon={Info}
                     title={cl.partenairesToAbout.title}
                     description={cl.partenairesToAbout.description}

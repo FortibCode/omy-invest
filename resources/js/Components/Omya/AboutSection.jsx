@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, MapPin, Building2, TrendingUp, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { resolveAnchor } from '@/utils/viewAnchors';
 import { useLanguage } from '@/Context/LanguageContext';
@@ -33,43 +33,27 @@ export default function AboutSection({ onSelectView, hideTag = false }) {
               </div>
             )}
 
-            <h2 className="text-4xl sm:text-6xl font-bold text-[#002E5B] leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
+            <h2 className="text-3xl sm:text-5xl font-bold text-[#002E5B] leading-tight">
               {t.about.title}
             </h2>
 
-            {/* EXACT FORM TEXT IN A CLEAN SPACIATION */}
-            <div className="text-slate-600 text-base sm:text-lg leading-relaxed space-y-4 font-poppins bg-white p-6 rounded-md border border-[#D4DCE8] shadow-sm">
+            <div className="text-slate-600 text-base sm:text-lg leading-relaxed space-y-4">
               <p>
-                {t.about.p1}{' '}
-                <span className="inline-block font-mono font-bold text-[#002E5B] bg-[#F4F6FA] px-2.5 py-0.5 rounded border border-[#002E5B]/50">
-                  COSUMAF-SDB-01/2025
-                </span>.
+                {t.about.p1} <strong className="font-semibold text-[#002E5B] whitespace-nowrap">COSUMAF-SDB-01/2025</strong>.
               </p>
-
-              <p className="text-slate-600">
-                {t.about.p2}
-              </p>
-
-              <p className="text-slate-600">
-                {t.about.p3}
-              </p>
+              <p>{t.about.p2}</p>
+              <p>{t.about.p3}</p>
             </div>
 
-            {/* 3 Activities List */}
-            <div className="pt-2 grid grid-cols-1 sm:grid-cols-3 gap-3 font-poppins">
-              <div className="flex items-center gap-2 p-3 bg-white rounded-md border border-[#D4DCE8]">
-                <CheckCircle2 className="w-4 h-4 text-[#002E5B] shrink-0" />
-                <span className="text-xs font-bold text-[#002E5B]">{t.about.activity1}</span>
-              </div>
-              <div className="flex items-center gap-2 p-3 bg-white rounded-md border border-[#D4DCE8]">
-                <CheckCircle2 className="w-4 h-4 text-[#002E5B] shrink-0" />
-                <span className="text-xs font-bold text-[#002E5B]">{t.about.activity2}</span>
-              </div>
-              <div className="flex items-center gap-2 p-3 bg-white rounded-md border border-[#D4DCE8]">
-                <CheckCircle2 className="w-4 h-4 text-[#002E5B] shrink-0" />
-                <span className="text-xs font-bold text-[#002E5B]">{t.about.activity3}</span>
-              </div>
-            </div>
+            {/* Les trois activités */}
+            <ul className="flex flex-wrap gap-x-6 gap-y-2 pt-1">
+              {[t.about.activity1, t.about.activity2, t.about.activity3].map((activity) => (
+                <li key={activity} className="flex items-center gap-2 text-sm font-semibold text-[#002E5B]">
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <span>{activity}</span>
+                </li>
+              ))}
+            </ul>
 
             <div className="pt-4">
               <a href="#nos-solutions" onClick={(e) => handleLinkClick(e, '#nos-solutions')} className="btn-bvmac-primary">
@@ -89,37 +73,27 @@ export default function AboutSection({ onSelectView, hideTag = false }) {
             className="lg:col-span-6 relative"
           >
             <div className="relative mx-auto max-w-lg">
-              
-              {/* Background Accent Frame */}
-              <div className="absolute -inset-3 rounded-xl bg-gradient-to-tr from-[#002E5B] to-[#002E5B] opacity-20 blur-md" />
-
-              {/* Single Clean Framed Photo */}
-              <div className="relative rounded-lg overflow-hidden shadow-xl border-4 border-white bg-[#002E5B]">
+              <div className="relative rounded-lg overflow-hidden shadow-md bg-[#002E5B]">
                 <img
                   src="/images/image-hero-8.jpeg"
                   alt={t.about.photoAlt}
-                  className="w-full h-[400px] object-cover"
+                  className="w-full h-[420px] object-cover"
                 />
-                
-                <div className="absolute inset-0 bg-gradient-to-t from-[#001D3D] via-transparent to-transparent" />
 
-                {/* Clean Stamp Banner at Bottom */}
-                <div className="absolute bottom-5 left-5 right-5 bg-[#001D3D]/95 backdrop-blur-md p-4 rounded-md border border-[#002E5B]/40 flex items-center justify-between text-white font-poppins">
+                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#001D3D]/90 to-transparent" />
+
+                {/* Agrément, posé en bas de la photo */}
+                <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-4 text-white">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-sm bg-[#002E5B] text-white flex items-center justify-center shrink-0 font-bold">
-                      <ShieldCheck className="w-6 h-6" />
-                    </div>
+                    <ShieldCheck className="w-8 h-8 shrink-0" strokeWidth={1.5} />
                     <div>
-                      <span className="text-xs uppercase font-bold text-slate-300 font-nav tracking-wider block">{t.about.agreementLabel}</span>
-                      <strong className="text-sm font-mono text-white">COSUMAF-SDB-01/2025</strong>
+                      <span className="block text-sm text-slate-300">{t.about.agreementLabel}</span>
+                      <strong className="block font-semibold">COSUMAF-SDB-01/2025</strong>
                     </div>
                   </div>
-                  <span className="text-[10px] font-nav uppercase tracking-widest text-slate-300 font-bold bg-white/10 px-2.5 py-1 rounded-sm hidden sm:block">
-                    {t.about.zoneLabel}
-                  </span>
+                  <span className="text-sm text-slate-300 hidden sm:block">{t.about.zoneLabel}</span>
                 </div>
               </div>
-
             </div>
           </motion.div>
 

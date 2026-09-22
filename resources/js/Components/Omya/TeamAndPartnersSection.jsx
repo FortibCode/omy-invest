@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Handshake, Building, Pause, Play, Sparkles, X, ArrowRight, ExternalLink, User as UserIcon } from 'lucide-react';
+import { Pause, Play, X, ArrowRight, ExternalLink, User as UserIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import OmyaLogo from '@/Components/Omya/OmyaLogo';
+import { LinkedInIcon } from '@/Components/Omya/SocialIcons';
 import { resolveAnchor } from '@/utils/viewAnchors';
 import { useLanguage } from '@/Context/LanguageContext';
 
-// NOTE: renseigner le nom complet et la photo (ex: '/images/equipe/prenom-nom.jpg') de chaque membre
-// dans TOUTES les langues n'est pas nécessaire — seuls le poste/département sont traduits ; le nom
-// (une fois renseigné ici) reste identique dans toutes les langues.
+// Membres de l'équipe — à compléter avec les vraies informations :
+//   name     : nom complet (identique dans toutes les langues)
+//   photo    : chemin de la photo portrait, ex. '/images/equipe/prenom-nom.jpg' (format portrait conseillé, ~800×1000px)
+//   linkedin : URL du profil LinkedIn (optionnel)
+// Le poste et le département sont traduits dans LanguageContext (t.team.positions / t.team.departments).
 const TEAM_META = [
-  { id: 1, name: '', photo: null },
-  { id: 2, name: '', photo: null },
-  { id: 3, name: '', photo: null },
-  { id: 4, name: '', photo: null },
+  { id: 1, name: '', photo: null, linkedin: null },
+  { id: 2, name: '', photo: null, linkedin: null },
+  { id: 3, name: '', photo: null, linkedin: null },
+  { id: 4, name: '', photo: null, linkedin: null },
 ];
 
 export default function TeamAndPartnersSection({ onSelectView }) {
@@ -103,51 +106,75 @@ export default function TeamAndPartnersSection({ onSelectView }) {
       <div id="equipe" className="py-24 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
+          <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
             <div className="section-tag-bvmac justify-center">
-              <Users className="w-4 h-4 text-[#002E5B]" />
               <span>{t.team.tag}</span>
             </div>
-            <h2 className="text-4xl sm:text-6xl font-bold text-[#002E5B] leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
+            <h2 className="text-3xl sm:text-5xl font-bold text-[#002E5B] leading-tight">
               {t.team.title}
             </h2>
-            <p className="text-slate-600 text-sm font-poppins">
+            <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
               {t.team.desc}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {teamMembers.map((member) => (
-              <motion.div
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-md sm:max-w-none mx-auto">
+            {teamMembers.map((member, idx) => (
+              <motion.article
                 key={member.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: member.id * 0.08 }}
-                className="bvmac-card p-8 flex flex-col items-center text-center group bg-white border border-[#D4DCE8] shadow-sm hover:shadow-lg transition-all"
+                transition={{ duration: 0.5, delay: idx * 0.08 }}
+                className="group bg-white rounded-lg overflow-hidden border border-slate-200 hover:shadow-md transition-shadow flex flex-col"
               >
-                {member.photo ? (
-                  <img
-                    src={member.photo}
-                    alt={member.name || member.position}
-                    className="w-24 h-24 rounded-full object-cover border-2 border-[#002E5B]/40 mb-5 group-hover:border-[#002E5B] transition-all shadow-inner"
-                  />
-                ) : (
-                  <div className="w-24 h-24 rounded-full bg-[#F4F6FA] border-2 border-[#002E5B]/40 flex items-center justify-center text-[#002E5B] mb-5 group-hover:border-[#002E5B] group-hover:bg-[#002E5B]/10 transition-all font-black text-xl font-nav shadow-inner">
-                    {member.name ? getInitials(member.name) : <UserIcon className="w-9 h-9" />}
-                  </div>
-                )}
+                {/* Portrait */}
+                <div className="relative aspect-[4/5] overflow-hidden bg-[#E8EEF6]">
+                  {member.photo ? (
+                    <img
+                      src={member.photo}
+                      alt={member.name || member.position}
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover object-top"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      {member.name ? (
+                        <span className="text-5xl font-bold text-[#002E5B]/60">
+                          {getInitials(member.name)}
+                        </span>
+                      ) : (
+                        <UserIcon className="w-20 h-20 text-[#002E5B]/20" strokeWidth={1.25} />
+                      )}
+                    </div>
+                  )}
 
-                <h3 className="text-base font-bold text-[#002E5B] group-hover:text-[#002E5B] transition-colors" style={{ fontFamily: "'Open Sans', sans-serif" }}>
-                  {member.name || t.team.nameNotSet}
-                </h3>
-                <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#002E5B] bg-[#EEF2F8] px-2.5 py-0.5 rounded-sm font-nav mt-1.5 border border-slate-200">
-                  {member.position}
-                </span>
-                <p className="text-sm text-slate-500 mt-2 leading-relaxed font-poppins">
-                  {member.department}
-                </p>
-              </motion.div>
+                  {member.linkedin && (
+                    <a
+                      href={member.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`LinkedIn — ${member.name}`}
+                      className="absolute bottom-4 right-4 w-9 h-9 rounded bg-white text-[#002E5B] flex items-center justify-center shadow hover:bg-[#002E5B] hover:text-white transition-colors"
+                    >
+                      <LinkedInIcon className="w-4 h-4" />
+                    </a>
+                  )}
+                </div>
+
+                {/* Identité */}
+                <div className="flex-1 p-6">
+                  <h3 className="text-lg font-bold text-[#001D3D] leading-snug">
+                    {member.name || t.team.nameNotSet}
+                  </h3>
+                  <p className="mt-1 text-sm font-semibold text-[#002E5B]">
+                    {member.position}
+                  </p>
+                  <p className="mt-3 pt-3 border-t border-slate-100 text-sm text-slate-500 leading-relaxed">
+                    {member.department}
+                  </p>
+                </div>
+              </motion.article>
             ))}
           </div>
 
@@ -155,27 +182,18 @@ export default function TeamAndPartnersSection({ onSelectView }) {
       </div>
 
       {/* ══════ 2. PARTENAIRES SECTION : ORBITAL GLOBE AVEC OUVERTURE DE LOGO EN GRAND EN CLICK ══════ */}
-      <div id="partenaires" className="py-24 bg-[#001D3D] text-white relative overflow-hidden border-t-2 border-[#FFFFFF]">
-        
-        {/* Background Glowing Grid */}
-        <div className="absolute inset-0 opacity-10 pointer-events-none"
-          style={{
-            backgroundImage: `radial-gradient(#FFFFFF 1.5px, transparent 1.5px)`,
-            backgroundSize: '36px 36px'
-          }}
-        />
+      <div id="partenaires" className="py-24 bg-[#001D3D] text-white relative overflow-hidden">
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-          <div className="text-center max-w-3xl mx-auto space-y-3 mb-8">
+          <div className="text-center max-w-3xl mx-auto space-y-4 mb-8">
             <div className="section-tag-light justify-center">
-              <Handshake className="w-4 h-4 text-[#FFFFFF]" />
               <span>{t.team.partnersTag}</span>
             </div>
-            <h2 className="text-4xl sm:text-6xl font-bold text-white leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
+            <h2 className="text-3xl sm:text-5xl font-bold text-white leading-tight">
               {t.team.partnersTitle}
             </h2>
-            <p className="text-slate-300 text-sm font-poppins">
+            <p className="text-slate-300 text-base">
               {t.team.partnersDesc}
             </p>
           </div>
@@ -184,24 +202,24 @@ export default function TeamAndPartnersSection({ onSelectView }) {
           <div className="flex items-center justify-center gap-3 mb-4">
             <button
               onClick={() => setIsRotating(!isRotating)}
-              className="px-4 py-1.5 rounded-full bg-[#002E5B] hover:bg-[#FFFFFF] hover:text-[#001D3D] transition text-xs font-nav uppercase font-bold flex items-center gap-2 border border-[#FFFFFF]/30"
+              className="px-4 py-1.5 rounded-full text-sm text-slate-300 hover:text-white hover:bg-white/10 transition-colors flex items-center gap-2 border border-white/20"
             >
-              {isRotating ? <Pause className="w-3.5 h-3.5 text-[#FFFFFF]" /> : <Play className="w-3.5 h-3.5 text-[#FFFFFF]" />}
+              {isRotating ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
               <span>{isRotating ? t.team.pauseOrbit : t.team.playOrbit}</span>
             </button>
           </div>
 
-          {/* ── 3D ORBITAL GLOBE CONTAINER ── */}
+          {/* ── ORBITE DES PARTENAIRES ── */}
           <div className="relative w-full h-[400px] sm:h-[450px] flex items-center justify-center my-4">
 
-            {/* Central Globe Sphere Core */}
-            <div className="absolute w-44 h-44 sm:w-52 sm:h-52 rounded-full bg-white shadow-[0_0_60px_rgba(255,255,255,0.5)] flex items-center justify-center p-6 sm:p-7 z-20">
+            {/* Logo OMYA au centre */}
+            <div className="absolute w-44 h-44 sm:w-52 sm:h-52 rounded-full bg-white shadow-lg flex items-center justify-center p-6 sm:p-7 z-20">
               <OmyaLogo light={false} className="h-11 sm:h-14 w-auto" />
             </div>
 
-            {/* Elliptical Orbit Ring Line */}
+            {/* Trajectoire */}
             <div
-              className="absolute w-[320px] sm:w-[680px] h-[160px] sm:h-[220px] rounded-[50%] border-2 border-dashed border-[#FFFFFF]/30 pointer-events-none z-10"
+              className="absolute w-[320px] sm:w-[680px] h-[160px] sm:h-[220px] rounded-[50%] border border-dashed border-white/20 pointer-events-none z-10"
               style={{ transform: 'rotateX(65deg)' }}
             />
 
@@ -245,15 +263,13 @@ export default function TeamAndPartnersSection({ onSelectView }) {
                   }}
                 >
                   {/* CLEAN LOGO CONTAINER (CLICKABLE FOR FULLSCREEN VIEW) */}
-                  <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white p-2 sm:p-2.5 flex items-center justify-center shadow-2xl transition-all duration-300 overflow-hidden ${
-                    isHighlighted
-                      ? 'border-2 border-[#FFFFFF] shadow-[0_0_35px_rgba(255, 255, 255,0.95)] scale-115 ring-4 ring-[#FFFFFF]/30'
-                      : 'border-2 border-slate-300/80 hover:border-[#FFFFFF] hover:scale-110'
+                  <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-white p-2 sm:p-2.5 flex items-center justify-center shadow-md transition-shadow overflow-hidden ${
+                    isHighlighted ? 'ring-4 ring-white/40' : ''
                   }`}>
                     <img
                       src={partner.logo}
                       alt={partner.name}
-                      className="w-full h-full object-contain filter drop-shadow-sm transition-transform duration-300 group-hover:scale-105"
+                      className="w-full h-full object-contain"
                     />
                   </div>
                 </div>
@@ -272,10 +288,10 @@ export default function TeamAndPartnersSection({ onSelectView }) {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.25 }}
                 onClick={() => handlePartnerClick(featuredPartner)}
-                className="bvmac-card-dark p-6 border-l-4 border-l-[#FFFFFF] bg-[#002E5B]/95 backdrop-blur-md shadow-2xl text-center space-y-3 rounded-md cursor-pointer hover:border-[#FFFFFF] transition-all group"
+                className="bvmac-card-dark p-6 cursor-pointer group"
               >
-                <div className="flex items-center justify-center gap-3">
-                  <div className="w-14 h-14 rounded-xl bg-white p-2 flex items-center justify-center border-2 border-[#FFFFFF] shadow-md shrink-0 group-hover:scale-105 transition-transform">
+                <div className="flex items-center justify-center gap-4">
+                  <div className="w-14 h-14 rounded-lg bg-white p-2 flex items-center justify-center shrink-0">
                     <img
                       src={featuredPartner.logo}
                       alt={featuredPartner.name}
@@ -283,19 +299,19 @@ export default function TeamAndPartnersSection({ onSelectView }) {
                     />
                   </div>
                   <div className="text-left">
-                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#FFFFFF] font-nav">
+                    <span className="block text-sm text-slate-300">
                       {t.team.officialPartner}
                     </span>
-                    <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight group-hover:text-[#FFFFFF] transition-colors" style={{ fontFamily: "'Open Sans', sans-serif" }}>
+                    <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight">
                       {featuredPartner.name}
                     </h3>
                   </div>
                 </div>
 
-                <div className="pt-2 text-center">
-                  <span className="text-[11px] font-bold text-[#FFFFFF] font-nav uppercase inline-flex items-center gap-1 group-hover:underline">
+                <div className="pt-4 text-center">
+                  <span className="text-sm font-semibold text-white inline-flex items-center gap-1.5 group-hover:underline">
                     <span>{t.team.clickToEnlarge}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-4 h-4" />
                   </span>
                 </div>
               </motion.div>
@@ -310,10 +326,8 @@ export default function TeamAndPartnersSection({ onSelectView }) {
                 <button
                   key={partner.id}
                   onClick={() => handlePartnerClick(partner)}
-                  className={`w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-white p-2.5 flex items-center justify-center transition-all duration-300 border ${
-                    isActive
-                      ? 'border-2 border-[#FFFFFF] shadow-[0_0_20px_rgba(255, 255, 255,0.8)] scale-110 ring-2 ring-[#FFFFFF]'
-                      : 'border-slate-700 opacity-60 hover:opacity-100 hover:border-[#FFFFFF]'
+                  className={`w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-white p-2.5 flex items-center justify-center transition-opacity ${
+                    isActive ? 'ring-2 ring-white' : 'opacity-60 hover:opacity-100'
                   }`}
                   title={`${partner.name} - ${t.team.clickToEnlargeTitle}`}
                 >
@@ -337,48 +351,47 @@ export default function TeamAndPartnersSection({ onSelectView }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-[#001D3D]/90 backdrop-blur-xl flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 bg-[#001D3D]/80 flex items-center justify-center p-4"
             onClick={() => setModalPartner(null)}
           >
             <motion.div
-              initial={{ scale: 0.85, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.85, opacity: 0, y: 20 }}
-              transition={{ duration: 0.3 }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 12 }}
+              transition={{ duration: 0.2 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-[#002E5B] border-2 border-[#FFFFFF] rounded-2xl max-w-xl w-full p-8 sm:p-10 relative shadow-[0_0_80px_rgba(255, 255, 255,0.4)] text-center text-white"
+              className="bg-white rounded-lg max-w-lg w-full p-8 sm:p-10 relative shadow-xl text-center text-[#001D3D]"
             >
               {/* Close Button */}
               <button
                 onClick={() => setModalPartner(null)}
-                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#001D3D] text-slate-300 hover:text-white hover:bg-[#FFFFFF] hover:text-[#001D3D] transition flex items-center justify-center border border-[#FFFFFF]/30"
+                aria-label="Fermer"
+                className="absolute top-4 right-4 w-9 h-9 rounded-full text-slate-500 hover:text-[#001D3D] hover:bg-slate-100 transition-colors flex items-center justify-center"
               >
                 <X className="w-5 h-5" />
               </button>
 
-              {/* Large Logo Display Box */}
-              <div className="w-48 h-48 sm:w-60 sm:h-60 rounded-3xl bg-white p-6 mx-auto mb-6 flex items-center justify-center border-4 border-[#FFFFFF] shadow-2xl">
+              <div className="w-44 h-44 sm:w-52 sm:h-52 rounded-lg bg-white p-6 mx-auto mb-6 flex items-center justify-center border border-slate-200">
                 <img
                   src={modalPartner.logo}
                   alt={modalPartner.name}
-                  className="w-full h-full object-contain filter drop-shadow-md"
+                  className="w-full h-full object-contain"
                 />
               </div>
 
-              {/* Partner Details */}
-              <span className="text-xs font-extrabold uppercase tracking-widest text-[#FFFFFF] font-nav bg-[#FFFFFF]/15 px-3.5 py-1 rounded-sm border border-[#FFFFFF]/30 inline-block mb-3">
+              <span className="block text-sm text-slate-500 mb-1">
                 {t.team.officialPartner}
               </span>
 
-              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-8" style={{ fontFamily: "'Open Sans', sans-serif" }}>
+              <h3 className="text-2xl sm:text-3xl font-bold text-[#002E5B] mb-8">
                 {modalPartner.name}
               </h3>
 
-              <div className="flex flex-wrap items-center justify-center gap-3 pt-4 border-t border-slate-700">
+              <div className="flex flex-wrap items-center justify-center gap-3 pt-6 border-t border-slate-100">
                 <a
                   href="#contact"
                   onClick={(e) => { handleLinkClick(e, '#contact'); setModalPartner(null); }}
-                  className="btn-bvmac-primary text-xs"
+                  className="btn-bvmac-primary"
                 >
                   <span>{t.team.contactAboutPartnership}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -388,7 +401,7 @@ export default function TeamAndPartnersSection({ onSelectView }) {
                     href={modalPartner.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-bvmac-outline-white text-xs"
+                    className="btn-bvmac-outline"
                   >
                     <span>{t.team.visitOfficialSite}</span>
                     <ExternalLink className="w-4 h-4" />

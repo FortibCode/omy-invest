@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, ShieldCheck, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { resolveAnchor } from '@/utils/viewAnchors';
 import { useLanguage } from '@/Context/LanguageContext';
@@ -73,11 +73,11 @@ export default function HeroSection({ onSelectView }) {
   return (
     <section id="accueil" className="relative bg-white text-slate-800 pt-6 pb-12 overflow-hidden font-sans select-none border-b border-slate-200">
       
-      {/* PURE WHITE LEFT & RIGHT SIDES / MARGINS */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      {/* Même largeur que l'en-tête : les bords du carrousel s'alignent sur le logo et le menu */}
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* ── MAIN SWIPER SLIDER CAROUSEL CONTAINER (Navy Blue Card on White Background) ── */}
-        <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-300 bg-[#001D3D] min-h-[500px] lg:min-h-[540px] flex flex-col justify-between">
+        <div className="relative rounded-xl overflow-hidden shadow-lg bg-[#001D3D] min-h-[500px] lg:min-h-[540px] 2xl:min-h-[580px] flex flex-col justify-between">
           
           {/* SLIDE BACKGROUND IMAGE & SLIDE CONTENT */}
           <AnimatePresence initial={false} custom={direction} mode="popLayout">
@@ -88,7 +88,7 @@ export default function HeroSection({ onSelectView }) {
               initial="enter"
               animate="center"
               exit="exit"
-              className="relative z-0 flex items-center"
+              className="relative z-0 flex-1 flex items-center"
             >
               {/* Background Image */}
               <div
@@ -98,42 +98,17 @@ export default function HeroSection({ onSelectView }) {
                 }}
               />
 
-              {/* Gradient Overlays for crystal clear readability */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#001D3D] via-[#002E5B]/95 to-[#002E5B]/40 z-10" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#001D3D] via-transparent to-black/30 z-10" />
-
-              {/* Dot Pattern Overlay */}
-              <div
-                className="absolute inset-0 opacity-[0.05] z-10"
-                style={{
-                  backgroundImage: `radial-gradient(#FFFFFF 1.5px, transparent 1.5px)`,
-                  backgroundSize: '30px 30px',
-                }}
-              />
+              {/* Voile pour garder le texte lisible sur la photo */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#001D3D] via-[#001D3D]/90 to-[#001D3D]/30 z-10" />
 
               {/* Slide Text Content */}
-              <div className="relative z-20 p-8 sm:p-14 lg:p-16 max-w-3xl space-y-6">
-                
-                {/* Badge Tag */}
-                {/* <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-sm bg-white/10 border-l-4 border-white text-white font-nav text-[11px] sm:text-xs font-bold uppercase tracking-wider backdrop-blur-md">
-                  <ShieldCheck className="w-4 h-4 text-white" />
-                  <span>{activeSlide.tag}</span>
-                </div> */}
+              <div className="relative z-20 px-8 py-12 sm:p-14 lg:p-16 max-w-2xl space-y-6">
 
-                {/* Main Headline */}
-                <h1
-                  className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight"
-                  style={{ fontFamily: "'Open Sans', sans-serif" }}
-                >
-                  {activeSlide.titleLine1}{' '}
-                  <span className="text-white">
-                    {activeSlide.titleHighlight}
-                  </span>{' '}
-                  {activeSlide.titleLine2}
+                <h1 className="text-3xl sm:text-5xl lg:text-[3.5rem] font-bold text-white leading-[1.1]">
+                  {[activeSlide.titleLine1, activeSlide.titleHighlight, activeSlide.titleLine2].filter(Boolean).join(' ')}
                 </h1>
 
-                {/* Paragraph Description */}
-                <p className="text-slate-100 text-base sm:text-lg leading-relaxed font-poppins font-light bg-[#001D3D]/80 p-5 rounded-md border border-slate-700/60 backdrop-blur-md">
+                <p className="text-slate-200 text-base sm:text-lg leading-relaxed">
                   {activeSlide.description}
                 </p>
 
@@ -157,23 +132,25 @@ export default function HeroSection({ onSelectView }) {
           {/* ── SIDE NAVIGATION ARROWS (LEFT / RIGHT) ── */}
           <button
             onClick={() => paginate(-1)}
-            className="absolute left-3 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/90 border border-slate-300 hover:bg-[#002E5B] hover:text-white text-[#001D3D] transition-all flex items-center justify-center shadow-xl backdrop-blur-md group"
+            className="absolute left-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-[#001D3D] transition-colors hidden sm:flex items-center justify-center shadow-md"
             title={t.hero.prevSlide}
+            aria-label={t.hero.prevSlide}
           >
-            <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" />
+            <ChevronLeft className="w-5 h-5" />
           </button>
 
           <button
             onClick={() => paginate(1)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/90 border border-slate-300 hover:bg-[#002E5B] hover:text-white text-[#001D3D] transition-all flex items-center justify-center shadow-xl backdrop-blur-md group"
+            className="absolute right-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-[#001D3D] transition-colors hidden sm:flex items-center justify-center shadow-md"
             title={t.hero.nextSlide}
+            aria-label={t.hero.nextSlide}
           >
-            <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
+            <ChevronRight className="w-5 h-5" />
           </button>
 
           {/* ── BOTTOM CAROUSEL TABS & CONTROLS ── */}
-          <div className="relative z-30 bg-[#001D3D]/95 backdrop-blur-md px-6 py-4 border-t border-white/20 flex flex-col sm:flex-row items-center justify-between gap-4">
-            
+          <div className="relative z-30 bg-[#001D3D] px-6 py-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+
             {/* Slide Category Tabs */}
             <div className="relative w-full sm:w-auto">
               <div className="flex items-center gap-2 overflow-x-auto scrollbar-none">
@@ -181,14 +158,13 @@ export default function HeroSection({ onSelectView }) {
                   <button
                     key={slide.id}
                     onClick={() => goToSlide(idx)}
-                    className={`px-3.5 py-1.5 rounded-sm font-nav text-xs font-bold uppercase transition-all duration-300 flex items-center gap-2 shrink-0 ${
+                    className={`px-3.5 py-1.5 rounded text-sm font-semibold transition-colors shrink-0 ${
                       idx === slideIndex
-                        ? 'bg-white text-[#001D3D] shadow-md'
-                        : 'bg-white/10 text-slate-300 hover:bg-white/20 hover:text-white border border-slate-700/50'
+                        ? 'bg-white text-[#001D3D]'
+                        : 'text-slate-300 hover:text-white hover:bg-white/10'
                     }`}
                   >
-                    <span className="font-mono text-[10px]">0{slide.id}</span>
-                    <span>{slide.category}</span>
+                    {slide.category}
                   </button>
                 ))}
               </div>
@@ -196,27 +172,27 @@ export default function HeroSection({ onSelectView }) {
             </div>
 
             {/* Controls & Progress */}
-            <div className="flex items-center gap-4 text-xs">
+            <div className="flex items-center gap-4 text-sm text-slate-300">
               <button
                 onClick={() => setIsPlaying(!isPlaying)}
-                className="flex items-center gap-1.5 text-slate-300 hover:text-white transition font-nav uppercase font-semibold text-[11px]"
+                className="flex items-center gap-1.5 hover:text-white transition-colors"
                 title={isPlaying ? t.hero.pauseAuto : t.hero.playAuto}
               >
-                {isPlaying ? <Pause className="w-3.5 h-3.5 text-white" /> : <Play className="w-3.5 h-3.5 text-white" />}
+                {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
                 <span>{isPlaying ? t.common.pause : t.common.play}</span>
               </button>
 
-              <div className="h-4 w-px bg-slate-700" />
+              <div className="h-4 w-px bg-white/20" />
 
-              <span className="font-mono font-bold text-slate-200 text-xs">
-                <span className="text-white">0{slideIndex + 1}</span> / 0{HERO_SLIDES.length}
+              <span className="tabular-nums">
+                <span className="text-white font-semibold">{slideIndex + 1}</span> / {HERO_SLIDES.length}
               </span>
             </div>
 
           </div>
 
           {/* Active progress bar */}
-          <div className="relative z-30 h-1 w-full bg-slate-900 overflow-hidden">
+          <div className="relative z-30 h-0.5 w-full bg-white/10 overflow-hidden">
             <motion.div
               key={page}
               initial={{ width: '0%' }}
@@ -229,6 +205,7 @@ export default function HeroSection({ onSelectView }) {
         </div>
 
       </div>
+
     </section>
   );
 }

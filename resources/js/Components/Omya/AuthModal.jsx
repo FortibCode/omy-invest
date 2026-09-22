@@ -1,190 +1,173 @@
-import React, { useState } from 'react';
-import { X, Mail, Lock, User, ShieldCheck, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useForm } from '@inertiajs/react';
+import { X, Mail, Lock, User, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/Context/LanguageContext';
 
+const inputClass =
+  'w-full bg-white border border-slate-300 rounded-md pl-10 pr-3 py-3 text-[#001D3D] placeholder-slate-400 focus:outline-none focus:border-[#002E5B] focus:ring-2 focus:ring-[#002E5B]/15 transition';
+
+function Field({ label, icon: Icon, error, children, aside }) {
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-1.5">
+        <label className="text-sm font-semibold text-[#001D3D]">{label}</label>
+        {aside}
+      </div>
+      <div className="relative">
+        <Icon className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+        {children}
+      </div>
+      {error && <p className="mt-1.5 text-sm text-red-600">{error}</p>}
+    </div>
+  );
+}
+
+// Connexion et inscription branchées sur l'authentification Laravel (Breeze) : routes 'login' et 'register'.
 export default function AuthModal({ isOpen, onClose, initialTab = 'login', titleMode = 'client' }) {
-  const [tab, setTab] = useState(initialTab); // 'login' or 'register'
+  const [tab, setTab] = useState(initialTab);
   const { t } = useLanguage();
+  const form = useForm({ name: '', email: '', password: '', password_confirmation: '', remember: false });
+
+  useEffect(() => {
+    if (isOpen) setTab(initialTab);
+  }, [isOpen, initialTab]);
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#001D3D]/80 backdrop-blur-md animate-fade-in">
-      <div
-        className="relative w-full max-w-lg max-h-[92vh] overflow-y-auto bg-white border border-slate-200 rounded-2xl shadow-2xl transition-all transform scale-100"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="h-1.5 bg-[#002E5B] sticky top-0" />
+  const switchTab = (next) => {
+    setTab(next);
+    form.clearErrors();
+  };
 
+  const submit = (e) => {
+    e.preventDefault();
+    const onFinish = () => form.reset('password', 'password_confirmation');
+    if (tab === 'login') {
+      form.post(route('login'), { onFinish });
+    } else {
+      form.post(route('register'), { onFinish });
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#001D3D]/70" onClick={onClose}>
+      <div
+        className="relative w-full max-w-md max-h-[92vh] overflow-y-auto bg-white rounded-lg shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+      >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-500 hover:text-white p-1.5 rounded-full bg-[#F4F6FA] hover:bg-[#002E5B] border border-slate-200 transition"
+          className="absolute top-4 right-4 text-slate-500 hover:text-[#001D3D] p-1.5 rounded-full hover:bg-slate-100 transition-colors"
           aria-label="Fermer"
         >
           <X className="w-5 h-5" />
         </button>
 
-        <div className="p-6 pb-4 text-center space-y-2">
-          <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-[#F4F6FA] border border-slate-200 text-[11px] font-bold text-[#002E5B]">
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>{titleMode === 'member' ? t.memberSpace : t.clientSpace}</span>
-          </div>
-
-          <h2 className="text-xl font-extrabold text-[#001D3D] tracking-wide uppercase">
+        <div className="px-8 pt-8 pb-5">
+          <p className="text-sm text-slate-500 mb-1">{titleMode === 'member' ? t.memberSpace : t.clientSpace}</p>
+          <h2 className="text-2xl font-bold text-[#001D3D]">
             {tab === 'login' ? t.authModalLoginTitle : t.authModalRegisterTitle}
           </h2>
-          <p className="text-xs text-slate-500">
+          <p className="text-slate-500 mt-1">
             {tab === 'login' ? t.authModalLoginDesc : t.authModalRegisterDesc}
           </p>
         </div>
 
-        <div className="flex border-b border-slate-200 px-6">
-          <button
-            onClick={() => setTab('login')}
-            className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider transition border-b-2 ${
-              tab === 'login'
-                ? 'text-[#002E5B] border-[#002E5B]'
-                : 'text-slate-400 border-transparent hover:text-[#001D3D]'
-            }`}
-          >
-            {t.login}
-          </button>
-          <button
-            onClick={() => setTab('register')}
-            className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider transition border-b-2 ${
-              tab === 'register'
-                ? 'text-[#002E5B] border-[#002E5B]'
-                : 'text-slate-400 border-transparent hover:text-[#001D3D]'
-            }`}
-          >
-            {t.register}
-          </button>
+        <div className="flex border-b border-slate-200 px-8">
+          {[['login', t.login], ['register', t.register]].map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => switchTab(key)}
+              className={`flex-1 py-3 text-sm font-semibold transition-colors border-b-2 -mb-px ${
+                tab === key ? 'text-[#002E5B] border-[#002E5B]' : 'text-slate-400 border-transparent hover:text-[#001D3D]'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
         </div>
 
-        <div className="p-6 space-y-4">
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              onClick={() => alert("Connexion via Google initialisée")}
-              className="flex items-center justify-center space-x-2 bg-white hover:bg-[#F4F6FA] border border-slate-300 rounded-lg py-2.5 px-3 text-xs font-semibold text-slate-700 transition shadow-sm"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
-                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.29v3.14C3.26 21.27 7.33 24 12 24z"/>
-                <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.59H1.29C.47 8.22 0 10.05 0 12s.47 3.78 1.29 5.41l3.99-3.14z"/>
-                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.73 1.29 6.59l3.99 3.14c.95-2.83 3.6-4.98 6.72-4.98z"/>
-              </svg>
-              <span>Google</span>
-            </button>
+        <form onSubmit={submit} className="px-8 py-6 space-y-4">
+          {tab === 'register' && (
+            <Field label={t.fullName} icon={User} error={form.errors.name}>
+              <input
+                type="text"
+                required
+                autoComplete="name"
+                value={form.data.name}
+                onChange={(e) => form.setData('name', e.target.value)}
+                className={inputClass}
+              />
+            </Field>
+          )}
 
-            <button
-              type="button"
-              onClick={() => alert("Connexion via Apple initialisée")}
-              className="flex items-center justify-center space-x-2 bg-white hover:bg-[#F4F6FA] border border-slate-300 rounded-lg py-2.5 px-3 text-xs font-semibold text-slate-700 transition shadow-sm"
-            >
-              <svg className="w-4 h-4 fill-current text-[#001D3D]" viewBox="0 0 24 24">
-                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.09c.67-.82 1.12-1.96.99-3.1-.96.04-2.13.64-2.82 1.45-.61.71-1.15 1.87-1.01 2.99 1.08.08 2.17-.52 2.84-1.34z"/>
-              </svg>
-              <span>Apple</span>
-            </button>
-          </div>
+          <Field label={t.emailAddr} icon={Mail} error={form.errors.email}>
+            <input
+              type="email"
+              required
+              autoComplete="email"
+              value={form.data.email}
+              onChange={(e) => form.setData('email', e.target.value)}
+              className={inputClass}
+            />
+          </Field>
 
-          <div className="relative flex items-center justify-center my-3">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-200" />
-            </div>
-            <span className="relative px-3 bg-white text-[10px] text-slate-400 uppercase tracking-widest">
-              {t.orByEmail}
-            </span>
-          </div>
-
-          <form onSubmit={(e) => e.preventDefault()} className="space-y-3.5 text-xs">
-            {tab === 'register' && (
-              <div>
-                <label className="block text-[#001D3D] font-bold uppercase font-nav mb-1.5">
-                  {t.fullName}
-                </label>
-                <div className="relative">
-                  <User className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-                  <input
-                    type="text"
-                    placeholder="Jean-Baptiste Fortune"
-                    className="w-full bg-[#F4F6FA] border border-slate-300 rounded-lg pl-9 pr-3 py-2.5 text-[#001D3D] placeholder-slate-400 focus:outline-none focus:border-[#002E5B] focus:bg-white transition"
-                  />
-                </div>
-              </div>
+          <Field
+            label={t.passwordLabel}
+            icon={Lock}
+            error={form.errors.password}
+            aside={tab === 'login' && (
+              <a href={route('password.request')} className="text-sm text-[#002E5B] hover:underline">
+                {t.forgotPass}
+              </a>
             )}
+          >
+            <input
+              type="password"
+              required
+              autoComplete={tab === 'login' ? 'current-password' : 'new-password'}
+              value={form.data.password}
+              onChange={(e) => form.setData('password', e.target.value)}
+              className={inputClass}
+            />
+          </Field>
 
-            <div>
-              <label className="block text-[#001D3D] font-bold uppercase font-nav mb-1.5">
-                {t.emailAddr}
-              </label>
-              <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-                <input
-                  type="email"
-                  placeholder="investisseur@domaine.com"
-                  className="w-full bg-[#F4F6FA] border border-slate-300 rounded-lg pl-9 pr-3 py-2.5 text-[#001D3D] placeholder-slate-400 focus:outline-none focus:border-[#002E5B] focus:bg-white transition"
-                />
-              </div>
-            </div>
+          {tab === 'register' && (
+            <Field label={t.passwordConfirm} icon={Lock} error={form.errors.password_confirmation}>
+              <input
+                type="password"
+                required
+                autoComplete="new-password"
+                value={form.data.password_confirmation}
+                onChange={(e) => form.setData('password_confirmation', e.target.value)}
+                className={inputClass}
+              />
+            </Field>
+          )}
 
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-[#001D3D] font-bold uppercase font-nav">
-                  {t.passwordLabel}
-                </label>
-                {tab === 'login' && (
-                  <a href="#" className="text-[11px] text-[#002E5B] hover:underline">
-                    {t.forgotPass}
-                  </a>
-                )}
-              </div>
-              <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-                <input
-                  type="password"
-                  placeholder="••••••••"
-                  className="w-full bg-[#F4F6FA] border border-slate-300 rounded-lg pl-9 pr-3 py-2.5 text-[#001D3D] placeholder-slate-400 focus:outline-none focus:border-[#002E5B] focus:bg-white transition"
-                />
-              </div>
-            </div>
+          {tab === 'login' && (
+            <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-600">
+              <input
+                type="checkbox"
+                checked={form.data.remember}
+                onChange={(e) => form.setData('remember', e.target.checked)}
+                className="rounded border-slate-300 text-[#002E5B] focus:ring-[#002E5B]"
+              />
+              <span>{t.rememberMe}</span>
+            </label>
+          )}
 
-            {tab === 'register' && (
-              <div>
-                <label className="block text-[#001D3D] font-bold uppercase font-nav mb-1.5">
-                  {t.investorType}
-                </label>
-                <select className="w-full bg-[#F4F6FA] border border-slate-300 rounded-lg px-3 py-2.5 text-[#001D3D] focus:outline-none focus:border-[#002E5B] focus:bg-white transition">
-                  <option value="particulier">{t.particulier}</option>
-                  <option value="entreprise">{t.corporate}</option>
-                </select>
-              </div>
-            )}
-
-            <div className="flex items-center justify-between pt-1">
-              <label className="flex items-center space-x-2 cursor-pointer text-slate-600">
-                <input type="checkbox" className="rounded border-slate-300 text-[#002E5B] focus:ring-[#002E5B]" />
-                <span className="text-[11px]">
-                  {tab === 'login' ? t.rememberMe : t.acceptTerms}
-                </span>
-              </label>
-            </div>
-
-            <button
-              type="submit"
-              onClick={() => {
-                alert(tab === 'login' ? 'Connexion réussie !' : 'Compte créé avec succès !');
-                onClose();
-              }}
-              className="btn-bvmac-primary w-full justify-center mt-2"
-            >
-              <span>{tab === 'login' ? t.submitLogin : t.submitRegister}</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </form>
-
-        </div>
+          <button
+            type="submit"
+            disabled={form.processing}
+            className="btn-bvmac-primary w-full justify-center mt-2 disabled:opacity-60"
+          >
+            <span>{tab === 'login' ? t.submitLogin : t.submitRegister}</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </form>
       </div>
     </div>
   );

@@ -1,46 +1,36 @@
 import React from 'react';
-import { Home, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/Context/LanguageContext';
 
 export default function SectionPageHeader({ icon: Icon, title, description, breadcrumbLabel, onSelectView }) {
   const { t } = useLanguage();
   return (
-    <section className="relative bg-[#001D3D] text-white py-10 sm:py-14 overflow-hidden border-b border-white/10">
-      <div
-        className="absolute inset-0 opacity-[0.05] pointer-events-none"
-        style={{
-          backgroundImage: `radial-gradient(#FFFFFF 1.5px, transparent 1.5px)`,
-          backgroundSize: '30px 30px',
-        }}
-      />
+    <section className="bg-[#001D3D] text-white py-10 sm:py-14">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-1.5 text-[11px] font-nav uppercase tracking-wider text-slate-400 mb-4">
+        <nav aria-label="Fil d'Ariane" className="flex items-center gap-1.5 text-sm text-slate-400 mb-4">
           <button
             onClick={() => onSelectView && onSelectView('accueil')}
-            className="flex items-center gap-1 hover:text-white transition"
+            className="hover:text-white transition-colors"
           >
-            <Home className="w-3 h-3" />
-            <span>{t.sectionHeaderHome}</span>
+            {t.sectionHeaderHome}
           </button>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-white font-bold">{breadcrumbLabel}</span>
-        </div>
+          <ChevronRight className="w-3.5 h-3.5" />
+          <span className="text-slate-200">{breadcrumbLabel}</span>
+        </nav>
 
         <div className="flex items-center gap-4">
           {Icon && (
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
-              <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+            <div className="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+              <Icon className="w-6 h-6 text-white" strokeWidth={1.75} />
             </div>
           )}
           <div>
-            <h1 className="text-2xl sm:text-4xl font-bold text-white leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
+            <h1 className="text-2xl sm:text-4xl font-bold text-white leading-tight">
               {title}
             </h1>
             {description && (
-              <p className="text-slate-300 text-sm sm:text-base mt-1.5 font-poppins max-w-2xl leading-relaxed">
+              <p className="text-slate-300 text-base mt-1.5 max-w-2xl leading-relaxed">
                 {description}
               </p>
             )}

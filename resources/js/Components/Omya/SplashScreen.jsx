@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import OmyaLogo from '@/Components/Omya/OmyaLogo';
+import { useLanguage } from '@/Context/LanguageContext';
+
+// Le « O » occupe les 24,3 % gauches du fichier logo (59 px sur 243).
+// On n'affiche d'abord que lui, centré, puis le logo se déroule jusqu'à « OMYA INVEST ».
+const O_CLIP = 'inset(0 75.7% 0 0)';
+const O_CENTER_X = '37.85%'; // (1 - 0.243) / 2 : garde la partie visible au centre pendant le déroulé
 
 export default function SplashScreen({ onFinish }) {
+  const { t } = useLanguage();
   const [phase, setPhase] = useState('show'); // 'show' | 'exit'
 
   useEffect(() => {
     if (phase !== 'show') return;
-    // Laisse le temps à la révélation du logo (~1.3s) puis marque une pause avant la sortie
-    const hold = setTimeout(() => setPhase('exit'), 3000);
+    // Apparition du O, déroulé du logo (~1.9s), puis le temps de lire la signature avant la sortie
+    const hold = setTimeout(() => setPhase('exit'), 4200);
     return () => clearTimeout(hold);
   }, [phase]);
 
@@ -53,28 +60,56 @@ export default function SplashScreen({ onFinish }) {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: '22px',
+              padding: '0 24px',
             }}
           >
-            {/* Logo officiel OMYA INVEST — révélation progressive de gauche à droite (du "O" jusqu'à "INVEST") */}
+            {/* Logo officiel OMYA INVEST : le O apparaît seul, puis le logo se déroule jusqu'à INVEST */}
             <motion.div
-              initial={{ clipPath: 'inset(0 100% 0 0)' }}
-              animate={{ clipPath: 'inset(0 0% 0 0)' }}
-              transition={{ duration: 1.1, ease: [0.65, 0, 0.35, 1], delay: 0.15 }}
+              initial={{ opacity: 0, clipPath: O_CLIP, x: O_CENTER_X }}
+              animate={{
+                opacity: [0, 1, 1, 1],
+                clipPath: [O_CLIP, O_CLIP, O_CLIP, 'inset(0 0% 0 0)'],
+                x: [O_CENTER_X, O_CENTER_X, O_CENTER_X, '0%'],
+              }}
+              transition={{
+                duration: 1.9,
+                delay: 0.1,
+                times: [0, 0.25, 0.42, 1],
+                ease: ['easeOut', 'linear', [0.65, 0, 0.35, 1]],
+              }}
             >
-              <OmyaLogo light={false} className="h-16 sm:h-20 w-auto" />
+              <OmyaLogo light={false} className="h-20 sm:h-24 lg:h-28 w-auto" />
             </motion.div>
 
-            {/* Ligne décorative en dégradé */}
+            {/* Signature de marque, sous le logo */}
+            <motion.p
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: 'easeOut', delay: 1.85 }}
+              style={{
+                // Toujours sur une seule ligne : la taille suit la largeur de l'écran (la phrase fait ~24,8em)
+                fontSize: 'clamp(0.625rem, calc((100vw - 48px) / 25.5), 1.375rem)',
+                fontWeight: 500,
+                lineHeight: 1.4,
+                color: '#002E5B',
+                margin: '28px 0 0',
+                whiteSpace: 'nowrap',
+                textAlign: 'center',
+              }}
+            >
+              {t.footer.tagline}
+            </motion.p>
+
+            {/* Filet de séparation */}
             <motion.div
               initial={{ scaleX: 0, opacity: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}
-              transition={{ duration: 0.5, ease: 'easeOut', delay: 1.3 }}
+              transition={{ duration: 0.5, ease: 'easeOut', delay: 2.2 }}
               style={{
-                width: '60px',
-                height: '2px',
-                background: 'linear-gradient(90deg, #001D3D, #0057B8)',
-                borderRadius: '99px',
+                width: '40px',
+                height: '1px',
+                backgroundColor: '#A9C1DE',
+                margin: '26px 0 18px',
               }}
             />
 
@@ -82,19 +117,18 @@ export default function SplashScreen({ onFinish }) {
             <motion.p
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: 'easeOut', delay: 1.45 }}
+              transition={{ duration: 0.5, ease: 'easeOut', delay: 2.3 }}
               style={{
-                fontFamily: "'Inter', 'Segoe UI', sans-serif",
-                fontSize: 'clamp(0.7rem, 1.4vw, 0.95rem)',
+                fontSize: 'clamp(0.625rem, 1.4vw, 0.85rem)',
                 fontWeight: 500,
-                letterSpacing: '0.22em',
+                letterSpacing: '0.12em',
                 textTransform: 'uppercase',
                 color: '#6B7280',
                 margin: 0,
                 textAlign: 'center',
               }}
             >
-              Société de Bourse · COSUMAF-SDB-01/2025
+              Société de bourse · COSUMAF-SDB-01/2025
             </motion.p>
           </div>
 
@@ -102,7 +136,7 @@ export default function SplashScreen({ onFinish }) {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.5, duration: 0.4 }}
+            transition={{ delay: 2.4, duration: 0.4 }}
             style={{
               position: 'absolute',
               bottom: '48px',
