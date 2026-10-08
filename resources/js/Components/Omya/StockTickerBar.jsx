@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
  * StockTickerBar Component — Barre de cotation 100% DYNAMIQUE issue du serveur API Laravel
  */
 
-export default function StockTickerBar({ speed = 45 }) {
+export default function StockTickerBar({ speed = 45, transparent = false }) {
   const [tickerItems, setTickerItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState('');
@@ -67,14 +67,13 @@ export default function StockTickerBar({ speed = 45 }) {
   // Duplication dynamique pour défilement en boucle infinie sans saut
   const duplicatedItems = [...tickerItems, ...tickerItems];
 
+  // Transparent en haut de l'accueil : le bandeau se fond avec la barre de navigation sur la vidéo du hero.
   return (
-    <div className="bg-[#020611] text-slate-200 text-[12.5px] py-1.5 px-3 border-b border-slate-900 flex items-center justify-between font-sans relative z-50 select-none">
+    <div className={`${transparent ? 'bg-transparent border-transparent' : 'bg-[#020611] border-slate-900'} transition-colors duration-300 text-slate-200 text-[12.5px] py-1.5 px-3 border-b flex items-center justify-between font-sans relative z-50 select-none`}>
 
       {/* GAUCHE : SÉANCE DE COTATION DYNAMIQUE */}
-      <div className="shrink-0 flex items-center gap-1.5 pr-4 text-slate-300 font-medium">
-        <span className="w-4 h-4 rounded-full border border-slate-500 flex items-center justify-center text-[10px] font-bold text-[#38BDF8]">
-          A
-        </span>
+      <div className="shrink-0 flex items-center gap-2 pr-4 text-slate-300 font-medium">
+        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
         <span className="uppercase tracking-wider font-semibold text-[12px]">
           SÉANCE DE COTATION : {sessionDate || 'Chargement...'}
         </span>

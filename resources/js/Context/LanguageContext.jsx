@@ -53,7 +53,6 @@ export const translations = {
       { id: 'nos-solutions', label: 'Nos solutions' },
       { id: 'investir', label: 'Investir' },
       { id: 'financer', label: 'Financer' },
-      { id: 'partenaires', label: 'Partenaires' },
       { id: 'marche-financier', label: 'Marché CEMAC' },
       { id: 'actualites-documents', label: 'Presse & Doc' },
       { id: 'contact', label: 'Contact' },
@@ -62,6 +61,9 @@ export const translations = {
     // ── HeaderNav ──
     headerNav: {
       espaceClient: "Espace client",
+      menu: "Menu",
+      closeMenu: "Fermer le menu",
+      menuTitle: "Navigation",
       solutionsMegaAgrement: "Agrément COSUMAF-SDB-01/2025",
       solutionsMegaTitle: "Nos 7 services",
       solutionsMegaSeeAll: "Voir tout",
@@ -98,7 +100,6 @@ export const translations = {
             { label: 'Conseil en financement', desc: 'Conseil aux émetteurs et aux investisseurs', href: '#solutions-conseil' },
           ],
         },
-        { id: 'partenaires', label: 'Partenaires', href: '#partenaires' },
         {
           id: 'marche-financier', label: 'Marché financier', href: '#marche-financier',
           dropdownItems: [
@@ -150,16 +151,15 @@ export const translations = {
           description: "Pour les agents à besoin de financement : OMYA INVEST structure pour vous les opérations d'emprunt obligataire, d'ouverture du capital et de financement structuré.",
           primaryBtnText: 'Présenter mon projet', secondaryBtnText: 'Structuration financière', category: 'Financer',
         },
-        {
-          titleLine1: 'Devenez', titleHighlight: 'partenaire', titleLine2: "d'OMYA INVEST.",
-          description: "OMYA INVEST accueille les apporteurs d'affaires et des partenaires fiables et dont les apports cadrent avec ses activités.",
-          primaryBtnText: 'Devenir partenaire', secondaryBtnText: 'Nos partenaires', category: 'Partenaires',
-        },
       ],
       prevSlide: 'Diapositive précédente',
       nextSlide: 'Diapositive suivante',
       pauseAuto: 'Mettre en pause',
       playAuto: 'Lecture automatique',
+      eyebrow: 'Société de bourse agréée par la COSUMAF',
+      location: 'Brazzaville, République du Congo',
+      market: 'Marché financier de la CEMAC',
+      agreement: 'Agrément',
     },
 
     // ── À propos ──
@@ -403,6 +403,7 @@ export const translations = {
       tagline: "Vos capitaux méritent mieux qu'un compte qui dort.",
       brandDesc: 'OMYA INVEST connecte les agents à besoin de financement et les agents à capacité de financement de la zone CEMAC et du reste du monde.',
       colInstitution: 'Institution',
+      colContact: 'Contact',
       colSolutions: 'Nos solutions',
       colMarket: 'Marché et presse',
       navLinks: [
@@ -412,7 +413,7 @@ export const translations = {
         { label: 'Notre vision', href: '#vision' },
         { label: 'Nos valeurs', href: '#valeurs' },
         { label: 'Nos cibles', href: '#cibles' },
-        { label: 'Équipe et partenaires', href: '#equipe' },
+        { label: 'Notre équipe', href: '#equipe' },
       ],
       solutionsLinks: [
         { label: 'Structuration financière', href: '#solutions-structuration' },
@@ -427,7 +428,6 @@ export const translations = {
         { label: 'Marché financier CEMAC', href: '#marche-financier' },
         { label: 'Investir', href: '#investir' },
         { label: 'Se financer', href: '#financer' },
-        { label: 'Partenaires', href: '#partenaires' },
         { label: 'Actualités', href: '#actualites' },
         { label: 'Documents', href: '#documents' },
         { label: 'Contact', href: '#contact' },
@@ -521,6 +521,9 @@ export const translations = {
 
     headerNav: {
       espaceClient: "Client area",
+      menu: "Menu",
+      closeMenu: "Close menu",
+      menuTitle: "Navigation",
       solutionsMegaAgrement: "COSUMAF-SDB-01/2025 License",
       solutionsMegaTitle: "Our 7 services",
       solutionsMegaSeeAll: "View all",
@@ -618,6 +621,10 @@ export const translations = {
       nextSlide: 'Next slide',
       pauseAuto: 'Pause',
       playAuto: 'Auto-play',
+      eyebrow: 'Brokerage firm licensed by COSUMAF',
+      location: 'Brazzaville, Republic of the Congo',
+      market: 'CEMAC financial market',
+      agreement: 'Licence',
     },
 
     about: {
@@ -848,6 +855,7 @@ export const translations = {
       tagline: 'Your capital deserves better than a dormant account.',
       brandDesc: 'OMYA INVEST connects entities seeking financing with entities with financing capacity across the CEMAC zone and the rest of the world.',
       colInstitution: 'Institution',
+      colContact: 'Contact',
       colSolutions: 'Our solutions',
       colMarket: 'Market and press',
       navLinks: [
@@ -963,6 +971,9 @@ export const translations = {
 
     headerNav: {
       espaceClient: "Área do cliente",
+      menu: "Menu",
+      closeMenu: "Fechar o menu",
+      menuTitle: "Navegação",
       solutionsMegaAgrement: "Licença COSUMAF-SDB-01/2025",
       solutionsMegaTitle: "Os nossos 7 serviços",
       solutionsMegaSeeAll: "Ver tudo",
@@ -1060,6 +1071,10 @@ export const translations = {
       nextSlide: 'Próximo slide',
       pauseAuto: 'Pausar',
       playAuto: 'Reprodução automática',
+      eyebrow: 'Sociedade de bolsa autorizada pela COSUMAF',
+      location: 'Brazzaville, República do Congo',
+      market: 'Mercado financeiro da CEMAC',
+      agreement: 'Autorização',
     },
 
     about: {
@@ -1290,6 +1305,7 @@ export const translations = {
       tagline: 'O seu capital merece mais do que uma conta parada.',
       brandDesc: 'A OMYA INVEST conecta os agentes com necessidade de financiamento e os agentes com capacidade de financiamento da zona CEMAC e do resto do mundo.',
       colInstitution: 'Instituição',
+      colContact: 'Contacto',
       colSolutions: 'As nossas soluções',
       colMarket: 'Mercado e imprensa',
       navLinks: [

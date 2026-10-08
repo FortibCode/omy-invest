@@ -6,7 +6,7 @@ import { useLanguage } from '@/Context/LanguageContext';
 
 // Métadonnées non traduisibles (ancre, image) — fusionnées avec le texte traduit par index.
 const OPERATIONS_META = [
-  { id: 'emprunt-obligataire', image: '/images/image-hero-4.jpeg' },
+  { id: 'emprunt-obligataire', image: '/images/equipe-reunion-table.jpg' },
   { id: 'ouverture-capital', image: '/images/image-hero-9.jpeg' },
   { id: 'financement-structure', image: '/images/image-hero-7.jpeg' },
   { id: 'conseil-financement', image: '/images/image-hero-5.jpeg' },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, Landmark, Briefcase, Globe, ArrowRight, Play, Eye, Target } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/Context/LanguageContext';
 import {
@@ -11,28 +11,24 @@ export default function ActivitiesSection() {
 
   const services = [
     {
-      icon: TrendingUp,
       title: t.act1Title || 'Société de Bourse',
       desc: t.act1Desc || 'Accès direct aux marchés BVMAC — achat, vente et souscription de titres pour particuliers et institutionnels.',
       tag: 'Agréé COSUMAF',
       link: '#societe-de-bourse',
     },
     {
-      icon: Landmark,
       title: t.act2Title || 'Gestion de Patrimoine',
       desc: t.act2Desc || 'Stratégies d\'investissement personnalisées, portefeuilles diversifiés et conseils patrimoniaux sur-mesure.',
       tag: 'Sur-mesure',
       link: '#gestion-patrimoine',
     },
     {
-      icon: Briefcase,
       title: t.act3Title || 'Conseil Financier',
       desc: t.act3Desc || 'Expertise locale et internationale pour structurer vos opérations financières et optimiser vos rendements.',
       tag: 'Expertise locale',
       link: '#conseil-financier',
     },
     {
-      icon: Globe,
       title: t.act4Title || 'Investissements',
       desc: t.act4Desc || 'Accès aux marchés financiers CEMAC et internationaux via une plateforme unique sécurisée.',
       tag: 'Local & International',
@@ -85,35 +81,22 @@ export default function ActivitiesSection() {
           {/* Grid: image + 2 cards */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-            {/* Image card with play button */}
+            {/* Image card */}
             <motion.div
-              className="lg:col-span-1 relative rounded-2xl overflow-hidden group cursor-pointer"
+              className="lg:col-span-1 relative rounded-2xl overflow-hidden group"
               style={{ minHeight: 300 }}
               variants={fadeInLeft}
               initial="hidden"
               whileInView="visible"
               viewport={viewportLarge}
-              whileHover={{ scale: 1.02 }}
             >
               <img
                 src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80"
                 alt="Notre vision"
-                className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
+                className="w-full h-full object-cover"
                 style={{ minHeight: 300 }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0C4A6E]/90 via-[#0C4A6E]/30 to-transparent" />
-
-              {/* Play button */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <motion.div
-                  className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white/40"
-                  whileHover={{ scale: 1.15, backgroundColor: 'rgba(14, 165, 233,0.5)' }}
-                  animate={{ boxShadow: ['0 0 0 0 rgba(255,255,255,0.4)', '0 0 0 20px rgba(255,255,255,0)'] }}
-                  transition={{ repeat: Infinity, duration: 2 }}
-                >
-                  <Play className="w-6 h-6 text-white fill-white" />
-                </motion.div>
-              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#001D3D]/90 via-[#001D3D]/40 to-transparent" />
             </motion.div>
 
             {/* 2 service cards */}
@@ -125,38 +108,22 @@ export default function ActivitiesSection() {
               viewport={viewportLarge}
             >
               {services.slice(0, 2).map((svc, i) => {
-                const Icon = svc.icon;
                 return (
                   <motion.div
                     key={i}
                     variants={staggerCard}
                     className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-6 group"
-                    whileHover={{
-                      backgroundColor: 'rgba(14, 165, 233,0.12)',
-                      borderColor: 'rgba(14, 165, 233,0.4)',
-                      y: -6,
-                    }}
-                    transition={{ duration: 0.3 }}
                   >
-                    {/* Icon */}
-                    <motion.div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
-                      style={{ background: 'rgba(14, 165, 233,0.2)', border: '1px solid rgba(14, 165, 233,0.4)' }}
-                      whileHover={{ rotate: 5, scale: 1.1 }}
-                    >
-                      <Icon className="w-6 h-6 text-sky-400" />
-                    </motion.div>
+                    <span className="text-xs font-mono font-bold text-white/80 uppercase tracking-wider block mb-3">
+                      0{i + 1}
+                    </span>
 
-                    {/* Orange top border */}
-                    <div className="w-8 h-0.5 bg-sky-400 mb-3" />
-
-                    <h3 className="text-white font-black text-base mb-2">{svc.title}</h3>
-                    <p className="text-sky-300 text-sm leading-relaxed">{svc.desc}</p>
+                    <h3 className="text-white font-bold text-lg mb-2">{svc.title}</h3>
+                    <p className="text-slate-300 text-sm leading-relaxed">{svc.desc}</p>
 
                     <motion.a
                       href={svc.link}
-                      className="inline-flex items-center gap-1.5 text-sky-400 text-xs font-black uppercase tracking-wider mt-4"
-                      whileHover={{ x: 5 }}
+                      className="inline-flex items-center gap-1.5 text-white text-xs font-semibold uppercase tracking-wider mt-4 hover:underline"
                     >
                       {t.learnMore || 'En Savoir Plus'}
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -195,54 +162,37 @@ export default function ActivitiesSection() {
             whileInView="visible"
             viewport={viewportLarge}
           >
-            {services.map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  key={i}
-                  variants={staggerCard}
-                  className="consult-card p-7 flex flex-col gap-4 group cursor-pointer"
-                  whileHover={{
-                    y: -8,
-                    boxShadow: '0 20px 50px rgba(3, 105, 161,0.15)',
-                  }}
-                >
-                  {/* Orange top line */}
-                  <div className="w-10 h-1 bg-sky-500 rounded-full group-hover:w-full transition-all duration-500" />
+            {services.map((item, i) => (
+              <motion.div
+                key={i}
+                variants={staggerCard}
+                className="consult-card p-7 flex flex-col gap-5 group cursor-pointer"
+                whileHover={{
+                  y: -6,
+                  boxShadow: '0 20px 50px rgba(3, 105, 161,0.12)',
+                }}
+              >
+                {/* Index */}
+                <span className="text-xs font-mono font-bold text-sky-500 uppercase tracking-wider">
+                  0{i + 1}
+                </span>
 
-                  {/* Icon */}
-                  <div className="w-14 h-14 rounded-xl flex items-center justify-center"
-                    style={{ background: '#0369A1' }}>
-                    <Icon className="w-7 h-7 text-sky-400" />
-                  </div>
+                {/* Text */}
+                <div className="space-y-2 flex-1">
+                  <h3 className="font-bold text-gray-800 text-base leading-snug">
+                    {item.title}
+                  </h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
 
-                  {/* Tag */}
-                  <span className="text-[10px] font-black uppercase tracking-widest text-sky-500 border border-sky-200 bg-sky-50 px-2.5 py-1 rounded-full self-start">
-                    {item.tag}
-                  </span>
-
-                  {/* Text */}
-                  <div className="space-y-1.5 flex-1">
-                    <h3 className="font-black text-gray-800 text-sm uppercase tracking-wide">
-                      {item.title}
-                    </h3>
-                    <p className="text-gray-500 text-xs leading-relaxed">
-                      {item.desc}
-                    </p>
-                  </div>
-
-                  {/* CTA */}
-                  <motion.a
-                    href={item.link}
-                    className="inline-flex items-center text-xs font-black uppercase tracking-widest text-sky-500 group-hover:gap-2 gap-1 transition-all"
-                    whileHover={{ x: 4 }}
-                  >
-                    {t.learnMore || 'En Savoir Plus'}
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </motion.a>
-                </motion.div>
-              );
-            })}
+                {/* Tag */}
+                <span className="text-[10px] font-semibold text-sky-600 border-t border-slate-100 pt-3 block">
+                  {item.tag}
+                </span>
+              </motion.div>
+            ))}
           </motion.div>
 
         </div>

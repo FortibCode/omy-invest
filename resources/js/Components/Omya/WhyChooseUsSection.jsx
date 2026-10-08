@@ -1,39 +1,13 @@
-import React, { useRef } from 'react';
-import { CheckCircle2, ArrowRight, Clock } from 'lucide-react';
-import { motion, useInView } from 'framer-motion';
+import React from 'react';
+import { ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/Context/LanguageContext';
 import {
   fadeInLeft, fadeInRight, fadeInUp,
-  staggerContainer, scaleIn, viewport, viewportLarge,
+  viewport, viewportLarge,
 } from '@/utils/animations';
 
-/* ── Animated Progress Bar ── */
-function AnimatedProgressBar({ pct, color = '#0EA5E9' }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, amount: 0.5 });
-  return (
-    <div ref={ref} className="flex items-center gap-3 mt-2">
-      <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-        <motion.div
-          className="h-full rounded-full"
-          style={{ background: color }}
-          initial={{ width: 0 }}
-          animate={inView ? { width: `${pct}%` } : { width: 0 }}
-          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
-        />
-      </div>
-      <motion.span
-        className="text-xs font-black shrink-0"
-        style={{ color }}
-        initial={{ opacity: 0 }}
-        animate={inView ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ delay: 0.7 }}
-      >
-        {pct}%
-      </motion.span>
-    </div>
-  );
-}
+
 
 export default function WhyChooseUsSection() {
   const { t } = useLanguage();
@@ -92,28 +66,6 @@ export default function WhyChooseUsSection() {
               whileHover={{ scale: 1.03 }}
             />
 
-            {/* Counter badge */}
-            <motion.div
-              className="counter-badge badge-pulse"
-              initial={{ opacity: 0, scale: 0.7 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
-              viewport={viewport}
-            >
-              <div className="text-3xl font-black text-white font-mono leading-none">3 500</div>
-              <div className="text-sky-400 text-xl font-black leading-none">+</div>
-              <div className="text-sky-300 text-[10px] font-semibold uppercase tracking-wide mt-1">
-                {t.clientTrustCount || "Clients nous font confiance"}
-              </div>
-            </motion.div>
-
-            {/* Decorative orange square */}
-            <motion.div
-              className="absolute top-4 right-4 w-16 h-16 rounded-lg opacity-20"
-              style={{ background: '#0EA5E9' }}
-              animate={{ rotate: [0, 10, 0], scale: [1, 1.05, 1] }}
-              transition={{ duration: 6, repeat: Infinity }}
-            />
           </motion.div>
 
           {/* Mobile: single image */}
@@ -146,71 +98,54 @@ export default function WhyChooseUsSection() {
               transition={{ duration: 0.5 }}
               viewport={viewport}
             >
-              <span className="section-tag">{t.aboutUsTag || "À Propos de Nous"}</span>
+              <span className="section-tag-bvmac">{t.aboutUsTag || "À Propos de Nous"}</span>
             </motion.div>
 
             {/* Title */}
-            <h2 className="section-title">
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#002E5B] leading-tight">
               {t.aboutUsHeading || "Nous Sommes une Société de Bourse"}{' '}
-              <span className="orange-gradient-text">{t.aboutUsHeadingAccent || "Dédiée à Votre Succès"}</span>
+              <span className="text-[#001D3D]">{t.aboutUsHeadingAccent || "Dédiée à Votre Succès"}</span>
             </h2>
 
             {/* Intro text */}
-            <p className="text-gray-600 leading-relaxed text-base">
+            <p className="text-slate-600 leading-relaxed text-base">
               {t.aboutUsDesc || "Depuis plus de 10 ans, OMYA INVEST accompagne ses clients avec rigueur, transparence et une profonde connaissance des marchés financiers de la CEMAC. Agréée par la COSUMAF, nous vous offrons un accès direct à la BVMAC et aux meilleures opportunités d'investissement."}
             </p>
 
-            {/* Highlight bullets (orange bar style) */}
-            <div className="space-y-5">
+            {/* Highlight bullets */}
+            <div className="space-y-4">
               {highlights.map((h, i) => (
-                <div key={i} className="orange-bar">
-                  <div>
-                    <h3 className="font-black text-gray-800 text-base mb-1">{h.title}</h3>
-                    <p className="text-gray-500 text-sm leading-relaxed">{h.desc}</p>
-                    <AnimatedProgressBar pct={h.pct} />
-                  </div>
+                <div key={i} className="p-4 bg-slate-50 border-l-4 border-[#002E5B] rounded-r-lg">
+                  <h3 className="font-bold text-[#001D3D] text-base mb-1">{h.title}</h3>
+                  <p className="text-slate-600 text-sm leading-relaxed">{h.desc}</p>
                 </div>
               ))}
             </div>
 
             {/* Experience badge */}
-            <motion.div
-              className="flex items-center gap-4 p-4 rounded-xl border border-sky-100 bg-gray-50"
-              whileHover={{ borderColor: '#0EA5E9', backgroundColor: '#F0F9FF' }}
-              transition={{ duration: 0.2 }}
-            >
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-                style={{ background: '#0369A1' }}>
-                <Clock className="w-6 h-6 text-sky-400" />
+            <div className="flex items-center gap-4 p-4 rounded-lg border border-slate-200 bg-white">
+              <div className="w-10 h-10 rounded bg-[#002E5B] text-white flex items-center justify-center shrink-0 font-bold text-sm">
+                10+
               </div>
               <div>
-                <div className="font-black text-gray-800 text-sm">{t.yearsExpTitle || "10 Ans d'Expérience"}</div>
-                <div className="text-gray-500 text-xs leading-snug">
+                <div className="font-bold text-[#001D3D] text-sm">{t.yearsExpTitle || "10 Ans d'Expérience"}</div>
+                <div className="text-slate-500 text-xs leading-snug">
                   {t.yearsExpDesc || "Expert en marchés financiers CEMAC depuis 2014 — Brazzaville, Congo."}
                 </div>
               </div>
-            </motion.div>
+            </div>
 
             {/* Certifications grid */}
-            <motion.div
-              className="grid grid-cols-2 gap-3"
-              variants={staggerContainer(0.08, 0.2)}
-              initial="hidden"
-              whileInView="visible"
-              viewport={viewport}
-            >
+            <div className="grid grid-cols-2 gap-3">
               {certifications.map((cert, i) => (
-                <motion.div
+                <div
                   key={i}
-                  variants={scaleIn}
-                  className="flex items-center gap-2 p-3 rounded-lg bg-gray-50 border border-sky-100"
-                  whileHover={{ borderColor: '#0EA5E9', backgroundColor: '#F0F9FF' }}
+                  className="p-3 rounded-md bg-white border border-slate-200 text-xs font-semibold text-[#001D3D]"
                 >
-                  <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: '#0EA5E9' }} />
-                  <span className="text-xs font-bold text-gray-700">{cert}</span>
-                </motion.div>
+                  {cert}
+                </div>
               ))}
-            </motion.div>
+            </div>
 
             {/* CTA */}
             <motion.a

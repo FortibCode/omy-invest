@@ -2,12 +2,15 @@ import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/Context/LanguageContext';
 
-export default function SectionPageHeader({ icon: Icon, title, description, breadcrumbLabel, onSelectView }) {
+// hideBreadcrumb : sans fil d'Ariane (ex. sur l'accueil) ; headingLevel : 'h1' sur une page de rubrique, 'h2' sous un autre titre principal.
+export default function SectionPageHeader({ icon: Icon, title, description, breadcrumbLabel, onSelectView, hideBreadcrumb = false, headingLevel = 'h1' }) {
   const { t } = useLanguage();
+  const Heading = headingLevel;
   return (
     <section className="bg-[#001D3D] text-white py-10 sm:py-14">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
+        {!hideBreadcrumb && (
         <nav aria-label="Fil d'Ariane" className="flex items-center gap-1.5 text-sm text-slate-400 mb-4">
           <button
             onClick={() => onSelectView && onSelectView('accueil')}
@@ -18,6 +21,7 @@ export default function SectionPageHeader({ icon: Icon, title, description, brea
           <ChevronRight className="w-3.5 h-3.5" />
           <span className="text-slate-200">{breadcrumbLabel}</span>
         </nav>
+        )}
 
         <div className="flex items-center gap-4">
           {Icon && (
@@ -26,9 +30,9 @@ export default function SectionPageHeader({ icon: Icon, title, description, brea
             </div>
           )}
           <div>
-            <h1 className="text-2xl sm:text-4xl font-bold text-white leading-tight">
+            <Heading className="text-2xl sm:text-4xl font-bold text-white leading-tight">
               {title}
-            </h1>
+            </Heading>
             {description && (
               <p className="text-slate-300 text-base mt-1.5 max-w-2xl leading-relaxed">
                 {description}

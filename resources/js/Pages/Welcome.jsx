@@ -7,23 +7,22 @@ import HeroSection from '@/Components/Omya/HeroSection';
 import SectionPageHeader from '@/Components/Omya/SectionPageHeader';
 import CrossLinkSection from '@/Components/Omya/CrossLinkSection';
 import AboutSection from '@/Components/Omya/AboutSection';
+import AboutHeroSection from '@/Components/Omya/AboutHeroSection';
 import InvestorPathwaySection from '@/Components/Omya/InvestorPathwaySection';
 import IssuerPathwaySection from '@/Components/Omya/IssuerPathwaySection';
 import SolutionsSection from '@/Components/Omya/SolutionsSection';
 import TargetsSection from '@/Components/Omya/TargetsSection';
 import MissionVisionValuesSection from '@/Components/Omya/MissionVisionValuesSection';
 import FinancialMarketSection from '@/Components/Omya/FinancialMarketSection';
-import TeamAndPartnersSection from '@/Components/Omya/TeamAndPartnersSection';
+
 import NewsSection from '@/Components/Omya/NewsSection';
 import DocumentsSection from '@/Components/Omya/DocumentsSection';
 import ContactSection from '@/Components/Omya/ContactSection';
 import FooterSection from '@/Components/Omya/FooterSection';
 import AuthModal from '@/Components/Omya/AuthModal';
-import { Home, Info, Briefcase, TrendingUp, Landmark, BookOpen, FileText, Mail, Users } from 'lucide-react';
+import CustomCursor from '@/Components/Omya/CustomCursor';
+import { Info, Briefcase, TrendingUp, Landmark, BookOpen, FileText, Mail, Users } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-// Icônes des onglets, dans le même ordre que t.viewTabs (contenu traduit dans LanguageContext).
-const VIEW_TAB_ICONS = [Home, Info, Briefcase, TrendingUp, Landmark, Users, BookOpen, FileText, Mail];
 
 export default function Welcome({ auth }) {
   return (
@@ -50,24 +49,35 @@ function WelcomeContent({ auth }) {
   const handleSelectView = (viewId, anchorId) => {
     setActiveView(viewId);
 
-    // Laisse le temps à l'onglet précédent de sortir (AnimatePresence) et au nouveau de se monter
-    // avant de tenter de défiler vers une sous-section précise (ex: #mission dans "À propos").
-    window.setTimeout(() => {
-      const target = anchorId ? document.getElementById(anchorId) : null;
-      if (target) {
+    // Attend que le nouvel onglet soit monté (AnimatePresence fait d'abord sortir l'ancien), puis défile
+    // vers la sous-section demandée (ex : #mission dans « À propos »). La recherche se fait uniquement
+    // dans le nouvel onglet : l'ancien peut contenir une section de même id pendant sa sortie.
+    let attempts = 0;
+    const scrollToTarget = () => {
+      const view = document.querySelector(`[data-view="${viewId}"]`);
+      if (!view && attempts++ < 15) {
+        window.setTimeout(scrollToTarget, 100);
+        return;
+      }
+      const target = view && anchorId ? view.querySelector(`#${CSS.escape(anchorId)}`) : null;
+      // Section d'ouverture de l'onglet (déjà tout en haut) : on remonte simplement en haut de page.
+      if (target && target !== view.firstElementChild) {
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-    }, 400);
+    };
+    window.setTimeout(scrollToTarget, 350);
   };
 
-  const viewTabs = t.viewTabs.map((tab, idx) => ({ ...tab, icon: VIEW_TAB_ICONS[idx] }));
   const sh = t.sectionHeaders;
   const cl = t.crossLinks;
 
   return (
     <>
+      {/* ── CUSTOM CURSOR PREMIUM ── */}
+      <CustomCursor />
+
       {/* ── SPLASH SCREEN ── */}
       {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
       <Head>
@@ -79,35 +89,7 @@ function WelcomeContent({ auth }) {
       <div className="relative min-h-screen bg-[#F4F6FA] text-slate-800 font-sans antialiased selection:bg-[#002E5B] selection:text-white">
 
         {/* 1. Header Navbar Sticky */}
-        <HeaderNav onOpenAuth={handleOpenAuth} onSelectView={handleSelectView} />
-
-        {/* ── SUB-NAVBAR QUICK TAB BAR ── */}
-        <div className="relative sticky top-[108px] z-40 bg-[#001D3D] border-b border-[#FFFFFF]/30 shadow-md py-2 px-4">
-          <div className="max-w-screen-2xl mx-auto sm:px-2 lg:px-4 flex items-center justify-center text-sm">
-            <div className="flex items-center gap-1 overflow-x-auto min-w-0 py-0.5 scrollbar-none">
-              {viewTabs.map((tab) => {
-                const TabIcon = tab.icon;
-                const isActive = activeView === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => handleSelectView(tab.id)}
-                    className={`px-3.5 py-1.5 rounded font-semibold transition-colors flex items-center gap-1.5 whitespace-nowrap ${
-                      isActive
-                        ? 'bg-white text-[#001D3D]'
-                        : 'text-slate-300 hover:text-white hover:bg-white/10'
-                    }`}
-                  >
-                    <TabIcon className={`w-3.5 h-3.5 ${isActive ? 'text-[#001D3D]' : 'text-[#FFFFFF]'}`} />
-                    <span>{tab.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-          {/* Indice visuel de défilement (mobile) */}
-          <div className="absolute right-0 top-0 bottom-0 w-10 bg-gradient-to-l from-[#001D3D] to-transparent pointer-events-none sm:hidden" />
-        </div>
+        <HeaderNav onOpenAuth={handleOpenAuth} onSelectView={handleSelectView} activeView={activeView} />
 
         <main className="relative z-10">
 
@@ -115,6 +97,7 @@ function WelcomeContent({ auth }) {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeView}
+              data-view={activeView}
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
@@ -128,24 +111,28 @@ function WelcomeContent({ auth }) {
                   <HeroSection onSelectView={handleSelectView} />
                   <AboutSection onSelectView={handleSelectView} />
                   <SolutionsSection onSelectView={handleSelectView} />
-                  <TeamAndPartnersSection onSelectView={handleSelectView} />
-                  <ContactSection />
+
                 </>
               )}
 
               {/* ══════ 2. RUBRIQUE À PROPOS ══════ */}
               {activeView === 'a-propos' && (
                 <>
-                  <SectionPageHeader
-                    icon={Info}
-                    title={sh['a-propos'].title}
-                    breadcrumbLabel={sh['a-propos'].breadcrumbLabel}
-                    description={sh['a-propos'].description}
-                    onSelectView={handleSelectView}
-                  />
-                  <AboutSection onSelectView={handleSelectView} hideTag />
-                  <MissionVisionValuesSection />
-                  <TargetsSection />
+                  <AboutHeroSection />
+                  {/* Fond commun aux 4 blocs (mission, vision, valeurs, cibles) : photo fixée à l'écran
+                      pendant le défilement (élément sticky : fonctionne aussi sur mobile), sous un voile bleu nuit */}
+                  <div className="relative">
+                    <div className="absolute inset-0" aria-hidden="true">
+                      <div
+                        className="sticky top-0 h-[100svh] bg-cover bg-center"
+                        style={{ backgroundImage: "url('/images/bg-equipe-reunion.jpg')" }}
+                      >
+                        <div className="absolute inset-0 bg-[#05080F]/80" />
+                      </div>
+                    </div>
+                    <MissionVisionValuesSection />
+                    <TargetsSection />
+                  </div>
                 </>
               )}
 
@@ -215,28 +202,7 @@ function WelcomeContent({ auth }) {
                 </>
               )}
 
-              {/* ══════ 6. RUBRIQUE PARTENAIRES ══════ */}
-              {activeView === 'partenaires' && (
-                <>
-                  <SectionPageHeader
-                    icon={Users}
-                    title={sh['partenaires'].title}
-                    breadcrumbLabel={sh['partenaires'].breadcrumbLabel}
-                    description={sh['partenaires'].description}
-                    onSelectView={handleSelectView}
-                  />
-                  <TeamAndPartnersSection onSelectView={handleSelectView} />
-                  <CrossLinkSection
-                    icon={Info}
-                    title={cl.partenairesToAbout.title}
-                    description={cl.partenairesToAbout.description}
-                    ctas={[{ label: cl.partenairesToAbout.cta, targetView: 'a-propos', href: '#presentation' }]}
-                    onSelectView={handleSelectView}
-                  />
-                </>
-              )}
-
-              {/* ══════ 7. RUBRIQUE MARCHÉ FINANCIER ══════ */}
+              {/* ══════ 6. RUBRIQUE MARCHÉ FINANCIER ══════ */}
               {activeView === 'marche-financier' && (
                 <>
                   <SectionPageHeader
@@ -258,7 +224,7 @@ function WelcomeContent({ auth }) {
                 </>
               )}
 
-              {/* ══════ 8. RUBRIQUE PRESSE & DOCUMENTS ══════ */}
+              {/* ══════ 7. RUBRIQUE PRESSE & DOCUMENTS ══════ */}
               {activeView === 'actualites-documents' && (
                 <>
                   <SectionPageHeader
@@ -273,7 +239,7 @@ function WelcomeContent({ auth }) {
                 </>
               )}
 
-              {/* ══════ 9. RUBRIQUE CONTACT ══════ */}
+              {/* ══════ 8. RUBRIQUE CONTACT ══════ */}
               {activeView === 'contact' && (
                 <>
                   <SectionPageHeader
@@ -284,13 +250,6 @@ function WelcomeContent({ auth }) {
                     onSelectView={handleSelectView}
                   />
                   <ContactSection />
-                  <CrossLinkSection
-                    icon={Users}
-                    title={cl.contactToPartners.title}
-                    description={cl.contactToPartners.description}
-                    ctas={[{ label: cl.contactToPartners.cta, targetView: 'partenaires', href: '#partenaires' }]}
-                    onSelectView={handleSelectView}
-                  />
                 </>
               )}
 

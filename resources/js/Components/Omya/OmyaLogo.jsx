@@ -1,81 +1,13 @@
 import React from 'react';
 
 export default function OmyaLogo({ className = "h-9", light = false }) {
-  // Logo officiel OMYA INVEST (fichier réel fourni, fond transparent).
-  // Utilisé sur tous les fonds clairs. Sur fond sombre, aucun fichier officiel
-  // en blanc n'existe : on garde une reproduction vectorielle fidèle en blanc.
-  if (!light) {
-    return (
-      <img
-        src="/images/omya-invest-logo.png"
-        alt="OMYA INVEST"
-        className={`inline-block object-contain select-none ${className}`}
-      />
-    );
-  }
-
-  const textColor = "#FFFFFF";
-  const investColor = "#38BDF8";
-
+  // Logo officiel OMYA INVEST (version haute résolution, fond transparent).
+  // Sur fond sombre : même fichier recoloré (OMYA en blanc, INVEST en bleu clair) → omya-invest-logo-white.png.
   return (
-    <div className={`inline-flex flex-col items-center justify-center select-none ${className}`}>
-      {/* SVG Vector Reproduction of OMYA INVEST Logo */}
-      <svg
-        viewBox="0 0 222 75"
-        className="h-full w-auto"
-        fill="none" 
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Letter 'O': Two facing arcs (parentheses brackets) */}
-        <g stroke={textColor} strokeWidth="7" strokeLinecap="round" fill="none">
-          <path d="M 28 12 A 22 22 0 0 0 28 52" />
-          <path d="M 38 12 A 22 22 0 0 1 38 52" />
-        </g>
-
-        {/* Letter 'M': Modern geometric M */}
-        <path
-          d="M 68 52 V 12 L 86 38 L 104 12 V 52"
-          stroke={textColor}
-          strokeWidth="7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-        />
-
-        {/* Letter 'Y': Geometric Y */}
-        <path
-          d="M 124 12 L 140 34 V 52 M 156 12 L 140 34"
-          stroke={textColor}
-          strokeWidth="7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-        />
-
-        {/* Letter 'A': Open Chevron Apex (no horizontal crossbar) */}
-        <path
-          d="M 174 52 L 194 12 L 214 52"
-          stroke={textColor}
-          strokeWidth="7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-        />
-
-        {/* Subtitle 'INVEST' */}
-        <text
-          x="121"
-          y="71"
-          textAnchor="middle"
-          fill={investColor}
-          fontSize="16"
-          fontWeight="700"
-          letterSpacing="9"
-          fontFamily="'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif"
-        >
-          INVEST
-        </text>
-      </svg>
-    </div>
+    <img
+      src={light ? '/images/omya-invest-logo-white.png' : '/images/omya-invest-logo-hd.png'}
+      alt="OMYA INVEST"
+      className={`inline-block object-contain select-none ${className}`}
+    />
   );
 }

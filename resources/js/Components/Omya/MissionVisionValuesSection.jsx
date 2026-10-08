@@ -1,113 +1,64 @@
-import React from 'react';
-import { ShieldCheck, Award, HeartHandshake, Compass, Building, User } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React, { useLayoutEffect } from 'react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLanguage } from '@/Context/LanguageContext';
+import SplitChapter, { AccordionList, typo } from '@/Components/Omya/SplitChapter';
 
-const VALUES_ICONS = [ShieldCheck, Award, HeartHandshake, Compass];
+
+// Garde le dernier mot insécable (« sous-région » ne se coupe pas au trait d'union)
+function NoBreakLastWord({ text }) {
+  const idx = text.lastIndexOf(' ');
+  if (idx === -1) return <span className="whitespace-nowrap">{text}</span>;
+  return (
+    <>
+      {text.slice(0, idx)} <span className="whitespace-nowrap">{text.slice(idx + 1)}</span>
+    </>
+  );
+}
 
 export default function MissionVisionValuesSection() {
   const { t } = useLanguage();
   const mvv = t.missionVisionValues;
 
-  const missionCards = [
-    { icon: Building, title: mvv.moralesTitle, text: mvv.moralesText },
-    { icon: User, title: mvv.physiquesTitle, text: mvv.physiquesText },
+  const missionItems = [
+    { title: mvv.moralesTitle, text: mvv.moralesText },
+    { title: mvv.physiquesTitle, text: mvv.physiquesText },
   ];
 
+  // Recalcule les positions une fois l'onglet installé (il entre avec une animation)
+  useLayoutEffect(() => {
+    const refresh = setTimeout(() => ScrollTrigger.refresh(), 500);
+    return () => clearTimeout(refresh);
+  }, []);
+
   return (
-    <section className="py-24 bg-white text-slate-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24">
+    <section
+      className="relative pt-20 pb-16 lg:pt-28 lg:pb-24 overflow-hidden text-white"
+    >
+      <div className="relative max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 space-y-20 lg:space-y-32">
 
-        {/* ══════ MISSION ══════ */}
-        <div id="mission" className="space-y-12">
-          <div className="text-center max-w-3xl mx-auto space-y-4">
-            <div className="section-tag-bvmac justify-center">
-              <span>{mvv.missionTag}</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#002E5B] leading-tight">
-              {mvv.missionQuote}
-            </h2>
-            <p className="text-slate-600 text-base sm:text-lg">
-              {mvv.missionSub}
-            </p>
-          </div>
+        {/* ══════ MISSION : texte à gauche, photo à droite ══════ */}
+        <SplitChapter id="mission" image="/images/image-hero-9.jpeg" imageFocus="30% center" color="#2E5E87">
+          <AccordionList idPrefix="mission" items={missionItems} />
+        </SplitChapter>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {missionCards.map((card, idx) => {
-              const Icon = card.icon;
-              return (
-                <motion.div
-                  key={card.title}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: idx * 0.08 }}
-                  className="bvmac-card p-8"
-                >
-                  <Icon className="w-7 h-7 text-[#002E5B] mb-5" strokeWidth={1.5} />
-                  <h3 className="text-xl font-bold text-[#001D3D] mb-3">{card.title}</h3>
-                  <p className="text-slate-600 leading-relaxed">{card.text}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
+        {/* ══════ VISION : photo à gauche, texte à droite ══════ */}
+        <SplitChapter id="vision" image="/images/equipe-reunion-table.jpg" imageFocus="center" photoLeft color="#5B4B8A">
+          <AccordionList idPrefix="vision" items={mvv.visionSteps} />
+        </SplitChapter>
 
-        {/* ══════ VISION ══════ */}
-        <div id="vision" className="space-y-12">
-          <div className="text-center max-w-3xl mx-auto space-y-4">
-            <div className="section-tag-bvmac justify-center">
-              <span>{mvv.visionTag}</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#002E5B] leading-tight">
-              {mvv.visionTitle}
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-10 md:gap-8">
-            {mvv.visionSteps.map((step, idx) => (
-              <motion.div
-                key={step.title}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.08 }}
-                className="border-t-2 border-[#002E5B] pt-6"
-              >
-                <span className="block text-sm font-semibold text-slate-500 mb-2">{idx + 1}</span>
-                <h3 className="text-xl font-bold text-[#001D3D] mb-3">{step.title}</h3>
-                <p className="text-slate-600 leading-relaxed">{step.text}</p>
-              </motion.div>
+        {/* ══════ VALEURS : texte à gauche, photo à droite ══════ */}
+        <SplitChapter id="valeurs" image="/images/valeurs-mains.jpg" imageFit="contain" imageBg="#060911" color="#1F6F6B">
+          {/* Liste simple : une valeur par ligne */}
+          <ul className="space-y-6 sm:space-y-7">
+            {mvv.values.map((value) => (
+              <li key={value.title} data-reveal>
+                <h3 className="text-xl sm:text-2xl font-medium leading-snug tracking-[-0.01em]">
+                  <NoBreakLastWord text={typo(value.title)} />
+                </h3>
+              </li>
             ))}
-          </div>
-        </div>
-
-        {/* ══════ VALEURS ══════ */}
-        <div id="valeurs" className="space-y-12">
-          <div className="text-center max-w-3xl mx-auto space-y-4">
-            <div className="section-tag-bvmac justify-center">
-              <span>{mvv.valeursTag}</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#002E5B] leading-tight">
-              {mvv.valeursTitle}
-            </h2>
-            {mvv.valeursQuote && (
-              <p className="text-slate-600 text-base sm:text-lg">{mvv.valeursQuote}</p>
-            )}
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-slate-200 border border-slate-200 rounded-lg overflow-hidden">
-            {mvv.values.map((value, idx) => {
-              const Icon = VALUES_ICONS[idx];
-              return (
-                <div key={value.title} className="bg-[#F7F9FC] p-7 flex items-center gap-4">
-                  <Icon className="w-7 h-7 text-[#002E5B] shrink-0" strokeWidth={1.5} />
-                  <h3 className="text-base font-bold text-[#001D3D] leading-snug">{value.title}</h3>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+          </ul>
+        </SplitChapter>
 
       </div>
     </section>

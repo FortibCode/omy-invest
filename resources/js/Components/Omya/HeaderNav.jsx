@@ -1,30 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X, ChevronDown, User, ArrowRight, ChevronRight, Landmark, Briefcase, TrendingUp, Award, Shield, Layers, Globe } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Menu, X, ChevronDown, User, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import OmyaLogo from '@/Components/Omya/OmyaLogo';
 import StockTickerBar from '@/Components/Omya/StockTickerBar';
 import { resolveAnchor } from '@/utils/viewAnchors';
 import { useLanguage } from '@/Context/LanguageContext';
+import { FacebookIcon, LinkedInIcon } from '@/Components/Omya/SocialIcons';
 
-// Type de menu déroulant par item (structure, non traduisible) — 'nos-solutions' seul utilise le mega-menu.
-const DROPDOWN_TYPE = {
-  'a-propos': 'list',
-  'nos-solutions': 'megamenu',
-  investir: 'list',
-  financer: 'list',
-  'marche-financier': 'list',
-  'actualites-documents': 'list',
-};
 
-const SOLUTIONS_COL1_ICONS = [Landmark, Briefcase, TrendingUp, Award];
-const SOLUTIONS_COL2_ICONS = [ArrowRight, Shield, Layers];
-
-export default function HeaderNav({ onOpenAuth, onSelectView }) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState(null);
+export default function HeaderNav({ onOpenAuth, onSelectView, activeView }) {
+  const [menuOpen, setMenuOpen] = useState(false);
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [scrolled, setScrolled] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const langRef = useRef(null);
   const { t, currentLang, changeLanguage, languages } = useLanguage();
 
   useEffect(() => {
@@ -33,166 +22,81 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Ferme le sélecteur de langue au clic extérieur
+  useEffect(() => {
+    if (!langMenuOpen) return;
+    const handleClick = (e) => {
+      if (langRef.current && !langRef.current.contains(e.target)) setLangMenuOpen(false);
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [langMenuOpen]);
+
+  // Menu ouvert : on bloque le défilement de la page et Échap le referme
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const handleKey = (e) => e.key === 'Escape' && setMenuOpen(false);
+    document.addEventListener('keydown', handleKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKey);
+    };
+  }, [menuOpen]);
+
+  // En haut de l'accueil et de « À propos », la barre est transparente et se pose sur l'écran d'ouverture plein écran.
+  const transparent = (activeView === 'accueil' || activeView === 'a-propos') && !scrolled;
+
   const handleNavClick = (e, href) => {
     if (e) e.preventDefault();
     const { viewId, anchorId } = resolveAnchor(href);
     if (onSelectView) {
       onSelectView(viewId, anchorId);
     }
+    setMenuOpen(false);
   };
 
+  // Sous-liens de chaque rubrique : « Nos solutions » regroupe les deux colonnes de services.
+  const solutions = [...t.headerNav.solutionsCol1, ...t.headerNav.solutionsCol2].map((s) => ({
+    label: s.title,
+    desc: s.desc,
+    href: s.href,
+  }));
   const navMenuItems = t.headerNav.items.map((item) => ({
     ...item,
-    dropdownType: DROPDOWN_TYPE[item.id],
+    subItems: item.id === 'nos-solutions' ? solutions : item.dropdownItems,
   }));
 
-  const solutionsCol1 = t.headerNav.solutionsCol1.map((item, idx) => ({ ...item, icon: SOLUTIONS_COL1_ICONS[idx] }));
-  const solutionsCol2 = t.headerNav.solutionsCol2.map((item, idx) => ({ ...item, icon: SOLUTIONS_COL2_ICONS[idx] }));
-
   return (
-    <header className="sticky top-0 left-0 right-0 z-50 shadow-md">
+    // Le fond est porté par l'en-tête entier (bandeau + navigation) : un seul bloc bleu nuit, sans démarcation.
+    <header className={`sticky top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      transparent ? 'bg-transparent' : 'bg-black/60 backdrop-blur-md shadow-sm'
+    }`}>
 
       {/* TICKER BARRE DE COTATION */}
-      <StockTickerBar />
+      <StockTickerBar transparent />
 
-      {/* NAVBAR FOND BLANC PURE & BLEU NUIT */}
-      {/* En défilant : effet verre dépoli (blanc à 75 % + flou), le contenu se devine derrière sans gêner la lecture */}
-      <div className={`border-b border-slate-200 transition-all duration-300 ${scrolled ? 'bg-white/75 backdrop-blur-lg backdrop-saturate-150 shadow-lg' : 'bg-white'}`}>
+      {/* NAVBAR : LOGO À GAUCHE, LANGUE + MENU À DROITE */}
+      <div className="relative z-10 border-b border-transparent">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-6 h-[76px]">
+          <div className="flex items-center justify-between gap-4 h-[76px]">
 
             {/* Logo */}
-            <a href="#" onClick={(e) => handleNavClick(e, '#accueil')} className="flex items-center shrink-0 mr-2">
-              <OmyaLogo light={false} className="h-10 sm:h-11 w-auto" />
+            <a href="#" onClick={(e) => handleNavClick(e, '#accueil')} className="flex items-center shrink-0">
+              <OmyaLogo light className="h-10 sm:h-11 w-auto" />
             </a>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden 2xl:flex items-center gap-1 flex-1 justify-center min-w-0">
-              {navMenuItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="relative"
-                  onMouseEnter={() => setActiveDropdown(item.id)}
-                  onMouseLeave={() => setActiveDropdown(null)}
-                >
-                  <a
-                    href={item.href}
-                    onClick={(e) => handleNavClick(e, item.href)}
-                    className={`inline-flex items-center gap-1 px-3 py-2.5 text-[15px] font-semibold transition-colors rounded-sm border-b-2 whitespace-nowrap ${
-                      activeDropdown === item.id
-                        ? 'text-[#002E5B] border-b-[#002E5B] bg-[#002E5B]/5'
-                        : 'text-[#001D3D] hover:text-[#002E5B] hover:border-b-[#002E5B] hover:bg-[#002E5B]/5'
-                    }`}
-                  >
-                    <span>{item.label}</span>
-                    {item.dropdownType && (
-                      <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${activeDropdown === item.id ? 'rotate-180 text-[#002E5B]' : 'text-slate-500'}`} />
-                    )}
-                  </a>
-
-                  {/* Dropdown */}
-                  <AnimatePresence>
-                    {item.dropdownType === 'list' && activeDropdown === item.id && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 8 }}
-                        transition={{ duration: 0.15 }}
-                        className="absolute top-full left-0 mt-0 w-72 bg-white border border-slate-200 border-t-2 border-t-[#002E5B] shadow-2xl z-50 rounded-b-md"
-                      >
-                        {item.dropdownItems.map((sub, idx) => (
-                          <a
-                            key={idx}
-                            href={sub.href}
-                            onClick={(e) => handleNavClick(e, sub.href)}
-                            className="block px-4 py-3 hover:bg-[#F4F6FA] border-b border-slate-100 last:border-none transition group"
-                          >
-                            <div className="text-sm font-semibold text-[#001D3D] group-hover:text-[#002E5B] transition flex items-center justify-between">
-                              <span>{sub.label}</span>
-                              <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 text-[#002E5B] transition-all" />
-                            </div>
-                            <div className="text-xs text-slate-500 leading-snug mt-0.5">{sub.desc}</div>
-                          </a>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Mega Menu Nos Solutions */}
-                  <AnimatePresence>
-                    {item.dropdownType === 'megamenu' && activeDropdown === item.id && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 8 }}
-                        transition={{ duration: 0.18 }}
-                        className="absolute top-full -left-24 mt-0 w-[720px] bg-white border border-slate-200 border-t-2 border-t-[#002E5B] shadow-2xl z-50 p-6 rounded-b-md"
-                      >
-                        <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-200">
-                          <div>
-                            <h4 className="text-base font-bold text-[#001D3D]">{t.headerNav.solutionsMegaTitle}</h4>
-                          </div>
-                          <a href="#nos-solutions" onClick={(e) => handleNavClick(e, '#nos-solutions')} className="text-sm font-semibold text-[#002E5B] hover:underline inline-flex items-center gap-1">
-                            <span>{t.headerNav.solutionsMegaSeeAll}</span>
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </a>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3">
-                          <div className="space-y-1">
-                            {solutionsCol1.map((svc) => {
-                              const Icon = svc.icon;
-                              return (
-                                <a key={svc.num} href={svc.href} onClick={(e) => handleNavClick(e, svc.href)} className="flex items-start gap-3 p-3 hover:bg-[#F4F6FA] transition group rounded-md">
-                                  <div className="shrink-0 w-8 h-8 rounded-sm bg-[#002E5B] text-white flex items-center justify-center">
-                                    <Icon className="w-4 h-4" />
-                                  </div>
-                                  <div>
-                                    <h5 className="text-sm font-bold text-[#001D3D] group-hover:text-[#002E5B] transition">{svc.title}</h5>
-                                    <p className="text-xs text-slate-500 mt-0.5 leading-snug">{svc.desc}</p>
-                                  </div>
-                                </a>
-                              );
-                            })}
-                          </div>
-                          <div className="space-y-1">
-                            {solutionsCol2.map((svc) => {
-                              const Icon = svc.icon;
-                              return (
-                                <a key={svc.num} href={svc.href} onClick={(e) => handleNavClick(e, svc.href)} className="flex items-start gap-3 p-3 hover:bg-[#F4F6FA] transition group rounded-md">
-                                  <div className="shrink-0 w-8 h-8 rounded-sm bg-[#002E5B] text-white flex items-center justify-center">
-                                    <Icon className="w-4 h-4" />
-                                  </div>
-                                  <div>
-                                    <h5 className="text-sm font-bold text-[#001D3D] group-hover:text-[#002E5B] transition">{svc.title}</h5>
-                                    <p className="text-xs text-slate-500 mt-0.5 leading-snug">{svc.desc}</p>
-                                  </div>
-                                </a>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              ))}
-            </nav>
-
-            {/* CTA ESPACE CLIENT + SÉLECTEUR DE LANGUE — BLEU NUIT AGRANDI */}
-            <div className="hidden 2xl:flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
 
               {/* Language Switcher */}
-              <div
-                className="relative"
-                onMouseEnter={() => setLangMenuOpen(true)}
-                onMouseLeave={() => setLangMenuOpen(false)}
-              >
+              <div ref={langRef} className="relative">
                 <button
-                  className="px-3 py-3 border border-slate-300 text-[#001D3D] hover:border-[#002E5B] hover:text-[#002E5B] transition-colors text-sm font-semibold rounded flex items-center gap-1.5"
+                  onClick={() => setLangMenuOpen(!langMenuOpen)}
+                  className="h-11 px-3 text-white hover:bg-white/10 transition-colors text-sm font-semibold rounded flex items-center gap-1.5"
                   aria-label={t.languageSelect}
+                  aria-expanded={langMenuOpen}
                 >
-                  <Globe className="w-4 h-4" />
                   <span>{currentLang}</span>
                   <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${langMenuOpen ? 'rotate-180' : ''}`} />
                 </button>
@@ -203,7 +107,7 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 8 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute top-full right-0 mt-0 w-44 bg-white border border-slate-200 border-t-2 border-t-[#002E5B] shadow-2xl z-50 rounded-b-md overflow-hidden"
+                      className="absolute top-full right-0 mt-2 w-44 bg-white border border-slate-200 border-t-2 border-t-[#002E5B] shadow-2xl z-50 rounded-b-md overflow-hidden"
                     >
                       {languages.map((lng) => (
                         <button
@@ -214,7 +118,9 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                           }`}
                         >
                           <span>{lng.label}</span>
-                          <span className="text-xs text-slate-400">{lng.short}</span>
+                          {currentLang === lng.code
+                            ? <Check className="w-3.5 h-3.5 text-[#002E5B]" />
+                            : <span className="text-xs text-slate-400">{lng.short}</span>}
                         </button>
                       ))}
                     </motion.div>
@@ -222,19 +128,14 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
                 </AnimatePresence>
               </div>
 
+              {/* Bouton Menu (hamburger) */}
               <button
-                onClick={() => onOpenAuth && onOpenAuth('login', 'client')}
-                className="px-6 py-3 bg-[#002E5B] text-white hover:bg-[#001D3D] transition-colors text-sm font-semibold rounded flex items-center gap-2 shrink-0"
+                onClick={() => setMenuOpen(true)}
+                className="h-11 px-3 text-white hover:bg-white/10 transition-colors text-sm font-semibold rounded flex items-center justify-center"
+                aria-label={t.headerNav.menu}
+                aria-expanded={menuOpen}
               >
-                <User className="w-4 h-4 text-white" />
-                <span>{t.headerNav.espaceClient}</span>
-              </button>
-            </div>
-
-            {/* Mobile Hamburger */}
-            <div className="flex 2xl:hidden">
-              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 text-[#001D3D] hover:text-[#002E5B] transition">
-                {mobileMenuOpen ? <X className="w-6 h-6 text-[#001D3D]" /> : <Menu className="w-6 h-6" />}
+                <Menu className="w-5 h-5" />
               </button>
             </div>
 
@@ -242,73 +143,137 @@ export default function HeaderNav({ onOpenAuth, onSelectView }) {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* PANNEAU DE NAVIGATION (tiroir latéral) */}
       <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="2xl:hidden bg-white border-b-2 border-[#002E5B] px-4 pt-2 pb-6 shadow-2xl"
-          >
-            {/* Language Switcher — Mobile */}
-            <div className="flex items-center gap-2 py-3 border-b border-slate-100">
-              <Globe className="w-4 h-4 text-[#002E5B] shrink-0" />
-              {languages.map((lng) => (
+        {menuOpen && (
+          <>
+            <motion.div
+              key="overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              onClick={() => setMenuOpen(false)}
+              className="fixed inset-0 z-[60] bg-[#001D3D]/60 backdrop-blur-sm"
+            />
+            <motion.aside
+              key="drawer"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'tween', ease: [0.22, 1, 0.36, 1], duration: 0.35 }}
+              className="fixed top-0 right-0 bottom-0 z-[70] w-full sm:w-[380px] bg-[#262B3B] text-white shadow-2xl flex flex-col justify-between p-6 sm:p-8"
+              role="dialog"
+              aria-modal="true"
+              aria-label={t.headerNav.menuTitle}
+            >
+              {/* Bouton fermeture X en haut à droite */}
+              <div className="flex justify-end shrink-0">
                 <button
-                  key={lng.code}
-                  onClick={() => changeLanguage(lng.code)}
-                  className={`px-3 py-1.5 rounded text-sm font-semibold transition ${
-                    currentLang === lng.code
-                      ? 'bg-[#002E5B] text-white'
-                      : 'bg-[#F4F6FA] text-[#001D3D] hover:bg-slate-200'
-                  }`}
+                  onClick={() => setMenuOpen(false)}
+                  className="w-9 h-9 text-white/80 hover:text-white transition flex items-center justify-center"
+                  aria-label={t.headerNav.closeMenu}
                 >
-                  {lng.short}
+                  <X className="w-6 h-6" />
                 </button>
-              ))}
-            </div>
+              </div>
 
-            <div className="space-y-0.5">
-              {navMenuItems.map((item) => (
-                <div key={item.id} className="border-b border-slate-100 last:border-none">
-                  {!item.dropdownType ? (
-                    <a href={item.href} onClick={(e) => { handleNavClick(e, item.href); setMobileMenuOpen(false); }} className="block py-3 text-base font-semibold text-[#001D3D] hover:text-[#002E5B]">
-                      {item.label}
-                    </a>
-                  ) : (
-                    <div>
-                      <button onClick={() => setActiveAccordion(activeAccordion === item.id ? null : item.id)} className="w-full flex items-center justify-between py-3 text-base font-semibold text-[#001D3D] hover:text-[#002E5B]">
-                        <span>{item.label}</span>
-                        <ChevronDown className={`w-4 h-4 transition-transform duration-200 text-[#002E5B] ${activeAccordion === item.id ? 'rotate-180' : ''}`} />
-                      </button>
-                      {activeAccordion === item.id && (
-                        <div className="pl-3 pb-3 space-y-2">
-                          {item.dropdownType === 'megamenu'
-                            ? [...solutionsCol1, ...solutionsCol2].map((s) => (
-                                <a key={s.num} href={s.href} onClick={(e) => { handleNavClick(e, s.href); setMobileMenuOpen(false); }} className="block py-1.5 text-[15px] text-slate-700 hover:text-[#002E5B]">{s.title}</a>
-                              ))
-                            : item.dropdownItems.map((sub, sIdx) => (
-                                <a key={sIdx} href={sub.href} onClick={(e) => { handleNavClick(e, sub.href); setMobileMenuOpen(false); }} className="block py-1.5 text-[15px] text-slate-700 hover:text-[#002E5B]">{sub.label}</a>
-                              ))}
+              {/* Rubriques épurées */}
+              <nav className="flex-1 overflow-y-auto py-6 my-2">
+                <ul className="space-y-3">
+                  {navMenuItems.map((item, idx) => {
+                    const isExpanded = activeAccordion === item.id;
+                    const hasSub = item.subItems && item.subItems.length > 0;
+                    return (
+                      <motion.li
+                        key={item.id}
+                        initial={{ opacity: 0, x: 12 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.04 + idx * 0.025, duration: 0.2 }}
+                      >
+                        <div className="flex items-center justify-between py-1">
+                          <a
+                            href={item.href}
+                            onClick={(e) => handleNavClick(e, item.href)}
+                            className="text-[17px] sm:text-[18px] text-white/90 hover:text-white font-normal transition-colors"
+                          >
+                            <span>{item.label}</span>
+                          </a>
+                          {hasSub && (
+                            <button
+                              onClick={() => setActiveAccordion(isExpanded ? null : item.id)}
+                              className="p-1 text-white/60 hover:text-white transition"
+                              aria-expanded={isExpanded}
+                              aria-label={item.label}
+                            >
+                              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
+                            </button>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  )}
+
+                        <AnimatePresence initial={false}>
+                          {hasSub && isExpanded && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="overflow-hidden"
+                            >
+                              <div className="pl-3 my-2 border-l border-white/20 space-y-2">
+                                {item.subItems.map((sub, sIdx) => (
+                                  <a
+                                    key={sIdx}
+                                    href={sub.href}
+                                    onClick={(e) => handleNavClick(e, sub.href)}
+                                    className="block text-sm text-white/70 hover:text-white transition"
+                                  >
+                                    <span>{sub.label}</span>
+                                  </a>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </motion.li>
+                    );
+                  })}
+                </ul>
+              </nav>
+
+              {/* Bas du panneau : Réseaux sociaux + Bouton Espace Client */}
+              <div className="shrink-0 space-y-5 pt-4 border-t border-white/10">
+                <div className="flex items-center gap-3">
+                  <a
+                    href="https://facebook.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 rounded-full bg-white text-[#262B3B] flex items-center justify-center hover:bg-white/80 transition"
+                    aria-label="Facebook"
+                  >
+                    <FacebookIcon className="w-4.5 h-4.5" />
+                  </a>
+                  <a
+                    href="https://linkedin.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 rounded-full bg-white text-[#262B3B] flex items-center justify-center hover:bg-white/80 transition"
+                    aria-label="LinkedIn"
+                  >
+                    <LinkedInIcon className="w-4.5 h-4.5" />
+                  </a>
                 </div>
-              ))}
-            </div>
-            <div className="mt-6 pt-4 border-t border-slate-200">
-              <button
-                onClick={() => { onOpenAuth && onOpenAuth('login', 'client'); setMobileMenuOpen(false); }}
-                className="px-6 py-3.5 bg-[#002E5B] text-white hover:bg-[#001D3D] transition-colors text-base font-semibold rounded w-full justify-center flex items-center gap-2"
-              >
-                <User className="w-4 h-4" />
-                <span>{t.headerNav.espaceClient}</span>
-              </button>
-            </div>
-          </motion.div>
+
+                <button
+                  onClick={() => { onOpenAuth && onOpenAuth('login', 'client'); setMenuOpen(false); }}
+                  className="w-full py-3 bg-white/10 border border-white/20 hover:bg-white hover:text-[#262B3B] transition text-sm font-semibold rounded-lg flex items-center justify-center gap-2"
+                >
+                  <User className="w-4 h-4" />
+                  <span>{t.headerNav.espaceClient}</span>
+                </button>
+              </div>
+            </motion.aside>
+          </>
         )}
       </AnimatePresence>
     </header>

@@ -73,36 +73,24 @@ export default function ProductsSection() {
           viewport={viewportLarge}
         >
           {products.map((item, index) => {
-            const IconComp = item.icon;
             return (
               <motion.div
                 key={index}
                 variants={staggerCard}
-                className="consult-card p-6 flex flex-col justify-between text-center group relative overflow-hidden"
-                whileHover={{
-                  y: -8,
-                  boxShadow: '0 16px 40px rgba(3, 105, 161,0.14)',
-                }}
+                className="bvmac-card p-6 flex flex-col justify-between text-left group relative overflow-hidden"
               >
                 <div>
-                  {/* Top orange highlight line on hover */}
-                  <div className="w-8 h-1 bg-sky-500 rounded-full mx-auto mb-4 group-hover:w-full transition-all duration-300" />
-
-                  {/* Icon */}
-                  <div 
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5 transition duration-300 shadow-md"
-                    style={{ background: '#0C4A6E' }}
-                  >
-                    <IconComp className="w-6 h-6 text-sky-400" />
+                  <div className="text-xs font-mono font-bold text-[#002E5B] uppercase tracking-wider mb-3">
+                    0{index + 1}
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-sm font-black text-gray-800 tracking-wide mb-3 uppercase">
+                  <h3 className="text-base font-bold text-[#001D3D] mb-2">
                     {item.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-gray-500 text-xs leading-relaxed mb-6 font-medium">
+                  <p className="text-slate-600 text-xs leading-relaxed mb-6 font-medium">
                     {item.description}
                   </p>
                 </div>

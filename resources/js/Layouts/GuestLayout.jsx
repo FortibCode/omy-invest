@@ -1,10 +1,12 @@
 import OmyaLogo from '@/Components/Omya/OmyaLogo';
+import CustomCursor from '@/Components/Omya/CustomCursor';
 import { Link } from '@inertiajs/react';
 import { TrendingUp, ShieldCheck, Award } from 'lucide-react';
 
 export default function GuestLayout({ children }) {
     return (
         <div className="min-h-screen flex" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+            <CustomCursor />
 
             {/* ── Left Branding Panel ── */}
             <div
